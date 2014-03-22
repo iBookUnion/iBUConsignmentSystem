@@ -1,0 +1,38 @@
+body {
+  padding-top: 50px;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+span.glyphicon-user {
+    font-size: 9em;
+      padding: 40px 15px;
+}
+
+span.glyphicon-book {
+    font-size: 9em;
+      padding: 40px 15px;
+}
+
+span.glyphicon-ok {
+    font-size: 9em;
+      padding: 40px 15px;
+}
+
+form {
+  padding: 40px 15px;
+}
+
+.blue {
+    color: #428bca;
+}
+
+.yellow {
+    color: #f0ad4e;
+}
+
+.green {
+    color: #5cb85c;
+}
