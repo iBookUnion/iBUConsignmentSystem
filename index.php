@@ -8,6 +8,6 @@
 
         <button id="submit_button" name="submit_button" class="btn btn-primary btn-lg pull-right">Submit</button>
 
-      </div><!-- /.container -->     
+      </div><!-- /.container -->
 
 <? include("footer.php"); ?>

@@ -10,7 +10,7 @@
 
           <div class="col-md-8">
 
-            <form role="form">
+            <form role="form" class="contact-form">
 
               <div class="form-group">
                 <label for="first_name">First Name</label>

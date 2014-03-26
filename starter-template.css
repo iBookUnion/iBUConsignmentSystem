@@ -21,8 +21,12 @@ span.glyphicon-ok {
       padding: 40px 15px;
 }
 
-form {
+form.contact-form {
   padding: 40px 15px;
+}
+
+form.book-form {
+  padding: 0px 15px;
 }
 
 .blue {
