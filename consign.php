@@ -24,14 +24,14 @@
 				<tbody id="book-list">
 				</tbody>
 			</table>
-			<button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" data-toggle="modal" data-target="#add_book_modal">Add Book</button>
+			<button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" data-toggle="modal" data-target="#add-book-modal">Add Book</button>
 		</div>
 	</div>
 </div>
 
 
 <!-- Book Modal -->
-<div class="modal fade" id="add_book_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="add-book-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -40,10 +40,16 @@
       </div>
       <div class="modal-body">
 
+      	<!-- Error Message Box -->
+      	<div class="alert alert-danger" id="add-book-error" hidden="hidden">
+      	  <a class="alert-link">Something is wrong!</a>
+      	</div>
+
+      	<!-- Book Form -->
         <form role="form" class="form-horizontal book-form">
           <div class="form-group">
             <label for="isbn">ISBN</label>
-            <input type="text" class="form-control input-medium" id="isbn" placeholder="Enter ISBN">
+            <input type="text" class="form-control input-medium" id="isbn" placeholder="Enter ISBN" ibu-validate="isbn">
           </div>
 
           <div class="row">
@@ -51,7 +57,7 @@
           	  <div class="col-md-5">
 		          <div class="form-group">
 		            <label for="course">Course Number</label>
-		            <input type="text" class="form-control input-medium" id="course" placeholder="Enter Course Number">
+		            <input type="text" class="form-control input-medium" id="course" placeholder="Enter Course Number" ibu-validate="text">
 		          </div>
 	          </div>
 
@@ -63,7 +69,7 @@
 		            <label for="price">Price</label>
 		            <div class="input-group">
 		            	<span class="input-group-addon">$</span>
-		            	<input type="text" class="form-control input-medium" id="price" placeholder="Enter Price">
+		            	<input type="number" class="form-control input-medium" id="price" placeholder="Enter Price" ibu-validate="number">
 		            	<span class="input-group-addon">.00</span>
 		            </div>
 		          </div>
@@ -71,24 +77,29 @@
 
           </div>
 
-          <hr>
+          <div id="book-data" class="collapse">
+          	  <hr>
+	          <!-- Warning Message Box -->
+	          <div class="alert alert-warning hide" id="book-data-not-found">
+	            <a class="alert-link">We don't recognize the book!</a>
+	          </div>
 
-          <div class="form-group">
-            <label for="title">Book Title</label>
-            <input type="text" class="form-control input-medium" id="title" placeholder="Enter Book Title">
-          </div>
+	          <div class="form-group">
+	            <label for="title">Book Title</label>
+	            <input type="text" class="form-control input-medium" id="title" placeholder="Enter Book Title" ibu-validate="text">
+	          </div>
 
-          <div class="form-group">
-            <label for="author">Book Author</label>
-            <input type="text" class="form-control input-medium" id="author" placeholder="Enter Book Author">
+	          <div class="form-group">
+	            <label for="author">Book Author</label>
+	            <input type="text" class="form-control input-medium" id="author" placeholder="Enter Book Author" ibu-validate="text">
+	          </div>
           </div>
         </form>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal" id="cancel-button">Cancel</button>
-        <button type="button" class="btn btn-success" data-dismiss="modal" id="add-button">Add</button>
-        <button type="button" class="btn btn-success">Add Another</button>
+        <button type="button" class="btn btn-success" id="add-book-button">Add</button>
       </div>
     </div>
   </div>
