@@ -1,7 +1,7 @@
 <div id="#agreement"class="row">
 
 	<div class="col-md-4">
-		<div class="starter-template">
+		<div class="form-section">
 			<h1>Agreement</h1>
 			<span class="glyphicon glyphicon-ok green hidden-xs"></span>
 			<p class="lead">Read the terms and conditions before consigning your items.</p>
@@ -10,7 +10,7 @@
 
 	<div class="col-md-8">
 
-		<div class="starter-template">
+		<div class="form-section">
 
 			<div class="well">
 				<p>

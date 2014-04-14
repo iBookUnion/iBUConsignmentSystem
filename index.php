@@ -6,7 +6,13 @@
         <? include("consign.php"); ?>
         <? include("agreement.php"); ?>
 
-        <button id="submit_button" name="submit_button" class="btn btn-primary btn-lg pull-right">Submit</button>
+
+        <div class="row">
+          <div class="col-md-4 col-md-offset-6">
+            <a href="confirmation.php" class="btn btn-block btn-primary">Submit Form</a>
+          </div>
+        </div>
+
 
       </div><!-- /.container -->
 

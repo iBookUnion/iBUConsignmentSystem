@@ -1,7 +1,7 @@
         <div class="row">
 
           <div class="col-md-4">
-            <div class="starter-template">
+            <div class="form-section">
               <h1>Contact Information</h1>
               <span class="glyphicon glyphicon-user blue hidden-xs"></span>
               <p class="lead">We'll be contacting you during the consignment session.</p>

@@ -43,3 +43,8 @@
           </div><!--/.nav-collapse -->
         </div>
       </div>
+
+      <div class="alert alert-warning alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Warning!</strong> This is not functional! The only semi-working thing is adding a book to the form (it also checks for valid ISBN).
+      </div>

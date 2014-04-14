@@ -1,7 +1,7 @@
 <div id="#consign" class="row">
 
 	<div class="col-md-4">
-		<div class="starter-template">
+		<div class="form-section">
 			<h1>Consignment</h1>
 			<span class="glyphicon glyphicon-book yellow hidden-xs"></span>
 			<p class="lead">Tell us about the books you'll consign with us.</p>
@@ -10,7 +10,7 @@
 
 	<div class="col-md-8">
 
-		<div class="starter-template">
+		<div class="form-section">
 			<p class="text-center text-info" id="no-book-info">You currently have no items added to the consignment form.</p>
 
 			<table class="table table-responsive table-bordered table-hover">
