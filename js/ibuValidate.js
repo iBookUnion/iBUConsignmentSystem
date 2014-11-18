@@ -28,7 +28,7 @@ function validate(inputData, validationType) {
     if (validationType === "text") {
         return true;
     } else if (validationType === "number") {
-        var intRegex = /^\d+$/;
+        var intRegex = /^[0-9]*[1-9][0-9]*$/;
         return intRegex.test(inputData);
     } else if (validationType === "isbn") {
         return validateIsbn(inputData);
@@ -41,10 +41,10 @@ function resetValidation(formGroupSelector) {
     formGroupSelector.removeClass("has-error");
 }
 
-
+// book form fields
 function validateIsbn(subject) {
     // `regex` checks for ISBN-10 or ISBN-13 format
-    var regex = /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[\- ]){3})[\- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[\- ]){4})[\- 0-9]{17}$)(?:97[89][\- ]?)?[0-9]{1,5}[\- ]?[0-9]+[\- ]?[0-9]+[\- ]?[0-9X]$/;
+    /*var regex = /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[\- ]){3})[\- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[\- ]){4})[\- 0-9]{17}$)(?:97[89][\- ]?)?[0-9]{1,5}[\- ]?[0-9]+[\- ]?[0-9]+[\- ]?[0-9X]$/;
     if (regex.test(subject)) {
         // Remove non ISBN digits, then split into an array
         var chars = subject.replace(/[^0-9X]/g, "").split("");
@@ -86,5 +86,27 @@ function validateIsbn(subject) {
     } else {
         console.log("Invalid ISBN");
         return false;
-    }
+    }*/
+    return true;
+}
+
+function validateCourse(course) {
+    var regex = /^\w{4}\s?\d{3}$/;
+    return regex.test(course);
+}
+
+// contact form fields
+function validateStudentId(sid) {
+    var regex = /^\d{8}$/;
+    return regex.test(sid);
+}
+
+function validateEmail(email){
+    var regex = /^([\w!.%+\-])+@([\w\-])+(?:\.[\w\-]+)+$/;
+    return regex.test(email);
+}
+
+function validatePhone(phone){
+    var regex = /^\d{10}$/
+    return phone.test(phone);
 }
