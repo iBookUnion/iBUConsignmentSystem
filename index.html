@@ -174,7 +174,7 @@
 				</thead>
 				<tbody id="book-list" ng-repeat="book in books">
 					<tr>
-						<th>{{book.course | uppercase}}</th>
+						<th>{{book.courses.join(", ") | uppercase}}</th>
 						<th>{{book.title}}</th>
 						<th>{{book.price | currency}}</th>
 					</tr>
@@ -211,7 +211,7 @@
 			</div>
 
 			<h3 class="text-danger">
-			*Pick-up Period: January ?? - ??, 2015 (10am-5pm) SUB 213
+			*Pick-up Period: January 9th, 2015 (10am-5pm) SUB 213
 			</h3>
 
 			<label>
