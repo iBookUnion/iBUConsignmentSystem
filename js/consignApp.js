@@ -87,7 +87,14 @@
 		this.addBook = function() {
 			$log.info('Consigning book ' + this.consignedBook.isbn + " for course" + this.consignedBook.courses[0]);
 			bookList.push(this.consignedBook);
-			this.consignedBook = {};
+
+			this.consignedBook = {
+				isbn: '',
+				courses: [],
+				price: '',
+				title: '',
+				author: ''
+			};
 		}
 	});
 	
