@@ -96,7 +96,7 @@
 			<form role="form" class="form-horizontal book-form" name="consignForm" ng-controller="ConsignFormCtrl as formCtrl" ng-submit="consignForm.$valid && formCtrl.addBook()" novalidate>
 			  <div class="form-group">
 				<label for="isbn">ISBN</label>
-				<input type="text" class="form-control input-medium" id="isbn" ng-model="formCtrl.consignedBook.isbn" placeholder="Enter ISBN" required>
+				<input type="text" class="form-control input-medium" ng-minlength=13 id="isbn" ng-model="formCtrl.consignedBook.isbn" placeholder="Enter ISBN(13 digit)" required>
 			  </div>
 
 			  <div class="row">
@@ -126,13 +126,13 @@
 
 			  <!-- show this for now div id="book-data" class="collapse"-->
 				  <hr>
-				  <div class="alert alert-warning hide" id="book-data-not-found">
-					<a class="alert-link">We dont recognize the book!</a>
+				  <div class="alert alert-warning" id="book-data-not-found" ng-show="consignForm.title.$error.required">
+					<a class="alert-link">We don't recognize the book!</a>
 				  </div>
 
 				  <div class="form-group">
 					<label for="title">Book Title</label>
-					<input type="text" class="form-control input-medium" id="title" ng-model="formCtrl.consignedBook.title" placeholder="Enter Book Title" ibu-validate="text">
+					<input type="text" class="form-control input-medium" id="title" name="title" ng-model="formCtrl.consignedBook.title" placeholder="Enter Book Title" required>
 				  </div>
 
 				  <div class="form-group">
@@ -144,12 +144,13 @@
 					<input type="submit" class="btn btn-primary pull-right" value="Add" />
 					<button class="btn btn-danger pull-right" ng-click="cancel()">Done</button>
 				</div>
-		</div>
 		<!--will add buttons here later<div class="modal-footer">
 			<button class="btn btn-danger" ng-click="cancel()">Done</button>
 			<button class="btn btn-success" ng-click="ok()">OK</button>
 		</div>-->
 	</form>
+		</div>
+
 	</script>
 
 	<div class="col-md-4">
