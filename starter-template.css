@@ -91,6 +91,22 @@ form.book-form {
 	color: #ffffff;
 }
 
+
+.error {
+	color: red;
+}
+
+/*input.ng-invalid {*/
+	/*border: 1px solid red;*/
+/*}*/
+input.ng-valid {
+	border: 1px solid green;
+}
+
+.checked {
+	color: green;
+}
+
 @media (max-width: 767px) {
 	.navbar-default .navbar-nav .open .dropdown-menu > li > a {
 		color: #b2d39d;
