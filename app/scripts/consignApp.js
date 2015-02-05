@@ -1,8 +1,28 @@
+'use strict';
+
 (function(){
-	var app = angular.module('consignmentApp', ['ui.bootstrap']);
+	var app = angular.module('consignmentApp', ['ui.bootstrap', 'ngRoute']);
+
+	app.config(function ($routeProvider) {
+		$routeProvider
+			.when('/', {
+				templateUrl: '../views/consignmentForm.html'
+			})
+			.when('/admin', {
+				templateUrl: 'views/inventory.html',
+				controller: 'InventoryCtrl'
+			})
+			.when('/admin/forms', {
+				templateUrl: 'views/forms.html',
+				controller: 'FormsCtrl'
+			})
+			.otherwise({
+				redirectTo: '/'
+			});
+	})
 
 	app.controller('ConsignmentCtrl', function($scope, $log) {
-		signContract = false;
+		var signContract = false;
 
 		$scope.contact = {
 			'fname': '',
@@ -18,16 +38,16 @@
 		console.log($scope.contact.fname);
 
 		$scope.createJson = function() {
-			consignor = {'student_id': $scope.contact.sno,
+			var consignor = {'student_id': $scope.contact.sno,
 						'first_name': $scope.contact.fname,
 						'last_name': $scope.contact.lname,
 						'email': $scope.contact.email,
 						'phone_number': $scope.contact.phno};
-			books = [];
-			consignments = [];
+			var books = [];
+			var consignments = [];
 
-			for (i = 0; i < bookList.length; i++) {
-				book = {
+			for (var i = 0; i < bookList.length; i++) {
+				var book = {
 					'isbn': bookList[i].isbn,
 					'title': bookList[i].title,
 					'author': bookList[i].author,
@@ -35,7 +55,7 @@
 					'courses': bookList[i].courses			
 				};
 
-				consignment = {
+				var consignment = {
 					'isbn': bookList[i].isbn,
 					'student_id': $scope.contact.sno,
 					'price': bookList[i].price,
@@ -47,7 +67,7 @@
 				consignments.push(consignment);
 			}
 
-			jsonObj = {'consignor': consignor,
+			var jsonObj = {'consignor': consignor,
 						'books': books,
 						'consignments': consignments};
 
