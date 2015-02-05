@@ -1,0 +1,21 @@
+<div class="form-section">
+    <p class="text-center text-info" ng-show="books.length == 0">You currently have no items added to the consignment form.</p>
+
+    <table class="table table-responsive table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Course</th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+        </thead>
+        <tbody id="book-list" ng-repeat="book in books">
+        <tr>
+            <th>{{book.courses.join(", ") | uppercase}}</th>
+            <th>{{book.title}}</th>
+            <th>{{book.price | currency}}</th>
+        </tr>
+        </tbody>
+    </table>
+    <button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" ng-click="open()">Add Book</button>
+</div>

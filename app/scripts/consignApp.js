@@ -19,7 +19,27 @@
 			.otherwise({
 				redirectTo: '/'
 			});
+	});
+
+	app
+		.directive("contactForm", function() {
+		return {
+			restrict: 'E',
+			templateUrl: 'views/consignmentForm/contactForm.html'
+		}
 	})
+		.directive("bookList", function() {
+			return {
+				restrict: 'E',
+				templateUrl: 'views/consignmentForm/bookList.html'
+			}
+		})
+		.directive("agreement", function() {
+			return {
+				restrict: 'E',
+				templateUrl: 'views/consignmentForm/agreement.html'
+			}
+		});
 
 	app.controller('ConsignmentCtrl', function($scope, $log) {
 		var signContract = false;
@@ -90,12 +110,30 @@
 
 	// });
 
-	app.controller('BookFormCtrl', function($scope, $log) {
+	app.controller('BookFormCtrl', function($scope, $modal, $log) {
 		$scope.books = bookList;
 
+		$scope.open = function() {
+			var modalInstance = $modal.open({
+				templateUrl: 'views/consignmentForm/bookModal.html',
+				controller: 'ModalInstanceCtrl',
+				resolve: {
+					consignedBook: function () {
+						return $scope.consignedBook;
+					}
+				}
+			});
+
+			modalInstance.result.then(function (consignedBook) {
+				$scope.consignedBook = consignedBook;
+			}, function () {
+				$log.info('Modal dismissed at: ' + new Date());
+			});
+		};
 	});
 
 	app.controller('ConsignFormCtrl', function($log) {
+
 		this.consignedBook = {
 			isbn: '',
 			courses: [],
@@ -118,26 +156,6 @@
 			};
 		}
 	});
-	
-	app.controller('BookModalCtrl', function($scope, $modal, $log) {
-		$scope.open = function() {
-			var modalInstance = $modal.open({
-				templateUrl: 'bookModal.html',
-				controller: 'ModalInstanceCtrl',
-				resolve: {
-				consignedBook: function () {
-					return $scope.consignedBook;
-					}
-				}
-			});
-
-		modalInstance.result.then(function (consignedBook) {
-			$scope.consignedBook = consignedBook;
-		}, function () {
-			$log.info('Modal dismissed at: ' + new Date());
-			});
-		};
-	});
 
 	app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, consignedBook) {
 		$scope.consignedBook = {};
@@ -157,4 +175,4 @@
 	var faculty = '';
 	var discovery = '';
 
-})()
+})();

@@ -1,0 +1,146 @@
+<div>
+    <div class="modal-header">
+        <h3 class="modal-title">Add A Book</h3>
+    </div>
+    <div class="modal-body">
+        <form role="form" class="form-horizontal book-form" name="consignForm"
+              ng-controller="ConsignFormCtrl as formCtrl"
+              ng-submit="consignForm.$valid && formCtrl.addBook()" novalidate>
+            <div class="form-group">
+                <label for="isbn">ISBN</label>
+                <input type="text" class="form-control input-medium" ng-maxlength=13 ng-minlength=13 id="isbn"
+                       name="isbn"
+                       ng-model="formCtrl.consignedBook.isbn" placeholder="Enter ISBN(13 digit)" required>
+
+                <div class="error-container"
+                     ng-show="consignForm.isbn.$dirty && consignForm.isbn.$invalid">
+                    <small class="error"
+                           ng-show="consignForm.isbn.$error.required">
+                        ISBN is required.
+                    </small>
+                    <small class="error"
+                           ng-show="consignForm.isbn.$error.minlength">
+                        ISBN is required to be exactly 13 characters
+                    </small>
+                    <small class="error"
+                           ng-show="consignForm.isbn.$error.maxlength">
+                        ISBN cannot be longer than 13 characters
+                    </small>
+                    <small class="error"
+                           ng-show="consignForm.isbn.$badInput">
+                        That is not a valid ISBN. Please input a valid ISBN.
+                    </small>
+
+                </div>
+                <div class="check-container" ng-show="consignForm.isbn.$dirty && consignForm.isbn.$valid">
+                    <small class="checked">
+                        &#10003;
+                    </small>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="course">Course Number</label>
+                        <input type="text" class="form-control input-medium" id="course" name="course"
+                               ng-model="formCtrl.consignedBook.courses[0]" ng-pattern="/^\w{4}\s?\d{3}$/"
+                               placeholder="Enter Course Number" required>
+
+                        <div class="error-container"
+                             ng-show="consignForm.course.$dirty && consignForm.course.$invalid">
+
+                            <small class="error"
+                                   ng-show="consignForm.course.$invalid">
+                                A valid course number consists of four letters and three numbers.
+                            </small>
+                        </div>
+                        <div class="check-container" ng-show="consignForm.course.$dirty && consignForm.course.$valid">
+                            <small class="checked">
+                                &#10003;
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-1">
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="price">Price</label>
+
+                        <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" min="0" class="form-control input-medium" id="price" name="price"
+                                   ng-model="formCtrl.consignedBook.price" placeholder="Enter Price" required>
+                            <span class="input-group-addon">.00</span>
+
+                            <div class="error-container"
+                                 ng-show="consignForm.price.$dirty && consignForm.price.$invalid">
+                                <small class="error"
+                                       ng-show="consignForm.price.$invalid">
+
+                                </small>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- show this for now div id="book-data" class="collapse"-->
+            <hr>
+            <div class="alert alert-warning" id="book-data-not-found"
+                 ng-show="consignForm.title.$error.required && !consignForm.title.$pristine">
+                <a class="alert-link">Please fill in the book title</a>
+            </div>
+
+
+            <!--<div class="alert alert-warning" id="author-not-validate" ng-show="consignForm.author.$error.required && !consignForm.author.$pristine">-->
+            <!--<a class="alert-link">We don't recognize the author!</a>-->
+            <!--</div>-->
+
+
+            <div class="form-group">
+                <label for="title">Book Title</label>
+                <input type="text" class="form-control input-medium" id="title" name="title"
+                       ng-model="formCtrl.consignedBook.title" placeholder="Enter Book Title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="author">Book Author</label>
+                <input type="text" class="form-control input-medium" id="author" name="author"
+                       ng-model="formCtrl.consignedBook.author" ng-pattern="[a-zA-Z]" placeholder="Enter Book Author"
+                       required>
+
+                <div class="error-container"
+                     ng-show="consignForm.author.$dirty && consignForm.author.$invalid">
+                    <small class="error"
+                           ng-show="consignForm.author.$error.required">
+                        Book author is required.
+                    </small>
+                    <small class="error"
+                           ng-show="consignForm.author.$badInput">
+                        Please input a valid author name.
+                    </small>
+
+                </div>
+            </div>
+
+            <!--/div-->
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" ng-disabled="consignForm.$invalid" value="Add"/>
+                <button class="btn btn-danger pull-right" ng-click="cancel()">Done</button>
+            </div>
+            <!--will add buttons here later<div class="modal-footer">
+              <button class="btn btn-danger" ng-click="cancel()">Done</button>
+              <button class="btn btn-success" ng-click="ok()">OK</button>
+            </div>-->
+        </form>
+    </div>
+</div>
