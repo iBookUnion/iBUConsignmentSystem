@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name iBUAdminApp.controller:AboutCtrl
+ * @name consignmentApp.controller:FormsCtrl
  * @description
- * # AboutCtrl
- * Controller of the iBuadminApp
+ * # FormsCtrl
+ * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
   .controller('FormsCtrl', ['$scope', '$routeParams', '$location', function ($scope, $routeParams, $location) {
@@ -16,7 +16,7 @@ angular.module('consignmentApp')
 
     $scope.viewConsignor = function() {
       console.log(this.consignor);
-      $location.path('/consignor/' + this.consignor.studentId);
+      $location.path('/admin/consignorInfo/' + this.consignor.studentId);
     }
 
     $scope.consignors = [

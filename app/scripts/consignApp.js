@@ -16,13 +16,16 @@
 				templateUrl: 'views/forms.html',
 				controller: 'FormsCtrl'
 			})
+			.when('/admin/consignorInfo/:sno', {
+				templateUrl: 'views/consignorInfo.html',
+				controller: 'ConsignorInfoCtrl'
+			})
 			.otherwise({
 				redirectTo: '/'
 			});
 	});
 
-	app
-		.directive("contactForm", function() {
+	app.directive("contactForm", function() {
 		return {
 			restrict: 'E',
 			templateUrl: 'views/consignmentForm/contactForm.html'

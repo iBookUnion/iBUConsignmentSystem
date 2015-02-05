@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc function
- * @name iBUAdminApp.controller:InventoryCtrl
+ * @name consignmentApp.controller:InventoryCtrl
  * @description
  * # InventoryCtrl
- * Controller of the iBUAdminApp
+ * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
   .controller('InventoryCtrl', function ($scope, $location) {
