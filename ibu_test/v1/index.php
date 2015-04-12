@@ -402,15 +402,18 @@ $app->post('/addBook', function() use ($app) {
 		
     function echoRespnse($status_code, $response) {
     $app = \Slim\Slim::getInstance();
-    // Http response code
-    $app->status($status_code);
+
+    $app->response->setStatus($status_code);
+
+    // Allow CORS
+    $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
     // setting response content type to json
-    $app->contentType('application/json');
-
-    echo json_encode($response);
+    $app->response->headers->set('Content-Type', 'application/json');
+    
+    $app->response->setBody(json_encode($response));
     }
-	
+
 	
 $app->run();
 ?>
