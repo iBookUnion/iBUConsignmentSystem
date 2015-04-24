@@ -31,5 +31,5 @@ angular.module('consignmentApp')
 
         $scope.saveConsignor = function () {
 
-        }
+        };
     });

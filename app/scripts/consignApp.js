@@ -1,7 +1,7 @@
 'use strict';
 
 (function(){
-	var app = angular.module('consignmentApp', ['ui.bootstrap', 'ngRoute']);
+	var app = angular.module('consignmentApp', ['ui.bootstrap', 'ngRoute', 'ngResource']);
 
 	app.config(function ($routeProvider) {
 		$routeProvider
@@ -25,23 +25,23 @@
 			});
 	});
 
-	app.directive("contactForm", function() {
+	app.directive('contactForm', function() {
 		return {
 			restrict: 'E',
 			templateUrl: 'views/consignmentForm/contactForm.html'
-		}
+		};
 	})
-		.directive("bookList", function() {
+		.directive('bookList', function() {
 			return {
 				restrict: 'E',
 				templateUrl: 'views/consignmentForm/bookList.html'
-			}
+			};
 		})
-		.directive("agreement", function() {
+		.directive('agreement', function() {
 			return {
 				restrict: 'E',
 				templateUrl: 'views/consignmentForm/agreement.html'
-			}
+			};
 		});
 
 	app.controller('ConsignmentCtrl', function($scope, $log) {
@@ -84,7 +84,7 @@
 					'price': bookList[i].price,
 					'current_state': '1',
 					'date': 'Now'
-				}
+				};
 
 				books.push(book);
 				consignments.push(consignment);
@@ -98,7 +98,7 @@
 
 			var confirmation = window.open();
 			confirmation.document.write(JSON.stringify(jsonObj));
-		}
+		};
 
 	});
 
@@ -147,7 +147,7 @@
 
 
 		this.addBook = function() {
-			$log.info('Consigning book ' + this.consignedBook.isbn + " for course" + this.consignedBook.courses[0]);
+			$log.info('Consigning book ' + this.consignedBook.isbn + ' for course' + this.consignedBook.courses[0]);
 			bookList.push(this.consignedBook);
 
 			this.consignedBook = {
@@ -157,7 +157,7 @@
 				title: '',
 				author: ''
 			};
-		}
+		};
 	});
 
 	app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, consignedBook) {
