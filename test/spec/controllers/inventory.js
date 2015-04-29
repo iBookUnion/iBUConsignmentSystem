@@ -6,11 +6,11 @@ describe('Controller: InventoryCtrl', function () {
   beforeEach(module('consignmentApp'));
 
   var MainCtrl,
-    scope, $httpBackend;
+    scope, httpBackend;
 
-  beforeEach(inject(function($injector) {
+  beforeEach(inject(function($httpBackend, $rootScope, $controller, API_URI) {
     // Set up the mock http service responses
-    $httpBackend = $injector.get('$httpBackend');
+    httpBackend = $httpBackend;
 
     var mockInventoryResponse = {
       'error': false,
@@ -32,20 +32,19 @@ describe('Controller: InventoryCtrl', function () {
       ]
     };
 
-    $httpBackend.when('GET', 'http://timadvance.me/ibu_test/v1/books')
+    httpBackend.when('GET', API_URI.inventory)
         .respond(mockInventoryResponse);
-  }));
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+    // Initialize the controller and a mock scope
     scope = $rootScope.$new();
     MainCtrl = $controller('InventoryCtrl', {
       $scope: scope
     });
   }));
 
+
   it('should display books available', function () {
-    $httpBackend.flush();
+    httpBackend.flush();
     expect(scope.books.length).toBeGreaterThan(0);
   });
 

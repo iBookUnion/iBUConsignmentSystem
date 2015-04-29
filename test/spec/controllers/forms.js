@@ -6,11 +6,11 @@ describe('Controller: FormCtrl', function () {
   beforeEach(module('consignmentApp'));
 
   var FormCtrl,
-      scope, $httpBackend;
+      scope, httpBackend;
 
-  beforeEach(inject(function($injector) {
+  beforeEach(inject(function($httpBackend, $rootScope, $controller, API_URI) {
     // Set up the mock http service responses
-    $httpBackend = $injector.get('$httpBackend');
+    httpBackend = $httpBackend;
 
     var mockUserResponse = {
       'error': false,
@@ -32,12 +32,10 @@ describe('Controller: FormCtrl', function () {
       ]
     };
 
-    $httpBackend.when('GET', 'http://timadvance.me/ibu_test/v1/users')
+    httpBackend.when('GET', API_URI.consignors)
         .respond(mockUserResponse);
-  }));
 
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
+    // Initialize the controller and a mock scope
     scope = $rootScope.$new();
     FormCtrl = $controller('FormsCtrl', {
       $scope: scope
@@ -45,7 +43,7 @@ describe('Controller: FormCtrl', function () {
   }));
 
   it('should have a list of consignors', function () {
-    $httpBackend.flush();
+    httpBackend.flush();
     expect(scope.consignors.length).toBeGreaterThan(0);
   });
 
