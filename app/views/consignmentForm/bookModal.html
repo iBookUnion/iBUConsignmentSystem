@@ -115,7 +115,7 @@
             <div class="form-group">
                 <label for="author">Book Author</label>
                 <input type="text" class="form-control input-medium" id="author" name="author"
-                       ng-model="formCtrl.consignedBook.author" ng-pattern="[a-zA-Z]" placeholder="Enter Book Author"
+                       ng-model="formCtrl.consignedBook.author" ng-pattern="/[a-zA-Z]+/" placeholder="Enter Book Author"
                        required>
 
                 <div class="error-container"

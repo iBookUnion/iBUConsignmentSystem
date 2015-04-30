@@ -17,9 +17,9 @@ angular.module('consignmentApp')
     Consignors.get(function(payload) {
       $scope.consignors = payload.users.map(function (apiConsignor) {
         var consignor = {};
-        consignor.studentId = apiConsignor.student_id;
-        consignor.firstName = apiConsignor.first_name;
-        consignor.lastName = apiConsignor.last_name;
+        consignor.studentId = apiConsignor.student_id; // jshint ignore:line
+        consignor.firstName = apiConsignor.first_name; // jshint ignore:line
+        consignor.lastName = apiConsignor.last_name; // jshint ignore:line
         return consignor;
       });
     });

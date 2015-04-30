@@ -44,8 +44,8 @@
 			};
 		});
 
-	app.controller('ConsignmentCtrl', function($scope, $log) {
-		var signContract = false;
+	app.controller('ConsignmentCtrl', ['$scope', 'BookCartService', function($scope, BookCartService) {
+		var bookList = BookCartService.getItems;
 
 		$scope.contact = {
 			'fname': '',
@@ -57,7 +57,7 @@
 			'discovery': ''
 		};
 
-		$scope.fname = fname;
+		$scope.fname = '';
 		console.log($scope.contact.fname);
 
 		$scope.createJson = function() {
@@ -100,56 +100,41 @@
 			confirmation.document.write(JSON.stringify(jsonObj));
 		};
 
-	});
+	}]);
 
-	// app.controller('ContactCtrl', function($scope, $log) {
-	// 	$scope.fname = fname;
-	// 	$scope.lname = lname;
-	// 	$scope.sno = sno;
-	// 	$scope.email = email;
-	// 	$scope.phno = phno;
-	// 	$scope.faculty = faculty;
-	// 	$scope.discover = discovery;
+	app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
+		function ($scope, $modal, $log, BookCartService) {
+			$scope.books = BookCartService.getItems();
 
-	// });
 
-	app.controller('BookFormCtrl', function($scope, $modal, $log) {
-		$scope.books = bookList;
-
-		$scope.open = function() {
-			var modalInstance = $modal.open({
-				templateUrl: 'views/consignmentForm/bookModal.html',
-				controller: 'ModalInstanceCtrl',
-				resolve: {
-					consignedBook: function () {
-						return $scope.consignedBook;
+			$scope.open = function () {
+				var modalInstance = $modal.open({
+					templateUrl: 'views/consignmentForm/bookModal.html',
+					controller: 'ModalInstanceCtrl',
+					resolve: {
+						consignedBook: function () {
+							return $scope.consignedBook;
+						}
 					}
-				}
-			});
+				});
 
-			modalInstance.result.then(function (consignedBook) {
-				$scope.consignedBook = consignedBook;
-			}, function () {
-				$log.info('Modal dismissed at: ' + new Date());
-			});
-		};
-	});
+				modalInstance.result.then(function (consignedBook) {
+					$scope.consignedBook = consignedBook;
+				}, function () {
+					$log.info('Modal dismissed at: ' + new Date());
+				});
+			};
+		}]);
 
-	app.controller('ConsignFormCtrl', function($log) {
+	app.controller('ConsignFormCtrl', ['$scope', '$log', 'BookCartService', function($scope, $log, BookCartService) {
 
+		//TODO: Either complete or remove support multiple courses.
+		// Need to instantiate empty array for courses on init.
 		this.consignedBook = {
-			isbn: '',
-			courses: [],
-			price: '',
-			title: '',
-			author: ''
+			courses: []
 		};
 
-
-		this.addBook = function() {
-			$log.info('Consigning book ' + this.consignedBook.isbn + ' for course' + this.consignedBook.courses[0]);
-			bookList.push(this.consignedBook);
-
+		this.resetForm = function() {
 			this.consignedBook = {
 				isbn: '',
 				courses: [],
@@ -157,25 +142,22 @@
 				title: '',
 				author: ''
 			};
+			$scope.consignForm.$setPristine();
+			$log.info('reset');
 		};
-	});
 
-	app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, consignedBook) {
+		this.addBook = function() {
+			$log.info('Consigning book ' + this.consignedBook.isbn + ' for course ' + this.consignedBook.courses[0]);
+			BookCartService.addItem(this.consignedBook);
+			this.resetForm();
+		};
+	}]);
+
+	app.controller('ModalInstanceCtrl', function ($scope, $modalInstance) {
 		$scope.consignedBook = {};
 
 		$scope.cancel = function () {
 			$modalInstance.dismiss('cancel');
 		};
 	});
-
-	var bookList = [];
-	var contactInfo = [];
-	var fname = '';
-	var lname = '';
-	var sno = '';
-	var email = '';
-	var phno = '';
-	var faculty = '';
-	var discovery = '';
-
 })();
