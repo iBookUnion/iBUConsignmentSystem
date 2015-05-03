@@ -6,7 +6,6 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
     function ($scope, $modal, $log, BookCartService) {
         $scope.books = BookCartService.getItems();
 
-
         $scope.open = function () {
             $scope.modalInstance = $modal.open({
                 templateUrl: 'views/consignmentForm/bookModal.html',
@@ -31,9 +30,11 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCa
 
         //TODO: Either complete or remove support multiple courses.
         // Need to instantiate empty array for courses on init.
-        $scope.consignedBook = {
+        var anEmptyBook = {
             courses: []
         };
+
+        $scope.consignedBook = anEmptyBook;
 
         $scope.addBook = function () {
             $log.info('Consigning book ' + this.consignedBook.isbn + ' for course ' + this.consignedBook.courses[0]);
@@ -42,18 +43,11 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCa
         };
 
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.close('cancel');
         };
 
         $scope.resetForm = function () {
-            this.consignedBook = {
-                isbn: '',
-                courses: [],
-                price: '',
-                title: '',
-                author: ''
-            };
+            this.consignedBook = anEmptyBook;
             $scope.consignForm.$setPristine();
-            $log.info('reset');
         };
     }]);
