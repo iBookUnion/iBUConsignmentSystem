@@ -16,7 +16,7 @@
                 templateUrl: 'views/forms.html',
                 controller: 'FormsCtrl'
             })
-            .when('/admin/consignorInfo/:sno', {
+            .when('/admin/consignorInfo/:consignorId', {
                 templateUrl: 'views/consignorInfo.html',
                 controller: 'ConsignorInfoCtrl'
             })
