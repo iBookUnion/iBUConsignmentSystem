@@ -16,7 +16,7 @@ class DbConsignmentHandler extends DbHandler {
     
     protected function set_conditions($query_params) {
     	$conditions = array();
-
+    	
 		$conditions[] = $this->set_isbn($query_params["isbn"]);
 		$conditions[] = $this->set_student_id($query_params["student_id"]);
 		$conditions[] = $this->set_price($query_params["price"]);
@@ -47,7 +47,9 @@ class DbConsignmentHandler extends DbHandler {
     }
 
     protected function obtain_key($params) {
-    	$k = $params[$this->key];
+    	// need to specifiy two locations in the $params array
+  		$k = array("isbn" => $params[$this->key[0]],
+  					"student_id" => $params[$this->key[1]]);
     		return $k;
     }
 
@@ -61,10 +63,11 @@ class DbConsignmentHandler extends DbHandler {
     }
     
     protected function get_search_array($key) {
-        $query_params = array("isbn" => $key,
-                      		  "student_id" => null,
+        $query_params = array("isbn" => $key["isbn"],
+                      		  "student_id" => $key["student_id"],
                       		  "price" => null,
-                      		  "current_state" => null);
+                      		  "current_state" => null,
+                      		  "date" => null);
         	return $query_params;
     }
     protected function prepare_strings($params) {
@@ -113,6 +116,11 @@ class DbConsignmentHandler extends DbHandler {
 
 }
 
+
+
+
+
+?>
 
 
 

@@ -122,18 +122,16 @@
 							  "email" => $email,
 							  "phone_number" => $phone_number);
 			
-
-
         $db = new DbUserHandler();
         $res = $db->create($params);
-
-        if ($res == "Succesfully Created") {
+        
+        if ($res == "Successfully Created") {
             $response["error"] = false;
             $response["message"] = "You are successfully registered";
         } else if ($res == "There Was An Error") {
             $response["error"] = true;
             $response["message"] = "Oops! An error occurred while registereing";                
-        } else if ($res == "Record Already Existed") {
+        } else if ($res == "Sorry, this user already exists") {
             $response["error"] = true;
             $response["message"] = "Sorry, this user already exists";
         }
@@ -160,16 +158,16 @@
             $db = new DbBookHandler();
             $res = $db->create($params);
  
-            if ($res == "Succesfully Created") {
-                $response["error"] = false;
-                $response["message"] = "You are successfully registered";
-            } else if ($res == "There Was An Error") {
-                $response["error"] = true;
-                $response["message"] = "Oops! An error occurred while registereing";                
-            } else if ($res == "Record Already Existed") {
-                $response["error"] = true;
-                $response["message"] = "Sorry, this user already exists";
-            }
+        if ($res == "Successfully Created") {
+            $response["error"] = false;
+            $response["message"] = "You are successfully registered";
+        } else if ($res == "There Was An Error") {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred while registereing";                
+        } else if ($res == "Sorry, this user already exists") {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this user already exists";
+        }
             echoRespnse(201, $response);
     });
 
@@ -191,16 +189,16 @@
             $db = new DbConsignmentHandler();
             $res = $db->create($params);
  
-            if ($res == "Succesfully Created") {
-                $response["error"] = false;
-                $response["message"] = "You are successfully registered";
-            } else if ($res == "There Was An Error") {
-                $response["error"] = true;
-                $response["message"] = "Oops! An error occurred while registereing";                
-            } else if ($res == "Record Already Existed") {
-                $response["error"] = true;
-                $response["message"] = "Sorry, this user already exists";
-            }
+	        if ($res == "Successfully Created") {
+	            $response["error"] = false;
+	            $response["message"] = "You are successfully registered";
+	        } else if ($res == "There Was An Error") {
+	            $response["error"] = true;
+	            $response["message"] = "Oops! An error occurred while registereing";                
+	        } else if ($res == "Sorry, this user already exists") {
+	            $response["error"] = true;
+	            $response["message"] = "Sorry, this user already exists";
+	        }
             echoRespnse(201, $response);
     });
 
