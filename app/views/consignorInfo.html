@@ -1,25 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>{{contact.fname}} {{contact.lname}} Information</title>
-</head>
-<body>
+<div class="container">
+    <div class="page-header">
+        <div>
 
-<div class="page-header">
-    <h1>#{{contact.consignmentNo}}
-        <small>{{contact.fname}} {{contact.lname}}</small>
-    </h1>
+            <h1>
+                {{contact.fname}} {{contact.lname}}
+                <small>#{{contact.consignmentNo}}</small>
+            </h1>
+
+            <!-- Single button -->
+            <div class="btn-group" dropdown is-open="status.isopen">
+                <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle
+                        ng-disabled="disabled">
+                    <b>
+                        Consigned <span class="caret"></span>
+                    </b>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Another action</a></li>
+                    <li><a href="#">Something else here</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Separated link</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <tabset>
+        <tab heading="Contact">
+            <contact-form></contact-form>
+        </tab>
+        <tab heading="Consignment">
+            <book-list></book-list>
+        </tab>
+    </tabset>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-9">
+            <button type="button" class="btn btn-primary btn-block">Save Changes</button>
+        </div>
+
+    </div>
 </div>
-
-<tabset>
-    <tab heading="Contact Information">
-        <contact-form></contact-form>
-    </tab>
-    <tab heading="Consigned Books">
-        <book-list></book-list>
-    </tab>
-</tabset>
-
 </body>
-</html>
