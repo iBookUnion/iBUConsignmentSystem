@@ -16,19 +16,27 @@ var fakeModalInstance = {
     }
 };
 var anEmptyBook = {courses: []};
-var newBook = {
+var book0 = {
     isbn: '1234567890123',
     courses: ['TEST 101'],
     price: 12,
     title: 'Some Book About Testing',
     author: 'The QA Team'
 };
-var anotherNewBook = {
+var book1 = {
     isbn: '3210987654321',
     courses: ['TEST 201'],
     price: 35,
     title: 'Some Other Book',
     author: 'Someone'
+};
+var book2 = {
+    isbn: 1234567890122,
+    title: 'Another book',
+    author: 'Quack Duck',
+    edition: 12,
+    courses: ['ARGH 431', 'SIGH 123'],
+    price: 12
 };
 
 describe('Controller: BookFormCtrl', function () {
@@ -39,14 +47,21 @@ describe('Controller: BookFormCtrl', function () {
     var BookFormCtrl,
         scope, modal, bookCartService;
 
-    beforeEach(inject(function($modal, BookCartService) {
+    var testBookList = [book0, book1, book2];
+
+    beforeEach(inject(function ($modal, BookCartService) {
         modal = $modal;
         spyOn(modal, 'open').and.returnValue(fakeModalInstance);
         bookCartService = BookCartService;
-        spyOn(bookCartService, 'getItems').and.returnValue([newBook, anotherNewBook]);
+        testBookList.map(function (book) {
+            bookCartService.addItem(book);
+        });
+        spyOn(bookCartService, 'getItems').and.callThrough();
+        spyOn(bookCartService, 'removeItem').and.callThrough();
+
     }));
 
-    beforeEach(inject(function($rootScope, $controller) {
+    beforeEach(inject(function ($rootScope, $controller) {
         // Initialize the controller and a mock scope
         scope = $rootScope.$new();
         BookFormCtrl = $controller('BookFormCtrl', {
@@ -55,25 +70,100 @@ describe('Controller: BookFormCtrl', function () {
         });
     }));
 
-    it('retrieves the list of books in the book cart', function() {
-        expect(scope.books).toEqual([newBook, anotherNewBook]);
+    it('retrieves the list of books in the book cart', function () {
+        expect(scope.books.length).toEqual(testBookList.length);
     });
 
-    it('opens a modal when open() is called', function() {
-        scope.open();
+    it('removes an existing book when removeBook() is called', function () {
+        scope.removeBook(1);
+        expect(bookCartService.removeItem).toHaveBeenCalled();
+        expect(scope.books.length).toEqual(testBookList.length - 1);
+    });
+
+    it('opens a modal when openBookModal() is called', function () {
+        scope.openBookModal();
         expect(modal.open).toHaveBeenCalled();
     });
+
+
 });
 
-describe('Controller: BookFormModalCtrl', function () {
+describe('Controller: BookFormModalCtrl opened with no existing book', function () {
 
     // load the controller's module
     beforeEach(module('consignmentApp'));
 
     var BookFormModalCtrl,
-        scope, mockBookCartService, mockModalInstance;
+        scope, mockBookCartService, mockModalInstance, existingBook;
 
-    beforeEach(inject(function($rootScope, $controller) {
+    beforeEach(inject(function ($rootScope, $controller) {
+        // Initialize the controller and a mock scope
+        scope = $rootScope.$new();
+        mockBookCartService = jasmine.createSpyObj('BookCartService', ['addItem']);
+        mockModalInstance = jasmine.createSpyObj('modalInstance', ['close', 'dismiss']);
+        existingBook = {courses: []};
+
+        BookFormModalCtrl = $controller('BookFormModalCtrl', {
+            $scope: scope,
+            $modalInstance: mockModalInstance,
+            BookCartService: mockBookCartService,
+            existingBook: undefined
+        });
+        scope.consignForm = jasmine.createSpyObj('consignForm', ['$setPristine']);
+    }));
+
+    it('has an empty book object at the beginning', function () {
+        expect(scope.consignedBook).toEqual(anEmptyBook);
+    });
+
+    it('adds a book to the book cart when addBook() is called', function () {
+        scope.consignedBook = book0;
+        scope.addBook();
+        expect(mockBookCartService.addItem).toHaveBeenCalledWith(book0);
+    });
+
+    it('clears consigned book to be an empty object after addBook() is called', function () {
+        scope.consignedBook = book0;
+        scope.addBook();
+        expect(scope.consignedBook).toEqual(anEmptyBook);
+    });
+
+    it('keeps the modal open after addBook() is called', function () {
+        scope.consignedBook = book0;
+        scope.addBook();
+        expect(mockModalInstance.dismiss).not.toHaveBeenCalled();
+        expect(mockModalInstance.close).not.toHaveBeenCalled();
+    });
+
+    it('dismisses the modal when cancel is called', function () {
+        scope.cancel();
+        expect(mockModalInstance.close).toHaveBeenCalledWith('cancel');
+    });
+
+    it('dismisses the modal without adding a new book to the book cart', function () {
+        scope.cancel();
+        expect(mockBookCartService.addItem).not.toHaveBeenCalled();
+    });
+});
+
+describe('Controller: BookFormModalCtrl opened with an existing book', function () {
+
+    // load the controller's module
+    beforeEach(module('consignmentApp'));
+
+    var BookFormModalCtrl,
+        scope, mockBookCartService, mockModalInstance, existingBook;
+
+    var testBook = {
+        isbn: 1234567890123,
+        title: 'Some book with a pretty long title to test smaller devices',
+        author: 'Tim Cheung',
+        edition: 1,
+        courses: ['TEST 101'],
+        price: 32
+    };
+
+    beforeEach(inject(function ($rootScope, $controller) {
         // Initialize the controller and a mock scope
         scope = $rootScope.$new();
         mockBookCartService = jasmine.createSpyObj('BookCartService', ['addItem']);
@@ -82,41 +172,18 @@ describe('Controller: BookFormModalCtrl', function () {
         BookFormModalCtrl = $controller('BookFormModalCtrl', {
             $scope: scope,
             $modalInstance: mockModalInstance,
-            BookCartService: mockBookCartService
+            BookCartService: mockBookCartService,
+            existingBook: testBook
         });
         scope.consignForm = jasmine.createSpyObj('consignForm', ['$setPristine']);
     }));
 
-    it('has an empty book object at the beginning', function() {
-        expect(scope.consignedBook).toEqual(anEmptyBook);
+    it('sets consignedBook to be the existingBook when an existing book is passed to the modal', function() {
+        expect(scope.consignedBook).toEqual(testBook);
     });
 
-    it('adds a book to the book cart when addBook() is called', function() {
-        scope.consignedBook = newBook;
+    it('does not try to add an existing book when "Add book" button is clicked', function () {
         scope.addBook();
-        expect(mockBookCartService.addItem).toHaveBeenCalledWith(newBook);
-    });
-
-    it('clears consigned book to be an empty object after addBook() is called', function() {
-        scope.consignedBook = newBook;
-        scope.addBook();
-        expect(scope.consignedBook).toEqual(anEmptyBook);
-    });
-
-    it('keeps the modal open after addBook() is called', function() {
-        scope.consignedBook = newBook;
-        scope.addBook();
-        expect(mockModalInstance.dismiss).not.toHaveBeenCalled();
-        expect(mockModalInstance.close).not.toHaveBeenCalled();
-    });
-
-    it('dismisses the modal when cancel is called', function() {
-        scope.cancel();
-        expect(mockModalInstance.close).toHaveBeenCalledWith('cancel');
-    });
-
-    it('dismisses the modal without adding a new book to the book cart', function() {
-        scope.cancel();
         expect(mockBookCartService.addItem).not.toHaveBeenCalled();
     });
 });

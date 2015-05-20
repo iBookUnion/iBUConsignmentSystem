@@ -1,33 +1,23 @@
 body {
-  padding-top: 50px;
-  padding-bottom: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
+
 .form-section {
-  padding: 40px 15px;
-  text-align: center;
+    padding: 40px 15px;
 }
 
-span.glyphicon-user {
+.form-section.instruction {
+    text-align: center;
+}
+
+span.glyphicon.large {
     font-size: 9em;
-      padding: 40px 15px;
-}
-
-span.glyphicon-book {
-    font-size: 9em;
-      padding: 40px 15px;
-}
-
-span.glyphicon-ok {
-    font-size: 9em;
-      padding: 40px 15px;
-}
-
-form.contact-form {
-  padding: 40px 15px;
+    padding: 40px 15px;
 }
 
 form.book-form {
-  padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .blue {
@@ -42,80 +32,131 @@ form.book-form {
     color: #5cb85c;
 }
 
-
 /* --- Navbar Style --- */
 .navbar-default {
-  background-color: #6aa63b;
-  border-color: #598b31;
+    background-color: #6aa63b;
+    border-color: #598b31;
 }
+
 .navbar-default .navbar-brand {
-  color: #b2d39d;
+    color: #b2d39d;
 }
+
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-  color: #ffffff;
+    color: #ffffff;
 }
+
 .navbar-default .navbar-text {
-  color: #b2d39d;
+    color: #b2d39d;
 }
+
 .navbar-default .navbar-nav > li > a {
-  color: #b2d39d;
+    color: #b2d39d;
 }
+
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-  color: #ffffff;
+    color: #ffffff;
 }
+
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-  color: #ffffff;
-  background-color: #598b31;
+    color: #ffffff;
+    background-color: #598b31;
 }
+
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-  color: #ffffff;
-  background-color: #598b31;
+    color: #ffffff;
+    background-color: #598b31;
 }
+
 .navbar-default .navbar-toggle {
-  border-color: #598b31;
+    border-color: #598b31;
 }
+
 .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-  background-color: #598b31;
+    background-color: #598b31;
 }
+
 .navbar-default .navbar-toggle .icon-bar {
-  background-color: #b2d39d;
+    background-color: #b2d39d;
 }
+
 .navbar-default .navbar-collapse,
 .navbar-default .navbar-form {
-  border-color: #b2d39d;
-}
-.navbar-default .navbar-link {
-  color: #b2d39d;
-}
-.navbar-default .navbar-link:hover {
-  color: #ffffff;
+    border-color: #b2d39d;
 }
 
+.navbar-default .navbar-link {
+    color: #b2d39d;
+}
+
+.navbar-default .navbar-link:hover {
+    color: #ffffff;
+}
 
 .error {
-  color: red;
+    color: red;
 }
 
 /*input.ng-invalid {*/
-  /*border: 1px solid red;*/
+/*border: 1px solid red;*/
 /*}*/
 input.ng-valid {
-  border: 1px solid green;
+    border: 1px solid green;
 }
 
 .checked {
-  color: green;
+    color: green;
 }
 
 @media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #b2d39d;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffffff;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #ffffff;
-    background-color: #598b31;
-  }
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a {
+        color: #b2d39d;
+    }
+
+    .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #ffffff;
+    }
+
+    .navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #ffffff;
+        background-color: #598b31;
+    }
 }
+
+.book-entry {
+    display : table;
+    height: 100%;
+}
+
+.book-entry-main {
+    float : none;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.book-entry-secondary {
+    float : none;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 5px; padding-right: 5px;
+}
+
+/*.book-entry {*/
+/*.make-row();*/
+/*display: table;*/
+/*height: 100%;*/
+/*}*/
+
+/*.book-entry-main {*/
+/*.make-xs-column(10);*/
+/*float: none;*/
+/*display: table-cell;*/
+/*vertical-align: middle;*/
+/*}*/
+
+/*.book-entry-secondary {*/
+/*.make-xs-column(1, @gutter: 10px);*/
+/*float: none;*/
+/*display: table-cell;*/
+/*vertical-align: middle;*/
+/*}*/

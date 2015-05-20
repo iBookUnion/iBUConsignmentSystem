@@ -1,21 +1,31 @@
 <div class="form-section" ng-controller="BookFormCtrl as consignedBooks">
-    <p class="text-center text-info" ng-show="books.length == 0">You currently have no items added to the consignment form.</p>
+    <p class="text-center text-info" ng-show="books.length == 0">You currently have no items added to the consignment
+        form.</p>
 
-    <table class="table table-responsive table-bordered table-hover">
-        <thead>
-        <tr>
-            <th>Course</th>
-            <th>Name</th>
-            <th>Price</th>
-        </tr>
-        </thead>
-        <tbody id="book-list" ng-repeat="book in books">
-        <tr>
-            <th>{{book.courses.join(", ") | uppercase}}</th>
-            <th>{{book.title}}</th>
-            <th>{{book.price | currency}}</th>
-        </tr>
-        </tbody>
-    </table>
-    <button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" ng-click="open()">Add Book</button>
+    <div class="list-group">
+        <a class="list-group-item" ng-repeat="book in books" ng-click="openBookModal(book)">
+            <div class="row book-entry">
+                <div class="col-xs-10 book-entry-main">
+                    <h4 class="list-group-item-heading">{{book.title}}
+                    <small>{{book.author}}</small></h4>
+
+                    <p class="list-group-item-text">{{book.courses.join(", ") | uppercase}}</p>
+                </div>
+
+                <div class="col-xs-1 book-entry-secondary">
+                    <h3 style="margin: 0">${{book.price}}</h3>
+                </div>
+
+                <div class="col-xs-1 book-entry-secondary">
+                    <span class="badge" style="float: none;" ng-click="removeBook(book)">
+                        <span class="glyphicon glyphicon-remove white"></span>
+                    </span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" ng-click="openBookModal()">Add
+        Book
+    </button>
 </div>

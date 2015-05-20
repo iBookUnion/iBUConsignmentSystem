@@ -6,13 +6,17 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
     function ($scope, $modal, $log, BookCartService) {
         $scope.books = BookCartService.getItems();
 
-        $scope.open = function () {
+        $scope.removeBook = function (book) {
+            BookCartService.removeItem(book);
+        };
+
+        $scope.openBookModal = function (book) {
             $scope.modalInstance = $modal.open({
                 templateUrl: 'views/consignmentForm/bookModal.html',
                 controller: 'BookFormModalCtrl',
                 resolve: {
-                    consignedBook: function () {
-                        return $scope.consignedBook;
+                    existingBook: function() {
+                        return book;
                     }
                 }
             });
@@ -25,8 +29,8 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
         };
     }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCartService',
-    function ($scope, $log, $modalInstance, BookCartService) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCartService', 'existingBook',
+    function ($scope, $log, $modalInstance, BookCartService, existingBook) {
 
         //TODO: Either complete or remove support multiple courses.
         // Need to instantiate empty array for courses on init.
@@ -34,11 +38,13 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCa
             courses: []
         };
 
-        $scope.consignedBook = anEmptyBook;
+        $scope.consignedBook = existingBook ? existingBook : anEmptyBook;
 
         $scope.addBook = function () {
             $log.info('Consigning book ' + this.consignedBook.isbn + ' for course ' + this.consignedBook.courses[0]);
-            BookCartService.addItem(this.consignedBook);
+            if (!existingBook) {
+                BookCartService.addItem(this.consignedBook);
+            }
             this.resetForm();
         };
 

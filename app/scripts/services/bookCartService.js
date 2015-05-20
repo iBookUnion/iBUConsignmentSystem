@@ -2,7 +2,7 @@
 
 angular.module('consignmentApp')
     .factory('BookCartService', function() {
-       var itemList = [];
+        var itemList = [];
 
         return {
             'getItems' : function() {
@@ -10,6 +10,10 @@ angular.module('consignmentApp')
             },
             'addItem' : function(item) {
                 itemList.push(item);
+            },
+            'removeItem' : function(item) {
+                var index = itemList.indexOf(item);
+                itemList.splice(index, 1);
             }
         };
     });
