@@ -7,7 +7,7 @@ class DbConsignmentHandler extends DbHandler {
 	protected $key = ["isbn","student_id"];
 
 	function __construct() {
-        require_once dirname(__FILE__) . './DbConnect.php';
+        require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
@@ -70,6 +70,14 @@ class DbConsignmentHandler extends DbHandler {
                       		  "date" => null);
         	return $query_params;
     }
+    
+    protected function get_identity($params) {
+    	$key_0 = $params[$this->key[0]];
+    	$key_1 = $params[$this->key[1]];
+    	$identity = "isbn = " . $key_0 . "student_id" . $key_1;
+    		return $identity;
+    }
+    
     protected function prepare_strings($params) {
     	$params["current_state"] = $this->stringify($params["current_state"]);  
     		return $params;    	
@@ -116,11 +124,6 @@ class DbConsignmentHandler extends DbHandler {
 
 }
 
-
-
-
-
-?>
 
 
 

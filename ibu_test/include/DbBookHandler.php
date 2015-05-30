@@ -1,3 +1,4 @@
+
 <?php
 
 class DbBookHandler extends Dbhandler {
@@ -7,7 +8,7 @@ class DbBookHandler extends Dbhandler {
     protected $key = "isbn";
 
 	function __construct() {
-        require_once dirname(__FILE__) . './DbConnect.php';
+        require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
@@ -65,7 +66,13 @@ class DbBookHandler extends Dbhandler {
                               "courses" => null);
             return $query_params;
     }
-
+    
+    protected function get_identity($params) {
+    	$key = $params[$key];
+    	$identity = "isbn = " . $key;
+    		return $identity;
+    }
+    
     protected function prepare_strings($params) {
         $params["title"] = $this->stringify($params["title"]);  
         $params["author"] =  $this->stringify($params["author"]);
