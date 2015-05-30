@@ -112,6 +112,3 @@ class DbBookHandler extends Dbhandler {
 	}
 
 }
-
-
-?>

@@ -421,8 +421,6 @@
 	
 	function echoRespnse($status_code, $response) {
     $app = \Slim\Slim::getInstance();
-    // Http response code
-    $app->status($status_code);
 
    // setting response content type to json
     $app->contentType('application/json');
@@ -432,13 +430,10 @@
     $app->response->headers->set('Access-Control-Allow-Origin', '*');
 
     //echo json_encode($response);
-    // setting response content type to json
-    $app->response->headers->set('Content-Type', 'application/json');
+
     
     $app->response->setBody(json_encode($response));
     }
 	
 	
 $app->run();
-
-?>

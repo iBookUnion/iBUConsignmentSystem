@@ -128,5 +128,3 @@ class DbUserHandler extends DbHandler {
     }
    
 }
-
-?>

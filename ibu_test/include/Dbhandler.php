@@ -190,5 +190,3 @@ abstract class DbHandler {
 
 
 }
-
-?>

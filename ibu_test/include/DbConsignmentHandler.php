@@ -123,9 +123,3 @@ class DbConsignmentHandler extends DbHandler {
 	}
 
 }
-
-
-
-
-
-?>
