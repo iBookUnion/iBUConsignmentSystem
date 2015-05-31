@@ -278,11 +278,13 @@
             $student_id = $app->request->post('student_id');
 			$price = $app->request->post('price');
 			$current_state = $app->request->post('current_state');
+			$date = $app->request->post('date');
 
 			$params = array("isbn" => $isbn,
 							"student_id" => $student_id,
 							"price" => $price,
-							"current_state" => $current_state);
+							"current_state" => $current_state,
+							"date" => $date);
 
             $db = new DbConsignmentHandler();
             $res = $db->update($params);
@@ -376,11 +378,13 @@
             $student_id = $app->request->post('student_id');
 			$price = $app->request->post('price');
 			$current_state = $app->request->post('current_state');
+			$date = $app->request->post('date');
 
 			$params = array("isbn" => $isbn,
 							"student_id" => $student_id,
 							"price" => $price,
-							"current_state" => $current_state);
+							"current_state" => $current_state,
+							"date" => $date);
 
             $db = new DbConsignmentHandler();
             $res = $db->update($params);

@@ -1,4 +1,3 @@
-
 <?php
 
 class DbBookHandler extends Dbhandler {
@@ -17,10 +16,10 @@ class DbBookHandler extends Dbhandler {
     protected function set_conditions($query_params) {
     	$conditions = array();
 
-		$conditions[] = $this->set_isbn($query_params["isbn"]);
-		$conditions[] = $this->set_author($query_params["author"]);
-		$conditions[] = $this->set_title($query_params["title"]);
-		$conditions[] = $this->set_edition($query_params["edition"]);
+		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
+		$conditions["author"] = $this->set_author($query_params["author"]);
+		$conditions["title"] = $this->set_title($query_params["title"]);
+		$conditions["edition"] = $this->set_edition($query_params["edition"]);
 
 			return $conditions; 
     }
@@ -67,9 +66,8 @@ class DbBookHandler extends Dbhandler {
             return $query_params;
     }
     
-    protected function get_identity($params) {
-    	$key = $params[$key];
-    	$identity = "isbn = " . $key;
+    protected function get_identity($conditions) {
+    	$identity = $conditions[$this->key];
     		return $identity;
     }
     
@@ -82,33 +80,37 @@ class DbBookHandler extends Dbhandler {
     private function set_isbn($query_param) {
     	if ($query_param != null) {
     		$cond = "isbn = " . $query_param;
-                return $cond;
+    	} else {
+    	    $cond = "isbn = null";
     	}
-    		
+    		    return $cond;
     }
 
 	private function set_author($query_param) {
     	if ($query_param != null) {
     		$cond = "author = " . $this->stringify($query_param);
-                return $cond;
+    	} else {
+    	    $cond = "author = null";
     	}
-    		
+    		    return $cond;
 	}
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
     		$cond = "title = " . $this->stringify($query_param);
-                return $cond;
+    	} else {
+    	    $cond = "title = null";
     	}
-    		
+    		    return $cond;
 	}
 
 	private function set_edition($query_param) {
     	if ($query_param != null) {
     		$cond = "edition = " . $this->stringify($query_param);
-                return $cond;
+    	} else {
+    	    $cond = "edition = null";
     	}
-    				
+    		    return $cond;
 	}
 
 }

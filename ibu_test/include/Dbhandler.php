@@ -11,7 +11,6 @@ abstract class DbHandler {
 		$package = array();
 		
 		$conditions = $this->set_not_null_conditions($query_params);
-
 		$query = $this->set_query($conditions);
 
 		$stmt = $this->conn->prepare($query);
@@ -29,8 +28,9 @@ abstract class DbHandler {
 
         if (!$this->verify_existence($key)) {
             return $this->insert($params);
-        }
+        } else {
             return "Sorry, this record already exists";
+        }
     }        
 
     // Updates A Record If It Exists Otherwise Creates it
@@ -41,21 +41,20 @@ abstract class DbHandler {
             return $this->insert($params);
         } else {
             $conditions = $this->set_conditions($params);
-                    var_dump($conditions);
             return $this->change($conditions);
         }
     }
     
     // Updates A Record in A Database Table
     public function update($params) {
-        
-    $key = $this->obtain_key($params);
-    
-    if ($this->verify_existence($key)) {
-        $conditions = $this->set_not_null_conditions($params);
-        return $this->change($conditions);
-    }
-            return "Sorry, this record doesn't exist";
+        $key = $this->obtain_key($params);
+                var_dump($params);
+        if ($this->verify_existence($key)) {
+            $conditions = $this->set_not_null_conditions($params);
+            return $this->change($conditions);
+        } else {
+                return "Sorry, this record doesn't exist";
+        }
     }
     
     // 
@@ -80,21 +79,31 @@ abstract class DbHandler {
     	// Default will obtain all records from the table
     	$query = "SELECT * FROM " . $this->get_table();
         $cnd_stmt = $this->implode_and($conditions);
-
+        
+        // it is currently looking for records that satiisfy null conditions
+        // this should not be happening...
+        //
 
     	if ($cnd_stmt != "")
 		{
 			$query .= ' WHERE ' . $cnd_stmt;
 		}
 
-		return $query;
+	    	return $query;
 
     }
     
     protected function set_not_null_conditions($params) {
         $conditions = $this->set_conditions($params);
-        
+
         //filter conditions
+        foreach ($conditions as $key => $value) {
+            $pos = strpos($value, "null");
+            if ($pos != false) {
+                unset($conditions[$key]);  
+            }
+        }
+            return $conditions;
     }
 
     protected function implode_and($conditions) {
