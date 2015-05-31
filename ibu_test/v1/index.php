@@ -308,7 +308,7 @@
         $response = array();
 		$params = array();
 
-		$student_id = $app->request()->put('student_id');
+		$student_id = $app->request()->post('student_id');
 		$first_name = $app->request()->post('first_name');
 		$last_name = $app->request()->post('last_name');
 		$email = $app->request()->post('email');
@@ -403,24 +403,102 @@
 	});
 	
 	$app->delete('/users', function() use ($app) { 
+				
+        $response = array();
+		$params = array();
+
+		$student_id = $app->request()->post('student_id');
+		$first_name = $app->request()->post('first_name');
+		$last_name = $app->request()->post('last_name');
+		$email = $app->request()->post('email');
+		$phone_number = $app->request()->post('phone_number');
 		
-		$response = array();
-		
-		$key = $app->request->params('student_id');
-		
-		echo "this should return the key value given: \n";
-		var_dump($key);
-		
+		$params = array("student_id" => $student_id,
+						"first_name" => $first_name,
+						"last_name" => $last_name,
+						"email" => $email,
+						"phone_number" => $phone_number);
+				
+        $db = new DbUserHandler();
+        $res = $db->delete($params);
+
+        if ($res == "Successfully Deleted") {
+            $response["error"] = false;
+            $response["message"] = "The User's Information was successfully Deleted!";
+        } else if ($res == "There Was An Error") {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred!";                
+        } else if ($res == "Sorry, this record doesn't exist") {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this user does not exist";
+        }
+        echoRespnse(201, $response);	
 	});
 	
 	$app->delete('/books', function() use ($app) { 
-		
-		$response = array();
+				
+            $response = array();
+			$params = array();
+
+            $isbn = $app->request->post('isbn');
+			$title = $app->request->post('title');
+			$author = $app->request->post('author');
+			$edition = $app->request->post('edition');
+            $courses = $app->request->post('courses');
+
+            $params = array("isbn" => $isbn,
+            				"title" => $title,
+            				"author" => $author,
+            				"edition" => $edition,
+            				"courses" => $courses);
+			
+            $db = new DbBookHandler();
+            $res = $db->update($params);
+ 
+	        if ($res == "Successfully Deleted") {
+	            $response["error"] = false;
+	            $response["message"] = "The Book Record was successfully Deleted";
+	        } else if ($res == "There Was An Error") {
+	            $response["error"] = true;
+	            $response["message"] = "Oops! An error has occurred!";                
+	        } else if ($res == "Sorry, this record doesn't exist") {
+	            $response["error"] = true;
+	            $response["message"] = "Sorry, this Book doesn't exist";
+	        }
+            echoRespnse(201, $response);
 	});	
 	
 	$app->delete('/consignments', function() use ($app) {
 		
-		 $response = array();		
+            $response = array();
+			$params = array();
+
+			$isbn = $app->request->post('isbn');
+            $student_id = $app->request->post('student_id');
+			$price = $app->request->post('price');
+			$current_state = $app->request->post('current_state');
+			$date = $app->request->post('date');
+
+			$params = array("isbn" => $isbn,
+							"student_id" => $student_id,
+							"price" => $price,
+							"current_state" => $current_state,
+							"date" => $date);
+
+            $db = new DbConsignmentHandler();
+            $res = $db->update($params);
+ 
+	        if ($res == "Successfully Deleted") {
+	            $response["error"] = false;
+	            $response["message"] = "The consignment was successfully Deleted!";
+	        } else if ($res == "There Was An Error") {
+	            $response["error"] = true;
+	            $response["message"] = "Oops! An error has occurred!";                
+	        } else if ($res == "Sorry, this record doesn't exist") {
+	            $response["error"] = true;
+	            $response["message"] = "Sorry, the consignment does not exist!";
+	        }
+            echoRespnse(201, $response);	
 	});
 	
 	function echoRespnse($status_code, $response) {

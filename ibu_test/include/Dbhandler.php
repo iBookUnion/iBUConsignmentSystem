@@ -38,27 +38,36 @@ abstract class DbHandler {
         $key = $this->obtain_key($params);
         
         if (!$this->verify_existence($key)) {
-            return $this->insert($params);
+                return $this->insert($params);
         } else {
             $conditions = $this->set_conditions($params);
-            return $this->change($conditions);
+                return $this->change($conditions);
         }
     }
     
     // Updates A Record in A Database Table
     public function update($params) {
         $key = $this->obtain_key($params);
-                var_dump($params);
+        
         if ($this->verify_existence($key)) {
             $conditions = $this->set_not_null_conditions($params);
-            return $this->change($conditions);
+                return $this->change($conditions);
         } else {
                 return "Sorry, this record doesn't exist";
         }
     }
     
     // 
-    public function delete() {}
+    public function delete($params) {
+        $key = $this->obtain_key($params);
+        
+        if($this->verify_existence($key)) {
+            $conditions = $this->set_not_null_conditions($params);
+                return $this->destroy($conditions);
+        } else {
+                return "Sorry, this record doesn't exist";
+        }
+    }
     
     // helper functions for get()
     abstract protected function set_conditions($query_params);
@@ -155,6 +164,16 @@ abstract class DbHandler {
         
         return ($result) ? "Successfully Updated" : "There Was An Error";
     }
+    
+    protected function destroy($conditions) {
+        $order = $this->obtain_deletion_statement($conditions);
+        var_dump($order);
+        $stmt = $this->conn->prepare($order);
+        $result = $stmt->execute();
+        $stmt->close();
+    
+        return ($result) ? "Successfully Updated" : "There Was An Error";
+    }
 
     protected function verify_existence($key) {
         $result = false;
@@ -180,6 +199,13 @@ abstract class DbHandler {
         $statement = "UPDATE " . $this->get_table() . " SET " . $alterations . " WHERE " . $identity;
             return $statement;
         
+    }
+    
+    protected function obtain_deletion_statement($conditions) {
+        $locations = $this->get_set_values($conditions);
+        $statement = "DELETE FROM " . $this->get_table() . " WHERE " . $locations;
+            return $statement;
+            
     }
     
     protected function get_values($params) {
