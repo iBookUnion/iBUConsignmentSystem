@@ -12,7 +12,7 @@ abstract class DbHandler {
 		
 		$conditions = $this->set_not_null_conditions($query_params);
 		$query = $this->set_query($conditions);
-
+        
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
 		$stmt->store_result();

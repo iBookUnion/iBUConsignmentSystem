@@ -4,6 +4,7 @@
 	require_once '../include/DbUserHandler.php';
 	require_once '../include/DbBookHandler.php';
 	require_once '../include/DbConsignmentHandler.php';
+	require_once '../include/DbInventoryHandler.php';
 	require('../libs/Slim/Slim.php');
 
 	\Slim\Slim::registerAutoloader();
@@ -102,6 +103,48 @@
 			echoRespnse(404, $response);
 			}
 
+	});
+	
+	$app->get('/inventory', function() use ($app) {
+
+		$isbn = $app->request()->get('isbn');
+		$student_id = $app->request()->get('student_id'); 
+		$author = $app->request()->get('author');
+		$title = $app->request()->get('title');
+		$edition = $app->request()->get('edition');
+		$courses = $app->request()->get('courses');
+		$price = $app->request()->get('price');
+		$current_state = $app->request()->get('current_state');
+		$date = $app->request()->get('date');
+		
+		
+		$query_params = array("isbn" => $isbn,
+							  "student_id" => $student_id,
+							  "author" => $author,
+							  "title" => $title,
+							  "edition" => $edition,
+							  "courses" => $courses,
+							  "price" => $price,
+							  "current_state" => $current_state,
+							  "date" => $date
+							  );
+
+
+		$db = new DbInventoryHandler();
+		$response["error"] = false;
+		$response["inventory"] = array();
+		
+		$response["inventory"] = $db->get($query_params) ?: null;
+
+		if (!empty($response["inventory"]))
+		{
+			echoRespnse(200, $response);
+		} else {
+			$response["error"] = true;
+			$response["message"] = "The requested resource doesn't exist";
+			echoRespnse(404, $response);
+			}
+				
 	});
 
 	$app->post('/users', function() use ($app) {	
