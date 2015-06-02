@@ -89,9 +89,6 @@ abstract class DbHandler {
     	$query = "SELECT * FROM " . $this->get_table();
         $cnd_stmt = $this->implode_and($conditions);
         
-        // it is currently looking for records that satiisfy null conditions
-        // this should not be happening...
-        //
 
     	if ($cnd_stmt != "")
 		{

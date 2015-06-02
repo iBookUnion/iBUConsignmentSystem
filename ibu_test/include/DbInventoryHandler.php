@@ -122,7 +122,7 @@ class DbInventoryHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "price = " . $query_param;
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "price = null";
     	}
     		    return $cond;
 	}
@@ -131,7 +131,7 @@ class DbInventoryHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "current_state = " . $this->stringify($query_param);
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "current_state = 1";
     	}
     		    return $cond;
 	}
@@ -140,7 +140,7 @@ class DbInventoryHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "date = " . $query_param;
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "date = null";
     	}
     		    return $cond;
 	}

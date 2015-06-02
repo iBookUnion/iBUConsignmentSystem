@@ -97,7 +97,7 @@ class DbConsignmentHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "student_id = " . $query_param;
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "student_id = null";
     	}
     		    return $cond;
 	}
@@ -106,7 +106,7 @@ class DbConsignmentHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "price = " . $query_param;
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "price = null";
     	}
     		    return $cond;
 	}
@@ -115,7 +115,7 @@ class DbConsignmentHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "current_state = " . $this->stringify($query_param);
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "current_state = null";
     	}
     		    return $cond;
 	}
@@ -124,7 +124,7 @@ class DbConsignmentHandler extends DbHandler {
 		if ($query_param != null) {
 			$cond = "date = " . $query_param;
 		} else {
-    	    $cond = "isbn = null";
+    	    $cond = "date = null";
     	}
     		    return $cond;
 	}
