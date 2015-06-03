@@ -7,7 +7,7 @@ class DbBookHandler extends Dbhandler {
     protected $key = "isbn";
 
 	function __construct() {
-        require_once dirname(__FILE__) . './DbConnect.php';
+        require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
@@ -16,10 +16,11 @@ class DbBookHandler extends Dbhandler {
     protected function set_conditions($query_params) {
     	$conditions = array();
 
-		$conditions[] = $this->set_isbn($query_params["isbn"]);
-		$conditions[] = $this->set_author($query_params["author"]);
-		$conditions[] = $this->set_title($query_params["title"]);
-		$conditions[] = $this->set_edition($query_params["edition"]);
+		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
+		$conditions["author"] = $this->set_author($query_params["author"]);
+		$conditions["title"] = $this->set_title($query_params["title"]);
+		$conditions["edition"] = $this->set_edition($query_params["edition"]);
+		$conditions["courses"] = $this->set_course($query_params["courses"]);
 
 			return $conditions; 
     }
@@ -53,7 +54,7 @@ class DbBookHandler extends Dbhandler {
     }
 
     protected function get_columns() {
-        $columns = "(isbn, title, author, edition, courses)";
+        $columns = " (isbn, title, author, edition, courses)";
             return $columns;
     }
 
@@ -65,46 +66,62 @@ class DbBookHandler extends Dbhandler {
                               "courses" => null);
             return $query_params;
     }
-
+    
+    protected function get_identity($conditions) {
+    	$identity = $conditions[$this->key];
+    		return $identity;
+    }
+    
     protected function prepare_strings($params) {
         $params["title"] = $this->stringify($params["title"]);  
         $params["author"] =  $this->stringify($params["author"]);
+        $params["courses"] = $this->stringify($params["courses"]);
             return $params;
     }
 
     private function set_isbn($query_param) {
     	if ($query_param != null) {
     		$cond = "isbn = " . $query_param;
-                return $cond;
+    	} else {
+    	    $cond = "isbn = null";
     	}
-    		
+    		    return $cond;
     }
 
 	private function set_author($query_param) {
     	if ($query_param != null) {
     		$cond = "author = " . $this->stringify($query_param);
-                return $cond;
+    	} else {
+    	    $cond = "author = null";
     	}
-    		
+    		    return $cond;
 	}
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
-    		$cond = "title = " . $this->stringify($query_param);
-                return $cond;
+    		$cond = "(title LIKE '%" . ($query_param) . "%')";
+    	} else {
+    	    $cond = "title = null";
     	}
-    		
+    		    return $cond;
 	}
 
 	private function set_edition($query_param) {
     	if ($query_param != null) {
     		$cond = "edition = " . $this->stringify($query_param);
-                return $cond;
+    	} else {
+    	    $cond = "edition = null";
     	}
-    				
+    		    return $cond;
+	}
+	
+	private function set_course($query_param) {
+	    if ($query_param != null) {
+	        $cond = "courses = " . $this->stringify($query_param);
+	    } else {
+	        $cond = "courses = null"; 
+	    }
+	            return $cond;
 	}
 
 }
-
-
-?>

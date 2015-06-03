@@ -7,7 +7,7 @@ class DbConsignmentHandler extends DbHandler {
 	protected $key = ["isbn","student_id"];
 
 	function __construct() {
-        require_once dirname(__FILE__) . './DbConnect.php';
+        require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
@@ -17,11 +17,11 @@ class DbConsignmentHandler extends DbHandler {
     protected function set_conditions($query_params) {
     	$conditions = array();
     	
-		$conditions[] = $this->set_isbn($query_params["isbn"]);
-		$conditions[] = $this->set_student_id($query_params["student_id"]);
-		$conditions[] = $this->set_price($query_params["price"]);
-		$conditions[] = $this->set_current_state($query_params["current_state"]);
-		$conditions[] = $this->set_date($query_params["date"]);
+		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
+		$conditions["student_id"] = $this->set_student_id($query_params["student_id"]);
+		$conditions["price"] = $this->set_price($query_params["price"]);
+		$conditions["current_state"] = $this->set_current_state($query_params["current_state"]);
+		$conditions["date"] = $this->set_date($query_params["date"]);
 
 			return $conditions;	
     }
@@ -70,6 +70,15 @@ class DbConsignmentHandler extends DbHandler {
                       		  "date" => null);
         	return $query_params;
     }
+    
+    protected function get_identity($conditions) {
+    	        var_dump($conditions);
+    	$key_0 = $conditions[$this->key[0]];
+    	$key_1 = $conditions[$this->key[1]];
+    	$identity = $key_0 . " AND " . $key_1;
+    		return $identity;
+    }
+    
     protected function prepare_strings($params) {
     	$params["current_state"] = $this->stringify($params["current_state"]);  
     		return $params;    	
@@ -78,51 +87,46 @@ class DbConsignmentHandler extends DbHandler {
 	private function set_isbn($query_param) {
 		if ($query_param != null) {
 			$cond = "isbn = " . $query_param;
-				return $cond;
-		}
-			
+		} else {
+    	    $cond = "isbn = null";
+    	}
+    		    return $cond;
 	}
 
 	private function set_student_id($query_param) {
 		if ($query_param != null) {
 			$cond = "student_id = " . $query_param;
-				return $cond;
-		}
-			
+		} else {
+    	    $cond = "student_id = null";
+    	}
+    		    return $cond;
 	}
 
 	private function set_price($query_param) {
 		if ($query_param != null) {
 			$cond = "price = " . $query_param;
-				return $cond;
-		}
-			
+		} else {
+    	    $cond = "price = null";
+    	}
+    		    return $cond;
 	}
 
 	private function set_current_state($query_param) {
 		if ($query_param != null) {
 			$cond = "current_state = " . $this->stringify($query_param);
-				return $cond;
-		}
-					
+		} else {
+    	    $cond = "current_state = null";
+    	}
+    		    return $cond;
 	}
 
 	private function set_date($query_param) {
 		if ($query_param != null) {
 			$cond = "date = " . $query_param;
-				return $cond;
-		}
+		} else {
+    	    $cond = "date = null";
+    	}
+    		    return $cond;
 	}
 
 }
-
-
-
-
-
-?>
-
-
-
-
-?>

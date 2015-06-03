@@ -7,7 +7,7 @@ class DbUserHandler extends DbHandler {
 	protected $key = "student_id";
 
 	function __construct() {
-        require_once dirname(__FILE__) . './DbConnect.php';
+        require_once dirname(__FILE__) . '/DbConnect.php';
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
@@ -17,7 +17,7 @@ class DbUserHandler extends DbHandler {
     protected function set_conditions($query_params) {
 		$conditions = array();
 
-		$conditions[] = $this->set_student_id($query_params["student_id"]);
+		$conditions["student_id"] = $this->set_student_id($query_params["student_id"]);
 		$conditions[] = $this->set_first_name($query_params["first_name"]);
 		$conditions[] = $this->set_last_name($query_params["last_name"]);
 		$conditions[] = $this->set_email($query_params["email"]);
@@ -72,6 +72,11 @@ class DbUserHandler extends DbHandler {
                       		  "phone_number" => null);
         	return $query_params;
     }
+    
+    protected function get_identity($conditions) {
+    	$identity = $conditions[$this->key];
+    		return $identity;
+    }
 
     protected function prepare_strings($params) {
     	$params["first_name"] = $this->stringify($params["first_name"]);  
@@ -83,36 +88,43 @@ class DbUserHandler extends DbHandler {
     private function set_student_id($query_param) {
     	if ($query_param != null) {
 			$cond = "student_id = " . $query_param;
-				return $cond;
+		} else {
+			$cond = "student_id = null";
 		}
+				return $cond;
     }
 
     private function set_first_name($query_param) {
-    	if ($query_param != null) {
+		if ($query_param != null) {
 			$cond = "first_name = " . $this->stringify($query_param);
-				return $cond;
+    	} else {
+			$cond = "first_name = null";
 		}
-
+				return $cond;		
     }
     private function set_last_name($query_param) {
     	if ($query_param != null) {
 			$cond = "last_name = " . $this->stringify($query_param);
-				return $cond;  
+		} else {
+			$cond = "last_name = null";
 		}  	
+				return $cond;		
     }
     private function set_email($query_param) {
     	if ($query_param != null) {
 			$cond = "email = " . $this->stringify($query_param);
-				return $cond;  
+		} else {
+			$cond = "email = null";
 		}    
+				return $cond;
     }
     private function set_phone_number($query_param) {
      	if ($query_param != null) {
 			$cond = "phone_number = " . $query_param;
-				return $cond;  
+		} else {
+			$cond = "phone_number = null";
 		}
+				return $cond;
     }
    
 }
-
-?>
