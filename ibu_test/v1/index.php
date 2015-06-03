@@ -5,6 +5,7 @@
 	require_once '../include/DbBookHandler.php';
 	require_once '../include/DbConsignmentHandler.php';
 	require_once '../include/DbInventoryHandler.php';
+	require_once '../include/DbCoursesHandler.php';
 	require('../libs/Slim/Slim.php');
 
 	\Slim\Slim::registerAutoloader();
@@ -55,9 +56,13 @@
 							  "title" => $title,
 							  "edition" => $edition,
 							  "courses" => $courses);
+		
+		if ($courses != null) {
+			$db = new DbCoursesHandler();
+		} else {
+			$db = new DbBookHandler();				
+		}
 
-
-		$db = new DbBookHandler();
 		$response["error"] = false;
 		$response["books"] = array();
 		
@@ -199,9 +204,13 @@
             				"edition" => $edition,
             				"courses" => $courses);
 			
-            $db = new DbBookHandler();
+			$db = new DbBookHandler();
             $res = $db->create($params);
- 
+			
+			// list of courses will be handled by the DbCourseHandler
+			// $db = new DbCourseHandler.....
+
+			 
 	        if ($res == "Successfully Created") {
 	            $response["error"] = false;
 	            $response["message"] = "The Book was successfully added";

@@ -20,6 +20,7 @@ class DbBookHandler extends Dbhandler {
 		$conditions["author"] = $this->set_author($query_params["author"]);
 		$conditions["title"] = $this->set_title($query_params["title"]);
 		$conditions["edition"] = $this->set_edition($query_params["edition"]);
+		$conditions["courses"] = $this->set_course($query_params["courses"]);
 
 			return $conditions; 
     }
@@ -53,7 +54,7 @@ class DbBookHandler extends Dbhandler {
     }
 
     protected function get_columns() {
-        $columns = "(isbn, title, author, edition, courses)";
+        $columns = " (isbn, title, author, edition, courses)";
             return $columns;
     }
 
@@ -74,6 +75,7 @@ class DbBookHandler extends Dbhandler {
     protected function prepare_strings($params) {
         $params["title"] = $this->stringify($params["title"]);  
         $params["author"] =  $this->stringify($params["author"]);
+        $params["courses"] = $this->stringify($params["courses"]);
             return $params;
     }
 
@@ -111,6 +113,15 @@ class DbBookHandler extends Dbhandler {
     	    $cond = "edition = null";
     	}
     		    return $cond;
+	}
+	
+	private function set_course($query_param) {
+	    if ($query_param != null) {
+	        $cond = "courses = " . $this->stringify($query_param);
+	    } else {
+	        $cond = "courses = null"; 
+	    }
+	            return $cond;
 	}
 
 }

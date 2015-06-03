@@ -164,7 +164,6 @@ abstract class DbHandler {
     
     protected function destroy($conditions) {
         $order = $this->obtain_deletion_statement($conditions);
-        var_dump($order);
         $stmt = $this->conn->prepare($order);
         $result = $stmt->execute();
         $stmt->close();
@@ -186,7 +185,7 @@ abstract class DbHandler {
     protected function obtain_insert_statement($params) {
         $columns = $this->get_columns();
         $values = $this->get_values($params);
-        $statement = "INSERT INTO " . $this->get_table() . $columns . " VALUES " . $values; 
+        $statement = "INSERT INTO " . $this->get_table() . $columns . " VALUES" . $values; 
             return $statement;
     }
     
