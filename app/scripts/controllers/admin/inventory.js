@@ -20,8 +20,9 @@ angular.module('consignmentApp')
             .path('admin/forms');
       };
 
-      Inventory.get(function(payload) {
-        $scope.books = payload.books;
-      });
+      Inventory.getList()
+        .then(function (inventory) {
+          $scope.books = inventory;
+        });
 
     }]);

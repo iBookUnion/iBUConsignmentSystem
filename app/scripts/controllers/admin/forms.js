@@ -13,7 +13,6 @@ angular.module('consignmentApp')
 
         if ($routeParams.isbn) {
             $scope.isbn = $routeParams.isbn;
-            Inventory.get()
         }
 
         Consignors.get(function (payload) {

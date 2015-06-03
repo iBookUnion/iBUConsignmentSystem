@@ -14,7 +14,7 @@ describe('Controller: InventoryCtrl', function () {
 
     var mockInventoryResponse = {
       'error': false,
-      'books': [
+      'inventory': [
         {
           'isbn': 0,
           'title': 'crisis on infinite earths',
