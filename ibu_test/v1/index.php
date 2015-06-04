@@ -195,16 +195,17 @@
             $params = array("isbn" => $isbn,
             				"title" => $title,
             				"author" => $author,
-            				"edition" => $edition,
-            				"courses" => $courses);
+            				"edition" => $edition);
 			
-			$db = new DbBookHandler();
-            $res = $db->create($params);
+			$dbBooks = new DbBookHandler();
+            $book_res = $dbBooks->create($params);
 			
 			// list of courses will be handled by the DbCourseHandler
-			// $db = new DbCourseHandler.....
+			$dbCourses = new DbCourseHandler();
+			$course_res = $dbCourses->create($course_list);
 
-			 
+			// need to change this to accomodate to responses
+			// need to be able to see what went wrong, there is a chance course additions could fail but book was created
 	        if ($res == "Successfully Created") {
 	            $response["error"] = false;
 	            $response["message"] = "The Book was successfully added";
