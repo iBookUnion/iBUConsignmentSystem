@@ -20,8 +20,8 @@ class DbCourseHandler extends DbHandler {
 		$conditions["author"] = $this->set_author($query_params["author"]);
 		$conditions["title"] = $this->set_title($query_params["title"]);
 		$conditions["edition"] = $this->set_edition($query_params["edition"]);
-		$conditions["subject"] = $this->set_price($query_params["subject"]);
-		$conditions["course_number"] = $this->set_current_state($query_params["course_number"]);
+		$conditions["subject"] = $this->set_subject($query_params["subject"]);
+		$conditions["course_number"] = $this->set_course_number($query_params["course_number"]);
 		
 			return $conditions;         
     }
@@ -63,6 +63,10 @@ class DbCourseHandler extends DbHandler {
     
     protected function get_columns() {
         
+    }
+    
+    protected function get_search_array($key) {
+
     }
     
     protected function prepare_strings($params) {

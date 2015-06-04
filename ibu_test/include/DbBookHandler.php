@@ -56,7 +56,7 @@ class DbBookHandler extends Dbhandler {
     }
 
     protected function get_columns() {
-        $columns = " (isbn, title, author, edition, courses)";
+        $columns = " (isbn, title, author, edition)";
             return $columns;
     }
 
@@ -65,6 +65,7 @@ class DbBookHandler extends Dbhandler {
                               "title" => null,
                               "author" => null,
                               "edition" => null,
+                              "course" => null,
                               "subject" => null,
                               "course_number" => null);
             return $query_params;
@@ -76,9 +77,12 @@ class DbBookHandler extends Dbhandler {
     }
     
     protected function insert($params) {
-        $books_insert = $this->obtain_insert_statement($params);
-        $courses_insert = $this->obtain_course_insert_statement($params);
-
+        $course_params = $params["courses"];
+        unset($params["courses"]);
+        
+        $books_insert = $this->obtain_insert_statement($params); // need to remove courses array from here
+        $courses_insert = $this->obtain_course_insert_statement($params["isbn"], $course_params);
+        
         $stmt = $this->conn->prepare($books_insert);
         $books_result = $stmt->execute();
         $stmt->close();
@@ -112,42 +116,45 @@ class DbBookHandler extends Dbhandler {
 
     }
     
-    private function obtain_course_insert_statement($params) {
+    private function obtain_course_insert_statement($isbn, $params) {
         // needs to be something like INSERT INTO courses (`isbn`, `subject`, `course_number`) VALUES ()
         $stmt_base = "INSERT INTO courses (`isbn`, `subject`, `course_number`) VALUES ";
-        $values = get_course_values($params);
+        $values = $this->get_course_values($isbn, $params);
+        
         $insert = $stmt_base . $values;
             return $insert;
         
     }
     
-    private function get_course_values($params) {
+    private function get_course_values($isbn, $params) {
         $values_list = array();
-        $isbn = $params["isbn"];
-        $course_list = $params["courses"];
+        $course_list = $params;
         
         foreach ($course_list as $course) {
             $subject = $course["subject"];
             $classes = $course["classes"];
             foreach ($classes as $cls) {
-                $class = $classes["course"];
-                
-                $values_list[] = "(" . $isbn . ", " . $subject . ", " . $class . ")"; 
+                $class = $cls["course"];
+                $values_list[] = "(" . $isbn . ", " . $this->stringify($subject) . ", " . $class . ")";
             }
         }
+        
+        // need to add commas to the values_list
+        $values_list = $this->implode_comma($values_list);
+                return $values_list;
         
     }
     
     protected function prepare_strings($params) {
         $params["title"] = $this->stringify($params["title"]);  
         $params["author"] =  $this->stringify($params["author"]);
-        $params["courses"] = $this->stringify($params["courses"]);
+        //$params["courses"] = $this->stringify($params["courses"]);
             return $params;
     }
 
     private function set_isbn($query_param) {
     	if ($query_param != null) {
-    		$cond = "isbn = " . $query_param;
+    		$cond = "books.isbn = " . $query_param;
     	} else {
     	    $cond = "isbn = null";
     	}

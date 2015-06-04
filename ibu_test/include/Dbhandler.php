@@ -13,8 +13,6 @@ abstract class DbHandler {
 		$conditions = $this->set_not_null_conditions($query_params);
 		$query = $this->set_query($conditions);
         
-        var_dump($query);
-        
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
 		$stmt->store_result();
@@ -27,10 +25,13 @@ abstract class DbHandler {
     // Adds A Record To A Database Table
     public function create($params) {
         $key = $this->obtain_key($params);
-
+        
         if (!$this->verify_existence($key)) {
             return $this->insert($params);
         } else {
+            
+            echo "so the problem seems to be that we touch down here \n";
+            
             return "Sorry, this record already exists";
         }
     }        
@@ -80,6 +81,7 @@ abstract class DbHandler {
     abstract protected function obtain_key($params);
     abstract protected function get_columns();
     abstract protected function prepare_strings($params);
+    abstract protected function get_search_array($key);
     
     // helper functions for update()
     abstract protected function get_identity($params);
