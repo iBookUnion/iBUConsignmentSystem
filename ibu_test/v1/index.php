@@ -12,9 +12,8 @@
 
 	$app = new \Slim\Slim();
 
-	$app->get('/users', function () use ($app) {
+	$app->get('/users(/:student_id)', function ($student_id = null) use ($app) {
 
-		$student_id = $app->request()->get('student_id');
 		$first_name = $app->request()->get('first_name');
 		$last_name = $app->request()->get('last_name');
 		$email = $app->request()->get('email');
@@ -42,26 +41,25 @@
 			} 
 
 	});
-
-	$app->get('/books', function () use ($app) {
-
-		$isbn= $app->request()->get('isbn');
+	
+	$app->get('/books(/:isbn)', function ($isbn = null) use ($app) {
+		
 		$author = $app->request()->get('author');
 		$title = $app->request()->get('title');
 		$edition = $app->request()->get('edition');
 		$courses = $app->request()->get('courses');
+		$subject = $app->request()->get('subject');
+		$course_number = $app->request()->get('course_number');
 		
 		$query_params = array("isbn" => $isbn,
 							  "author" => $author,
 							  "title" => $title,
 							  "edition" => $edition,
-							  "courses" => $courses);
+							  "subject" => $subject,
+							  "course_number" => $course_number);
 		
-		if ($courses != null) {
-			$db = new DbCoursesHandler();
-		} else {
-			$db = new DbBookHandler();				
-		}
+
+		$db = new DbBookHandler();				
 
 		$response["error"] = false;
 		$response["books"] = array();
@@ -110,9 +108,8 @@
 
 	});
 	
-	$app->get('/inventory', function() use ($app) {
+	$app->get('/inventory(/:isbn)', function($isbn = null) use ($app) {
 
-		$isbn = $app->request()->get('isbn');
 		$student_id = $app->request()->get('student_id'); 
 		$author = $app->request()->get('author');
 		$title = $app->request()->get('title');
@@ -188,11 +185,8 @@
     });
 
 	$app->post('/books', function() use ($app) {	
-		
-            $response = array();
-			$params = array();
-
-            $isbn = $app->request->post('isbn');
+			$response = array();
+	
 			$title = $app->request->post('title');
 			$author = $app->request->post('author');
 			$edition = $app->request->post('edition');
@@ -288,38 +282,7 @@
         echoRespnse(201, $response);		
 	});
 	
-	$app->put('/books', function() use ($app) {
-		
-            $response = array();
-			$params = array();
-
-            $isbn = $app->request->post('isbn');
-			$title = $app->request->post('title');
-			$author = $app->request->post('author');
-			$edition = $app->request->post('edition');
-            $courses = $app->request->post('courses');
-
-            $params = array("isbn" => $isbn,
-            				"title" => $title,
-            				"author" => $author,
-            				"edition" => $edition,
-            				"courses" => $courses);
-			
-            $db = new DbBookHandler();
-            $res = $db->update($params);
- 
-	        if ($res == "Successfully Updated") {
-	            $response["error"] = false;
-	            $response["message"] = "The Book Record was successfully changed";
-	        } else if ($res == "There Was An Error") {
-	            $response["error"] = true;
-	            $response["message"] = "Oops! An error has occurred!";                
-	        } else if ($res == "Sorry, this record doesn't exist") {
-	            $response["error"] = true;
-	            $response["message"] = "Sorry, this Book doesn't exist";
-	        }
-            echoRespnse(201, $response);		
-	});
+	
 
 	$app->put('/consignments', function() use ($app) {
 		
@@ -388,12 +351,9 @@
         echoRespnse(201, $response);
 	});
 	
-	$app->patch('/books', function() use ($app) { 
-				
+	$app->patch('/books/:isbn', function($isbn = null) use ($app) { 
             $response = array();
-			$params = array();
 
-            $isbn = $app->request->post('isbn');
 			$title = $app->request->post('title');
 			$author = $app->request->post('author');
 			$edition = $app->request->post('edition');
@@ -487,12 +447,9 @@
         echoRespnse(201, $response);	
 	});
 	
-	$app->delete('/books', function() use ($app) { 
-				
+	$app->delete('/books/:isbn', function($isbn) use ($app) { 
             $response = array();
-			$params = array();
 
-            $isbn = $app->request->post('isbn');
 			$title = $app->request->post('title');
 			$author = $app->request->post('author');
 			$edition = $app->request->post('edition');

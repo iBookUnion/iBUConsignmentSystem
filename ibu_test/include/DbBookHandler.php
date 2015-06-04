@@ -20,14 +20,15 @@ class DbBookHandler extends Dbhandler {
 		$conditions["author"] = $this->set_author($query_params["author"]);
 		$conditions["title"] = $this->set_title($query_params["title"]);
 		$conditions["edition"] = $this->set_edition($query_params["edition"]);
-		$conditions["courses"] = $this->set_course($query_params["courses"]);
+		$conditions["subject"] = $this->set_subject($query_params["subject"]);
+		$conditions["course_number"] = $this->set_course_number($query_params["course_number"]);
 
 			return $conditions; 
     }
 
     protected function package_result($stmt) {
 		$rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $title, $author, $edition, $courses);
+		$stmt->bind_result($isbn, $title, $author, $edition, $course_isbn, $subject, $course_number);
 		
 		$books = array();
 		while($row = $stmt->fetch())
@@ -36,7 +37,8 @@ class DbBookHandler extends Dbhandler {
 			$book["title"] = $title;
 			$book["author"] = $author;
 			$book["edition"] = $edition;
-			$book["courses"] = $courses;
+			$book["subject"] = $subject;
+			$book["course_number"] = $course_number;
 			$books[] = $book;
 		}
 		
@@ -63,13 +65,32 @@ class DbBookHandler extends Dbhandler {
                               "title" => null,
                               "author" => null,
                               "edition" => null,
-                              "courses" => null);
+                              "subject" => null,
+                              "course_number" => null);
             return $query_params;
     }
     
     protected function get_identity($conditions) {
     	$identity = $conditions[$this->key];
     		return $identity;
+    }
+    
+    protected function set_query($conditions) {
+
+    	// Default will obtain all records from the table
+    	$query = "SELECT * FROM " . $this->get_table();
+    	$join = " JOIN courses ON books.isbn = courses.isbn";
+    	$joined_query = $query . $join; 
+        $cnd_stmt = $this->implode_and($conditions);
+        
+
+    	if ($cnd_stmt != "")
+		{
+			$joined_query .= ' WHERE ' . $cnd_stmt;
+		}
+
+	    	return $joined_query;
+
     }
     
     protected function prepare_strings($params) {
@@ -115,11 +136,20 @@ class DbBookHandler extends Dbhandler {
     		    return $cond;
 	}
 	
-	private function set_course($query_param) {
+	private function set_subject($query_param) {
 	    if ($query_param != null) {
-	        $cond = "courses = " . $this->stringify($query_param);
+	        $cond = "subject = " . $this->stringify($query_param);
 	    } else {
-	        $cond = "courses = null"; 
+	        $cond = "subject = null"; 
+	    }
+	            return $cond;
+	}
+	
+	private function set_course_number($query_param) {
+	    if ($query_param != null) {
+	        $cond = "course_number = " . $this->stringify($query_param);
+	    } else {
+	        $cond = "course_number = null"; 
 	    }
 	            return $cond;
 	}
