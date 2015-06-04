@@ -66,6 +66,10 @@ class DbInventoryHandler extends DbHandler {
         
     }
     
+    protected function get_search_array($key) {
+        
+    }
+    
     protected function prepare_strings($params) {
         
     }

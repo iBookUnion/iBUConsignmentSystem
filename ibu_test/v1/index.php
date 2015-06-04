@@ -5,7 +5,7 @@
 	require_once '../include/DbBookHandler.php';
 	require_once '../include/DbConsignmentHandler.php';
 	require_once '../include/DbInventoryHandler.php';
-	require_once '../include/DbCoursesHandler.php';
+	//require_once '../include/DbCoursesHandler.php';
 	require('../libs/Slim/Slim.php');
 
 	\Slim\Slim::registerAutoloader();
@@ -186,26 +186,19 @@
 
 	$app->post('/books', function() use ($app) {	
 			$response = array();
-	
-			$title = $app->request->post('title');
-			$author = $app->request->post('author');
-			$edition = $app->request->post('edition');
-            $courses = $app->request->post('courses');
-
-            $params = array("isbn" => $isbn,
-            				"title" => $title,
-            				"author" => $author,
-            				"edition" => $edition);
 			
-			$dbBooks = new DbBookHandler();
-            $book_res = $dbBooks->create($params);
-			
-			// list of courses will be handled by the DbCourseHandler
-			$dbCourses = new DbCourseHandler();
-			$course_res = $dbCourses->create($course_list);
+            $json = $app->request->getBody();
+            $params = json_decode($json, true);
 
-			// need to change this to accomodate to responses
-			// need to be able to see what went wrong, there is a chance course additions could fail but book was created
+			//$isbn = $params["isbn"];
+			//$title = $params["title"];
+			//$author = $params["author"];
+			//$edition = $params["edition"];
+            //$courses = $params["courses"];
+            
+            $db = new DbBookHandler();
+            $res = $db->create($params);
+			 
 	        if ($res == "Successfully Created") {
 	            $response["error"] = false;
 	            $response["message"] = "The Book was successfully added";
@@ -217,6 +210,7 @@
 	            $response["message"] = "Sorry, this Book already exists";
 	        }
             echoRespnse(201, $response);
+
     });
 
 	$app->post('/consignments', function() use ($app) {	
@@ -526,6 +520,4 @@
     
     $app->response->setBody(json_encode($response));
     }
-	
-	
 $app->run();
