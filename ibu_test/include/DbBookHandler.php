@@ -75,6 +75,25 @@ class DbBookHandler extends Dbhandler {
     		return $identity;
     }
     
+    protected function insert($params) {
+        $books_insert = $this->obtain_insert_statement($params);
+        $courses_insert = $this->obtain_course_insert_statement($params);
+
+        $stmt = $this->conn->prepare($books_insert);
+        $books_result = $stmt->execute();
+        $stmt->close();
+        
+        $stmt = $this->conn->prepare($courses_insert);
+        $courses_result = $stmt->execute();
+        $stmt->close();
+        
+        $result = $books_result && $courses_result;
+    
+        // going to need more complicated logic here, going to need to need to push up thiis change to index
+        return ($result) ? "Successfully Created" : "There Was An Error";
+
+    }
+    
     protected function set_query($conditions) {
 
     	// Default will obtain all records from the table
@@ -91,6 +110,32 @@ class DbBookHandler extends Dbhandler {
 
 	    	return $joined_query;
 
+    }
+    
+    private function obtain_course_insert_statement($params) {
+        // needs to be something like INSERT INTO courses (`isbn`, `subject`, `course_number`) VALUES ()
+        $stmt_base = "INSERT INTO courses (`isbn`, `subject`, `course_number`) VALUES ";
+        $values = get_course_values($params);
+        $insert = $stmt_base . $values;
+            return $insert;
+        
+    }
+    
+    private function get_course_values($params) {
+        $values_list = array();
+        $isbn = $params["isbn"];
+        $course_list = $params["courses"];
+        
+        foreach ($course_list as $course) {
+            $subject = $course["subject"];
+            $classes = $course["classes"];
+            foreach ($classes as $cls) {
+                $class = $classes["course"];
+                
+                $values_list[] = "(" . $isbn . ", " . $subject . ", " . $class . ")"; 
+            }
+        }
+        
     }
     
     protected function prepare_strings($params) {
