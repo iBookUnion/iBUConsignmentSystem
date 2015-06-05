@@ -10,6 +10,8 @@ abstract class DbHandler {
 		$conditions = array();
 		$package = array();
 		
+		$query_params["title"] = "(title LIKE '%" . $query_params["title"] . "%')";
+		
 		$conditions = $this->set_not_null_conditions($query_params);
 		$query = $this->set_query($conditions);
         
@@ -29,9 +31,6 @@ abstract class DbHandler {
         if (!$this->verify_existence($key)) {
             return $this->insert($params);
         } else {
-            
-            echo "so the problem seems to be that we touch down here \n";
-            
             return "Sorry, this record already exists";
         }
     }        
@@ -153,9 +152,6 @@ abstract class DbHandler {
         $result = $stmt->execute();
         $stmt->close();
 
-        echo "is this returning true or false?? \n";
-        var_dump($result);
-
         return ($result) ? "Successfully Created" : "There Was An Error";
 
     }
@@ -177,9 +173,6 @@ abstract class DbHandler {
         $stmt = $this->conn->prepare($order);
         $result = $stmt->execute();
         $stmt->close();
-        
-        echo "is this true of false??: \n";
-        var_dump($result);
     
         return ($result) ? "Successfully Deleted" : "There Was An Error";
     }
