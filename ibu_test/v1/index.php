@@ -465,10 +465,7 @@
 			
             $db = new DbBookHandler();
             $res = $db->delete($params);
- 			
- 			echo "what is in here when something actually gets deleted??: \n";
- 			var_dump($res);
- 			
+
 	        if ($res == "Successfully Deleted") {
 	            $response["error"] = false;
 	            $response["message"] = "The Book Record was successfully Deleted";
@@ -479,8 +476,6 @@
 	            $response["error"] = true;
 	            $response["message"] = "Sorry, this Book doesn't exist";
 	        }
-	      	echo "send a fucking message damnit!!";
-	        var_dump($response);
             echoRespnse(201, $response);
 	});	
 	

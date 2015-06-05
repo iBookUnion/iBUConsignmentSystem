@@ -172,7 +172,7 @@ class DbBookHandler extends Dbhandler {
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
-    		$cond = "(title LIKE '%" . ($query_param) . "%')";
+    		$cond = $query_param;
     	} else {
     	    $cond = "title = null";
     	}
