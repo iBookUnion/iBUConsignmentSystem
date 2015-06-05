@@ -46,10 +46,12 @@
 		
 		$author = $app->request()->get('author');
 		$title = $app->request()->get('title');
+		$title = "(title LIKE '%" . $title . "%')";
 		$edition = $app->request()->get('edition');
 		$courses = $app->request()->get('courses');
 		$subject = $app->request()->get('subject');
 		$course_number = $app->request()->get('course_number');
+
 		
 		$query_params = array("isbn" => $isbn,
 							  "author" => $author,

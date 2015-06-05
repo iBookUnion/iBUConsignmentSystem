@@ -10,8 +10,6 @@ abstract class DbHandler {
 		$conditions = array();
 		$package = array();
 		
-		$query_params["title"] = "(title LIKE '%" . $query_params["title"] . "%')";
-		
 		$conditions = $this->set_not_null_conditions($query_params);
 		$query = $this->set_query($conditions);
         
