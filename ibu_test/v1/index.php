@@ -195,7 +195,7 @@
 			//$author = $params["author"];
 			//$edition = $params["edition"];
             //$courses = $params["courses"];
-            
+		
             $db = new DbBookHandler();
             $res = $db->create($params);
 			 
@@ -209,6 +209,7 @@
 	            $response["error"] = true;
 	            $response["message"] = "Sorry, this Book already exists";
 	        }
+
             echoRespnse(201, $response);
 
     });
@@ -352,13 +353,17 @@
 			$title = $app->request->post('title');
 			$author = $app->request->post('author');
 			$edition = $app->request->post('edition');
-            $courses = $app->request->post('courses');
+            $subject = $app->request->post('subject');
+            $course_number = $app->request->post('course_number');
 
+			var_dump($title);
+		
             $params = array("isbn" => $isbn,
             				"title" => $title,
             				"author" => $author,
             				"edition" => $edition,
-            				"courses" => $courses);
+            				"subject" => $subject,
+            				"course_number" => $course_number);
 			
             $db = new DbBookHandler();
             $res = $db->update($params);
@@ -448,17 +453,22 @@
 			$title = $app->request->post('title');
 			$author = $app->request->post('author');
 			$edition = $app->request->post('edition');
-            $courses = $app->request->post('courses');
+            $subject = $app->request->post('subject');
+            $course_number = $app->request->post('course_number');
 
             $params = array("isbn" => $isbn,
             				"title" => $title,
             				"author" => $author,
             				"edition" => $edition,
-            				"courses" => $courses);
+            				"subject" => $subject,
+            				"course_number" => $course_number);
 			
             $db = new DbBookHandler();
-            $res = $db->update($params);
- 
+            $res = $db->delete($params);
+ 			
+ 			echo "what is in here when something actually gets deleted??: \n";
+ 			var_dump($res);
+ 			
 	        if ($res == "Successfully Deleted") {
 	            $response["error"] = false;
 	            $response["message"] = "The Book Record was successfully Deleted";
@@ -469,6 +479,8 @@
 	            $response["error"] = true;
 	            $response["message"] = "Sorry, this Book doesn't exist";
 	        }
+	      	echo "send a fucking message damnit!!";
+	        var_dump($response);
             echoRespnse(201, $response);
 	});	
 	

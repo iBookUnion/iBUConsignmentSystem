@@ -153,12 +153,18 @@ abstract class DbHandler {
         $result = $stmt->execute();
         $stmt->close();
 
+        echo "is this returning true or false?? \n";
+        var_dump($result);
+
         return ($result) ? "Successfully Created" : "There Was An Error";
 
     }
     
     protected function change($conditions) {
         $revision = $this->obtain_update_statement($conditions);
+        
+        var_dump($revision);
+        
         $stmt = $this->conn->prepare($revision);
         $result = $stmt->execute();
         $stmt->close();
@@ -171,8 +177,11 @@ abstract class DbHandler {
         $stmt = $this->conn->prepare($order);
         $result = $stmt->execute();
         $stmt->close();
+        
+        echo "is this true of false??: \n";
+        var_dump($result);
     
-        return ($result) ? "Successfully Updated" : "There Was An Error";
+        return ($result) ? "Successfully Deleted" : "There Was An Error";
     }
 
     protected function verify_existence($key) {
