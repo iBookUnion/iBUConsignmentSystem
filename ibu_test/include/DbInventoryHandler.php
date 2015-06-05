@@ -30,7 +30,9 @@ class DbInventoryHandler extends DbHandler {
     
     protected function package_result($stmt) {
     	$rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $title, $author, $edition, $courses, $isbn_alt, $student_id, $price, $current_state, $date);
+		$stmt->bind_result($isbn, $title, $author, $edition,
+						   $isbn_alt, $student_id, $price,
+						   $current_state, $date, $consignment_number, $consignment_item);
 		
 		$inventory = array();
 
@@ -41,10 +43,12 @@ class DbInventoryHandler extends DbHandler {
 			$book["title"] = $title;
 			$book["author"] = $author;
 			$book["edition"] = $edition;
-			$book["courses"] = $courses;
 			$book["price"] = $price;
 			$book["current_state"] = $current_state;
-			$book["date"] = $date;			
+			$book["date"] = $date;
+			$book["consignment_number"] = $consignment_number;
+			$book["consignment_item"] = $consignment_item;
+			
 			$inventory[] = $book;	
 		}
 		

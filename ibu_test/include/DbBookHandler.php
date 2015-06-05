@@ -1,5 +1,7 @@
 <?php
 
+// courses perhaps hosuld have a default value so that there is not a problem when searching books
+
 class DbBookHandler extends Dbhandler {
 
 	protected $conn;
@@ -11,6 +13,26 @@ class DbBookHandler extends Dbhandler {
         // opening db connection
         $db = new DbConnect();
         $this->conn = $db->connect();
+    }
+    
+    	// Retrieves A Record From A Database Table
+	public function get($query_params) {
+
+		$conditions = array();
+		$package = array();
+		
+		$query_params["title"] = "(title LIKE '%" . $query_params["title"] . "%')";
+		
+		$conditions = $this->set_not_null_conditions($query_params);
+		$query = $this->set_query($conditions);
+        
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$stmt->store_result();
+		
+		$package = $this->package_result($stmt);
+
+		    return $package;
     }
 
     protected function set_conditions($query_params) {
@@ -92,10 +114,16 @@ class DbBookHandler extends Dbhandler {
         $stmt->close();
         
         $result = $books_result && $courses_result;
-    
-        // going to need more complicated logic here, going to need to need to push up thiis change to index
-        return ($result) ? "Successfully Created" : "There Was An Error";
 
+                return ($result) ? "Successfully Created" : $this->get_result($books_result, $courses_result);
+    }
+    
+    private function get_result($books_result, $courses_result) {
+        if ($books_result) {
+                return "There was an error with courses";
+        } else {
+                return "There was an error with books";
+        }
     }
     
     protected function set_query($conditions) {

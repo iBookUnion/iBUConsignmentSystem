@@ -28,7 +28,7 @@ class DbCourseHandler extends DbHandler {
     
     protected function package_result($stmt) {
         $rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $title, $author, $edition, $courses, $isbn_alt, $subject, $course_number);
+		$stmt->bind_result($isbn, $title, $author, $edition, $isbn_alt, $subject, $course_number);
 		
 		$books = array();
 
