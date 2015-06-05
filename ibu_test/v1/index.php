@@ -46,7 +46,6 @@
 		
 		$author = $app->request()->get('author');
 		$title = $app->request()->get('title');
-		$title = "(title LIKE '%" . $title . "%')";
 		$edition = $app->request()->get('edition');
 		$courses = $app->request()->get('courses');
 		$subject = $app->request()->get('subject');
@@ -206,7 +205,13 @@
 	            $response["message"] = "The Book was successfully added";
 	        } else if ($res == "There Was An Error") {
 	            $response["error"] = true;
-	            $response["message"] = "Oops! An error has occurred!";                
+	            $response["message"] = "Oops! An error has occurred!";  
+	        } elseif ($res == "There was an error with courses") {
+	        	$response["error"] = true;
+	        	$response["message"] = "Oops! An error concerning the courses table has occurred";
+	        } elseif ($res == "There was an error with books") {
+	        	$response["error"] = true;
+	        	$response["message"] = "Oops! An error concerning the books table has occurred";
 	        } else if ($res == "Sorry, this record already exists") {
 	            $response["error"] = true;
 	            $response["message"] = "Sorry, this Book already exists";
@@ -219,21 +224,14 @@
 	$app->post('/consignments', function() use ($app) {	
 		
             $response = array();
-			$params = array();
 
-			$isbn = $app->request->post('isbn');
-            $student_id = $app->request->post('student_id');
-			$price = $app->request->post('price');
-			$current_state = $app->request->post('current_state');
-
-			$params = array("isbn" => $isbn,
-							"student_id" => $student_id,
-							"price" => $price,
-							"current_state" => $current_state);
+			$json = $app->request->getBody();
+            $params = json_decode($json, true);
 
             $db = new DbConsignmentHandler();
             $res = $db->create($params);
- 
+			
+			// will need to adapt this to throw error for exact table 
 	        if ($res == "Successfully Created") {
 	            $response["error"] = false;
 	            $response["message"] = "The consignment was successfully created!";
