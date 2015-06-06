@@ -231,16 +231,13 @@
             $db = new DbConsignmentHandler();
             $res = $db->create($params);
 			
-			// will need to adapt this to throw error for exact table 
-	        if ($res == "Successfully Created") {
+			// will need to adapt this to throw error for exact table
+			// this seems messy should clean it up
+	        if ($res["error"]) {
 	            $response["error"] = false;
 	            $response["message"] = "The consignment was successfully created!";
-	        } else if ($res == "There Was An Error") {
-	            $response["error"] = true;
-	            $response["message"] = "Oops! An error has occurred!";                
-	        } else if ($res == "Sorry, this record already exists") {
-	            $response["error"] = true;
-	            $response["message"] = "Sorry, this consignment already exists";
+	        } else {
+	        	$response = $res;
 	        }
             echoRespnse(201, $response);
     });

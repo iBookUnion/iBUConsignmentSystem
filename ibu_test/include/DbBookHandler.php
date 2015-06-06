@@ -151,7 +151,6 @@ class DbBookHandler extends Dbhandler {
         
         $insert = $stmt_base . $values;
             return $insert;
-        
     }
     
     private function get_course_values($isbn, $params) {
