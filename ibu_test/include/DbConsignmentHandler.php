@@ -118,7 +118,8 @@ class DbConsignmentHandler extends DbHandler {
 		$result["course"] = $this->course_insert($courses_insert); // "course insert failed"
 		$result["consignment"] = $this->consignment_insert($consignments_insert); // "consignment insert failed"
 		
-        return ($result) ? "Successfully Created" : "There Was An Error";
+		// make a method to deal with the results
+        	return $ths->set_result($result);
 
     }
     
@@ -149,6 +150,41 @@ class DbConsignmentHandler extends DbHandler {
         $stmt->close();
         	return $result;
     }
+
+	// returns an array: first element is a boolean specifying if there was an error
+	// second is the message specifiying the error
+    private function set_result($result) {
+    	// check if all the insertion occurred correctly
+    	// if any of them failed delete what occurred before (how would I do this???) 
+    	// may need to refrain from doing the deletion until the next refactoring
+		$result_statement = array();
+		$result_statement["error"] = false;
+		// is there a map in php? probably...
+		$res = $result["user"] && $result["book"] && $result["course"] && $result["consignment"];
+		
+		if ($res) {
+			$result_statement["message"] = "Consignment Successfully Created";
+			return $result_statement;
+		} else {
+			return $this->get_result($result);			
+		}
+    }
+    
+    private function get_error($result) {
+    	$result_statement = array();
+		$result_statement["error"] = true;
+    	
+    	if (!$result["user"]) {
+    		$result_statement["message"] = "There Was An Error In Creating User Record. ";
+    	} elseif (!$result["book"]) {
+    		$result_statement["message"] .= "There Was An Error In A Creating Book Record. ";
+    	} elseif (!$result["course"]) {
+    		$result_statement["message"] .= "There Was An Error In Creating Course Record. ";
+    	} elseif (!$result["consignment"]) {
+    		$result_statement["message"] .= "There Was An Error In Creating Consignment Record. ";
+    	}
+    		return $result_statement;
+    }
     
     //overloaded method:
     protected function set_query($conditions) {
@@ -160,16 +196,71 @@ class DbConsignmentHandler extends DbHandler {
     	
         $cnd_stmt = $this->implode_and($conditions);
         
-
     	if ($cnd_stmt != "")
 		{
 			$query .= ' WHERE ' . $cnd_stmt;
 		}
-
 	    	return $query;
-
     }
     
+    private function obtain_user_insert_statement($params) {
+        $stmt_base = "INSERT INTO users (student_id, first_name, last_name, email, phone_number) VALUES ";
+        $values = $this->get_user_values($params);
+        
+        $insert = $stmt_base . $values;
+            return $insert;
+    }
+   	
+   	private function obtain_book_insert_statement($params) {
+        $stmt_base = "INSERT INTO books (isbn, title, author, edition) VALUES ";
+        $values = $this->get_book_values($params["books"]);
+        
+        $insert = $stmt_base . $values;
+            return $insert;	
+   	}
+   	
+   	private function obtain_courses_insert_statement($params) {
+        $stmt_base = "INSERT INTO courses (`isbn`, `subject`, `course_number`) VALUES ";
+        $values = $this->get_course_values($params["books"]);
+        
+        $insert = $stmt_base . $values;
+            return $insert;
+   	}
+   	
+   	private function obtain_insert_statement($params) {
+        $stmt_base = "INSERT INTO consignments (isbn, student_id, price, current_state, consignment_number, consignment_item) VALUES ";
+        $values = $this->get_consignment_values($params);
+        
+        $insert = $stmt_base . $values;
+            return $insert;
+   	}
+
+    private function get_user_values($params) {
+        unset($params["books"]);
+        $user_values = $this->get_values($params);
+            return $user_values;
+    }
+
+    private function get_book_values($params) {
+        //may be the case that i have a list of books...
+        // snip the courses etc.
+        // get values, wrap values and combine
+    }
+
+    private function get_course_values($params) {
+        // for each book in the list get the isbn
+        // go through course list and wrap up
+        // wrap them all up together
+    }
+
+    private function get_consignment_values($params) {
+        //  will need to use the student_id on all of them
+        // then for each book in the list
+        // get the isbn etc.
+        // we know the state
+        // need to figure out how we will determine a consignment number.....
+    }
+      
     protected function prepare_strings($params) {
     	$params["current_state"] = $this->stringify($params["current_state"]);  
     		return $params;    	
