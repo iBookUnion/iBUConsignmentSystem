@@ -7,6 +7,7 @@ angular.module('consignmentApp')
             'baseURL': baseURL,
             'inventory': baseURL + '/inventory',
             'consignors': baseURL + '/users',
-            'consignor': baseURL + '/user/:consignorId'
+            'consignor': baseURL + '/user/:consignorId',
+            'consignment': baseURL + '/consignments'
         };
     })());

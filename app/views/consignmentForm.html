@@ -1,5 +1,5 @@
 <!-- MAIN CONTAINER -->
-<div class="container" ng-controller="ConsignmentCtrl as contactInfo">
+<div class="container" ng-controller="ConsignmentCtrl">
 
     <!-- CONTACT INFO -->
     <div class="row">
@@ -16,7 +16,6 @@
         <!-- RIGHT CONTACT INFO -->
         <div class="col-md-8">
            <contact-form class=""></contact-form>
-            {{contact.fname}}
         </div>
     </div>
 
@@ -54,7 +53,7 @@
     <!-- SUBMIT -->
     <div class="row">
         <div class="col-md-4 col-md-offset-6">
-            <div class="btn btn-block btn-primary" ng-click="createJson()">Submit Form</div>
+            <div class="btn btn-block btn-primary" ng-click="submitForm()">Submit Form</div>
         </div>
     </div>
 
