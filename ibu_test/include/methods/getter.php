@@ -10,6 +10,9 @@ abstract class Getter {
 		$query = $this->prepare_query_statement($conditions);
 
 		// should I leave the actual execuion to another class?
+		$stmt = $this->conn->prepare($query);
+		$stmt->execute();
+		$stmt->store_result();
 
 		$packaged_results = $this->package_results($stmt);
 
@@ -41,9 +44,15 @@ abstract class Getter {
 }
 
 class User_Getter extends Getter {
-
+		protected $conn;
+	
+	function __construct($conn) {
+    require_once dirname(__FILE__) . '/DbConnect.php';
+    // opening db connection
+ 		$this->conn = $conn;
+    }	
 	// with the changes that have occured I should not get a list element if the param is non-existant
-	protected function set_search_conditions($params){
+	protected function set_search_conditions($query_params){
 		$conditions = array();
 
 		$conditions["student_id"] = $this->set_student_id($query_params["student_id"]);

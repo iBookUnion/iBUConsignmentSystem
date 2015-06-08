@@ -1,9 +1,12 @@
 <?php 
 
+	require_once '../include/methods/getter.php';
+	require_once '../include/DbConnect.php';
+
 abstract class DbHandler {
 	
 	// could I just implement here and have a method to fetch back proper getter?
-	protected function get_method($params) {
+	public function get_method($params) {
 		$getter = $this->get_getter();
 
 		$res = $getter->retrieve($params);
@@ -32,8 +35,12 @@ class DbUserResourceHandler extends DbHandler {
 
 
     protected function get_getter() {
-    	$getter = new User_Getter();
+    	$getter = new User_Getter($this->conn);
     		return $getter;
+    }
+    
+    protected function post_method($params) {
+    	
     }
 
 	protected function patch_method($params) {
@@ -45,6 +52,8 @@ class DbUserResourceHandler extends DbHandler {
 	}
 
 	protected function delete_match($params) {
+	
+		
 	}	
 
 }
@@ -53,7 +62,7 @@ class DbBooksResourceHandler extends DbHandler {
 		protected $conn;
 
 	function __construct() {
-    require_once dirname(__FILE__) . '/DbConnect.php';
+    require_once  '../include/DbConnect.php';
     // opening db connection
     $db = new DbConnect();
     $this->conn = $db->connect();
@@ -93,7 +102,9 @@ class DbConsignmentsResourceHandler extends DbHandler {
     	$getter = new User_Getter();
     		return $getter;
     }
-
+	
+	protected function post_method($params) {}
+	
 	protected function patch_method($params) {}
 
 	protected function delete_match($params) {}	
