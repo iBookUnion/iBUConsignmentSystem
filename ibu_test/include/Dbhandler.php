@@ -1,227 +1,122 @@
-<?php
+<?php 
 
 abstract class DbHandler {
+	
+	// could I just implement here and have a method to fetch back proper getter?
+	protected function get_method($params) {
+		$getter = $this->get_getter();
+
+		$res = $getter->retrieve($params);
+
+		// for now let's just have it return the response
+			return $res;
+
+	}
+
+	abstract protected function post_method($params);
+	abstract protected function patch_method($params);
+	abstract protected function delete_match($params);
+
+	abstract protected function get_getter();
+}
+
+class DbUserResourceHandler extends DbHandler {
+		protected $conn;
+
+	function __construct() {
+    require_once dirname(__FILE__) . '/DbConnect.php';
+    // opening db connection
+    $db = new DbConnect();
+    $this->conn = $db->connect();
+    }	
 
 
-
-	// Retrieves A Record From A Database Table
-	public function get($query_params) {
-
-		$conditions = array();
-		$package = array();
-		
-		$conditions = $this->set_not_null_conditions($query_params);
-		$query = $this->set_query($conditions);
-        
-		$stmt = $this->conn->prepare($query);
-		$stmt->execute();
-		$stmt->store_result();
-		
-		$package = $this->package_result($stmt);
-
-		    return $package;
+    protected function get_getter() {
+    	$getter = new User_Getter();
+    		return $getter;
     }
 
-    // Adds A Record To A Database Table
-    public function create($params) {
-        $key = $this->obtain_key($params);
-        
-        if (!$this->verify_existence($key)) {
-            return $this->insert($params);
-        } else {
-            return "Sorry, this record already exists";
-        }
-    }        
+	protected function patch_method($params) {
+		$patcher = new User_Patcher();
 
-    // Updates A Record If It Exists Otherwise Creates it
-    public function alter($params) {
-        $key = $this->obtain_key($params);
-        
-        if (!$this->verify_existence($key)) {
-                return $this->insert($params);
-        } else {
-            $conditions = $this->set_conditions($params);
-                return $this->change($conditions);
-        }
-    }
-    
-    // Updates A Record in A Database Table
-    public function update($params) {
-        $key = $this->obtain_key($params);
-        
-        if ($this->verify_existence($key)) {
-            $conditions = $this->set_not_null_conditions($params);
-                return $this->change($conditions);
-        } else {
-                return "Sorry, this record doesn't exist";
-        }
-    }
-    
-    // 
-    public function delete($params) {
-        $key = $this->obtain_key($params);
-        
-        if($this->verify_existence($key)) {
-            $conditions = $this->set_not_null_conditions($params);
-                return $this->destroy($conditions);
-        } else {
-                return "Sorry, this record doesn't exist";
-        }
-    }
-    
-    // helper functions for get()
-    abstract protected function set_conditions($query_params);
-    abstract protected function package_result($stmt);
-    abstract protected function get_table();
+		$res = $patcher->update($params);
 
-    // helper functions for create()
-    abstract protected function obtain_key($params);
-    abstract protected function get_columns();
-    abstract protected function prepare_strings($params);
-    abstract protected function get_search_array($key);
-    
-    // helper functions for update()
-    abstract protected function get_identity($params);
+		//handle response
+	}
 
-    // Creates SQL SELECT Statement
-    protected function set_query($conditions) {
+	protected function delete_match($params) {
+	}	
 
-    	// Default will obtain all records from the table
-    	$query = "SELECT * FROM " . $this->get_table();
-        $cnd_stmt = $this->implode_and($conditions);
-        
+}
 
-    	if ($cnd_stmt != "")
-		{
-			$query .= ' WHERE ' . $cnd_stmt;
-		}
+class DbBooksResourceHandler extends DbHandler {
+		protected $conn;
 
-	    	return $query;
-
-    }
-    
-    protected function set_not_null_conditions($params) {
-        $conditions = $this->set_conditions($params);
-
-        //filter conditions
-        foreach ($conditions as $key => $value) {
-            $pos = strpos($value, "null");
-            if ($pos != false) {
-                unset($conditions[$key]);  
-            }
-        }
-            return $conditions;
+	function __construct() {
+    require_once dirname(__FILE__) . '/DbConnect.php';
+    // opening db connection
+    $db = new DbConnect();
+    $this->conn = $db->connect();
     }
 
-    protected function implode_and($conditions) {
-            return $this->implode_recursive($conditions, " AND ");
+    protected function get_getter() {
+    	$getter = new User_Getter();
+    		return $getter;
     }
 
-    protected function implode_comma($conditions) {
-            return $this->implode_recursive($conditions, ", ");
-    }
+	protected function post_method($params) {
+		// this does a call to books table and courses table and course_books table
+		// so create the three poster and have the params fr each prepared
+		// remembering that I have to check for prior existence
+		// then handle their responses
+		// if something goes wrong need to delete all that was created
+	}
 
-    protected function implode_recursive($conditions, $glue) {
-        if ($conditions != null) {
-            $condition = array_shift($conditions);
-            if ($condition == null) {
-                return $this->implode_recursive($conditions, $glue);
-            } else {
-                return $condition . $this->implode_helper($conditions, $glue);
-            }
-        }
-    }
+	protected function patch_method($params) {}
 
-    protected function implode_helper($conditions, $glue) {
-        if ($conditions != null) {    
-            $condition = array_shift($conditions);
-            if ($condition == null) {
-                return $this->implode_helper($conditions, $glue);
-            } else {
-                return $glue . $condition . $this->implode_helper($conditions, $glue);
-            }
-        }    
-    }
+	protected function delete_match($params) {}	
 
-    protected function insert($params) {
-        $insert = $this->obtain_insert_statement($params);
+}
 
-        $stmt = $this->conn->prepare($insert);
-        $result = $stmt->execute();
-        $stmt->close();
+class DbConsignmentsResourceHandler extends DbHandler {
+		protected $conn;
 
-        return ($result) ? "Successfully Created" : "There Was An Error";
-
-    }
-    
-    protected function change($conditions) {
-        $revision = $this->obtain_update_statement($conditions);
-        
-        var_dump($revision);
-        
-        $stmt = $this->conn->prepare($revision);
-        $result = $stmt->execute();
-        $stmt->close();
-        
-        return ($result) ? "Successfully Updated" : "There Was An Error";
-    }
-    
-    protected function destroy($conditions) {
-        $order = $this->obtain_deletion_statement($conditions);
-        $stmt = $this->conn->prepare($order);
-        $result = $stmt->execute();
-        $stmt->close();
-    
-        return ($result) ? "Successfully Deleted" : "There Was An Error";
-    }
-
-    protected function verify_existence($key) {
-        $result = false;
-        $query_params = $this->get_search_array($key);
-        $response = $this->get($query_params);
-
-        if ($response != null) {
-            $result = true;
-        }
-            return $result;
-    }
-
-    protected function obtain_insert_statement($params) {
-        $columns = $this->get_columns();
-        $values = $this->get_values($params);
-        $statement = "INSERT INTO " . $this->get_table() . $columns . " VALUES" . $values; 
-            return $statement;
-    }
-    
-    protected function obtain_update_statement($conditions) {
-        $alterations = $this->get_set_values($conditions);
-        $identity = $this->get_identity($conditions);
-        $statement = "UPDATE " . $this->get_table() . " SET " . $alterations . " WHERE " . $identity;
-            return $statement;
-        
-    }
-    
-    protected function obtain_deletion_statement($conditions) {
-        $locations = $this->get_set_values($conditions);
-        $statement = "DELETE FROM " . $this->get_table() . " WHERE " . $locations;
-            return $statement;
-            
-    }
-    
-    protected function get_values($params) {
-        $params = $this->prepare_strings($params);
-        $values = " (" . $this->implode_comma($params) . ") ";
-            return $values;
-    }
-    
-    protected function get_set_values($conditions) {
-        $alterations = $this->implode_comma($conditions);
-            return $alterations;
-    }
-    
-    protected function stringify($param) {
-            return str_pad($param, strlen($param) + 2, '"', STR_PAD_BOTH);
-    }
+	function __construct() {
+    require_once dirname(__FILE__) . '/DbConnect.php';
+    // opening db connection
+    $db = new DbConnect();
+    $this->conn = $db->connect();
+    }		
 
 
+    protected function get_getter() {
+    	$getter = new User_Getter();
+    		return $getter;
+    }
+
+	protected function patch_method($params) {}
+
+	protected function delete_match($params) {}	
+}
+
+class DbInventoryResourceHandler extends DbHandler {
+		protected $conn;
+	
+	function __construct() {
+    require_once dirname(__FILE__) . '/DbConnect.php';
+    // opening db connection
+    $db = new DbConnect();
+    $this->conn = $db->connect();
+    }
+
+    protected function get_getter() {
+    	$getter = new User_Getter();
+    		return $getter;
+    }
+
+	protected function post_method($params) {}
+
+	protected function patch_method($params) {}
+
+	protected function delete_match($params) {}	
 }
