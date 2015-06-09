@@ -8,7 +8,7 @@ abstract class DbHandler {
 	// could I just implement here and have a method to fetch back proper getter?
 	public function get_method($params) {
 		$getter = $this->get_getter();
-
+        
 		$res = $getter->retrieve($params);
 
 		// for now let's just have it return the response
@@ -69,7 +69,7 @@ class DbBooksResourceHandler extends DbHandler {
     }
 
     protected function get_getter() {
-    	$getter = new User_Getter();
+    	$getter = new Books_Courses_Getter($this->conn);
     		return $getter;
     }
 
@@ -99,7 +99,7 @@ class DbConsignmentsResourceHandler extends DbHandler {
 
 
     protected function get_getter() {
-    	$getter = new User_Getter();
+    	$getter = new ALL_Consignment_Getter($this->conn);
     		return $getter;
     }
 	
@@ -121,7 +121,7 @@ class DbInventoryResourceHandler extends DbHandler {
     }
 
     protected function get_getter() {
-    	$getter = new User_Getter();
+    	$getter = new Book_Consignment_Getter($this->conn);
     		return $getter;
     }
 

@@ -5,16 +5,19 @@
 abstract class Getter {
 	
 	public function retrieve($params) {
-
 		$conditions = $this->set_search_conditions($params);
 		$query = $this->prepare_query_statement($conditions);
-
+		
+		var_dump($query);
+		
 		// should I leave the actual execuion to another class?
 		$stmt = $this->conn->prepare($query);
 		$stmt->execute();
 		$stmt->store_result();
-
+		
 		$packaged_results = $this->package_results($stmt);
+		
+			return $packaged_results;
 
 	}
 
@@ -47,10 +50,11 @@ class User_Getter extends Getter {
 		protected $conn;
 	
 	function __construct($conn) {
-    require_once dirname(__FILE__) . '/DbConnect.php';
+    require_once '../include/DbConnect.php';
     // opening db connection
  		$this->conn = $conn;
-    }	
+    }
+    
 	// with the changes that have occured I should not get a list element if the param is non-existant
 	protected function set_search_conditions($query_params){
 		$conditions = array();
@@ -126,8 +130,32 @@ class User_Getter extends Getter {
 }
 
 class Books_Courses_Getter extends Getter {
+			protected $conn;
 	
-	protected function set_search_conditions($params) {
+	function __construct($conn) {
+    require_once '../include/DbConnect.php';
+    // opening db connection
+ 		$this->conn = $conn;
+    }
+    
+    protected function prepare_query_statement($conditions) {
+
+		$fields = "books.isbn, title, author, edition, GROUP_CONCAT( CONCAT(subject, ' ', course_number)) as courses ";
+    	$query = "SELECT " . $fields . "FROM " . $this->get_table();
+        $cnd_stmt = implode_and($conditions);
+        
+
+    	if ($cnd_stmt != "")
+		{
+			$query .= ' WHERE ' . $cnd_stmt;
+		}
+		
+		$query .=  " GROUP BY books.isbn";
+
+	    	return $query;
+	}
+	
+	protected function set_search_conditions($query_params) {
 		$conditions = array();
 
 		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
@@ -141,12 +169,12 @@ class Books_Courses_Getter extends Getter {
 	}
 
 	protected function get_table() {
-		return "books JOIN courses ON books.isbn = courses.isbn";
+		return "books LEFT JOIN course_books ON books.isbn = course_books.isbn";
 	}
 
 	protected function package_results($stmt) {
 		$rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $title, $author, $edition, $course_isbn, $subject, $course_number);
+		$stmt->bind_result($isbn, $title, $author, $edition, $courses);
 		
 		$books = array();
 		while($row = $stmt->fetch())
@@ -155,8 +183,7 @@ class Books_Courses_Getter extends Getter {
 			$book["title"] = $title;
 			$book["author"] = $author;
 			$book["edition"] = $edition;
-			$book["subject"] = $subject;
-			$book["course_number"] = $course_number;
+			$book["courses"] = $courses;
 			$books[] = $book;
 		}
 		
@@ -167,10 +194,8 @@ class Books_Courses_Getter extends Getter {
 	    private function set_isbn($query_param) {
     	if ($query_param != null) {
     		$cond = "books.isbn = " . $query_param;
-    	} else {
-    	    $cond = "isbn = null";
-    	}
     		    return $cond;
+    	}
     }
 
 	private function set_author($query_param) {
@@ -182,7 +207,7 @@ class Books_Courses_Getter extends Getter {
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
-    		$cond = $query_param;
+    		$cond =  "(title LIKE '%" . ($query_param) . "%')";;
     		    return $cond;
     	}
 	}
@@ -212,9 +237,35 @@ class Books_Courses_Getter extends Getter {
 }
 
 class ALL_Consignment_Getter extends Getter {
-	protected function set_search_conditions($params) {
+		protected $conn;
+	
+	function __construct($conn) {
+    require_once '../include/DbConnect.php';
+    // opening db connection
+ 		$this->conn = $conn;
+    }
+	
+	protected function prepare_query_statement($conditions) {
+
+		$fields = "consignments.consignment_number, users.student_id, first_name, last_name, email, phone_number,
+					date, consigned_items.consignment_item, books.isbn, title, edition, price, current_state";
+    	$query = "SELECT " . $fields . " FROM " . $this->get_table();
+        $cnd_stmt = implode_and($conditions);
+
+    	if ($cnd_stmt != "")
+		{
+			$query .= ' WHERE ' . $cnd_stmt;
+		}
+		
+		$query .=  " ORDER BY consignments.consignment_number";
+
+	    	return $query;
+	}
+	
+	protected function set_search_conditions($query_params) {
 		$conditions = array();
     	
+    	$conditions["consignment_number"] = $this->set_consignment_number($query_params["consignment_number"]);
 		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
 		$conditions["student_id"] = $this->set_student_id($query_params["student_id"]);
 		$conditions["price"] = $this->set_price($query_params["price"]);
@@ -225,15 +276,21 @@ class ALL_Consignment_Getter extends Getter {
 	}
 
 	protected function get_table() {
-		return "consignments JOIN users ON consignments.student_id = users.student_id";
+		$table = "books
+	    	JOIN consigned_items
+		      ON books.isbn = consigned_items.isbn
+		   JOIN consignments
+		     ON consignments.consignment_number = consigned_items.consignment_number
+		   JOIN users
+		     ON consignments.student_id = users.student_id";
+			
+			return $table;
 	}
 
 	protected function package_results($stmt) {
 		$rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $student_id, $price, $current_state,
-							$date, $consignment_number, $consignment_item,
-							$student_id2, $first_name, $last_name,
-							$email, $phone_number);
+		$stmt->bind_result($consignment_number, $student_id, $first_name, $last_name, $email, $phone_number,
+					$date, $consignment_item, $isbn, $title, $edition, $price, $current_state);
 		
 		$consignments = array();
 		while($row = $stmt->fetch())
@@ -244,18 +301,28 @@ class ALL_Consignment_Getter extends Getter {
 			$consignment["last_name"] = $last_name;
 			$consignment["email"] = $email;
 			$consignment["phone_number"] = $phone_number;
-			$consignment["isbn"] = $isbn;
+			$consignment["date"] = $date;
 			$consignment["consignment_item"] = $consignment_item;
+			$consignment["isbn"] = $isbn;
+			$consignment["title"] = $title;
+			$consignment["edition"] = $edition;
 			$consignment["price"] = $price;
 			$consignment["current_state"] = $current_state;
-			$consignment["date"] = $date;
+			
 			$consignments[] = $consignment;
 		}
 		
 		$stmt->close();
 			return $consignments;	
 	}
-
+	
+	private function set_consignment_number($query_param) {
+		if ($query_param != null) {
+			$cond = "consignments.consignment_number = " . $query_param;
+				return $cond;
+		}
+	}
+	
 	private function set_isbn($query_param) {
 		if ($query_param != null) {
 			$cond = "isbn = " . $query_param;
@@ -293,45 +360,50 @@ class ALL_Consignment_Getter extends Getter {
 }
 
 class Book_Consignment_Getter extends Getter {
-	protected function set_search_conditions($params) {
+			protected $conn;
+	
+	function __construct($conn) {
+    require_once '../include/DbConnect.php';
+    // opening db connection
+ 		$this->conn = $conn;
+    }
+    
+	protected function set_search_conditions($query_params) {
 		$conditions = array();
 
 		$conditions["isbn"] = $this->set_isbn($query_params["isbn"]);
-		$conditions["student_id"] =$this->set_student_id($query_params["student_id"]);
 		$conditions["author"] = $this->set_author($query_params["author"]);
 		$conditions["title"] = $this->set_title($query_params["title"]);
 		$conditions["edition"] = $this->set_edition($query_params["edition"]);
-		$conditions["price"] = $this->set_price($query_params["price"]);
+		// $conditions["price"] = $this->set_price($query_params["price"]);
 		$conditions["current_state"] = $this->set_current_state($query_params["current_state"]);
-		$conditions["date"] = $this->set_date($query_params["date"]);
+		// $conditions["date"] = $this->set_date($query_params["date"]);
 		
 			return $conditions;         
 	}
 	
 	protected function get_table() {
-		return "books JOIN consignments ON books.isbn = consignments.isbn";
+		return "books JOIN consigned_items ON books.isbn = consigned_items.isbn";
 	}
 	
 	protected function package_results($stmt) {
 		$rows = $stmt->num_rows;
 		$stmt->bind_result($isbn, $title, $author, $edition,
-						   $isbn_alt, $student_id, $price,
-						   $current_state, $date, $consignment_number, $consignment_item);
+						   $consignment_number, $isbn_alt, $price,
+						   $current_state, $consignment_item);
 		
 		$inventory = array();
 
 		while($row = $stmt->fetch())
 		{
 			$book["isbn"] = $isbn;
-			$book["student_id"] = $student_id;
 			$book["title"] = $title;
 			$book["author"] = $author;
 			$book["edition"] = $edition;
 			$book["price"] = $price;
 			$book["current_state"] = $current_state;
-			$book["date"] = $date;
 			$book["consignment_number"] = $consignment_number;
-			$book["consignment_item"] = $consignment_item;
+			$book["consigned_item"] = $consignment_item;
 			
 			$inventory[] = $book;	
 		}

@@ -13,13 +13,13 @@
 
 $app->get('/users(/:student_id)', function($student_id = null) use ($app) {
 		$params = package_user_parameters($student_id, $app);
-		
-		echo "sometshing";
 				
 		$db = new DbUserResourceHandler();
-		$db->get_method($params);
+		$response = $db->get_method($params);
 		
 		// manage errors
+		
+		echoRespnse(200, $response);
 
 });
 
@@ -38,7 +38,13 @@ $app->delete('/users/:student_id', function($student_id) use ($app) {
 
 $app->get('/books(/:isbn)', function($isbn = null) use ($app) {
 		$params = package_book_parameters($isbn, $app);
-
+				
+		$db = new DbBooksResourceHandler();
+		$response = $db->get_method($params);
+		
+		// manage errors
+		
+		echoRespnse(200, $response);
 });
 
 $app->post('/books', function() use ($app) {
@@ -53,8 +59,16 @@ $app->delete('/books/:isbn', function() use ($app){
 		$params = package_book_parameters($isbn, $app);
 });
 
-$app->get('/consignments(/:consignment_number)', function() use ($app){
+$app->get('/consignments(/:consignment_number)', function($consignment_number = null) use ($app){
 		$params = package_consignment_parameters($consignment_number, $app);
+		
+				
+		$db = new DbConsignmentsResourceHandler();
+		$response = $db->get_method($params);
+		
+		// manage errors
+		
+		echoRespnse(200, $response);
 });
 
 $app->post('/consignments', function() use ($app) {
@@ -70,8 +84,18 @@ $app->delete('/consignments/:consignment_number', function() use ($app){
 });
 
 
-$app->get('/inventory(/:isbn)', function() use ($app){
+$app->get('/inventory(/:isbn)', function($isbn = null) use ($app){
+		
 		$params = package_inventory_parameters($isbn, $app);
+				
+		$db = new DbInventoryResourceHandler();
+		$response = $db->get_method($params);
+		
+		// manage errors
+		
+		echoRespnse(200, $response);
+
+		
 });
 
 function package_user_parameters($student_id, $app) {
@@ -108,21 +132,46 @@ function package_book_parameters($isbn, $app) {
 }
 
 function package_consignment_parameters($consignment_number, $app) {
+
 		$isbn = $app->request()->get('isbn');
 		$student_id = $app->request()->get('student_id'); 
 		$price = $app->request()->get('price');
 		$current_state = $app->request()->get('current_state');
 		$date = $app->request()->get('date');
 
-		$params = array("isbn" => $isbn,
-							  "student_id" => $student_id,
-							  "price" => $price,
-							  "current_state" => $current_state,
-							  "date" => $date);
+		$params = array("consignment_number" => $consignment_number,		
+						"isbn" => $isbn,
+					    "student_id" => $student_id,
+					    "price" => $price,
+					    "current_state" => $current_state,
+					    "date" => $date);
 
 			return $params;
 }
 
+function package_inventory_parameters($isbn, $app) {
+	// need to be able to take approx titles..
+	$title = $app->request()->get('title');
+	$isbn = $app->request()->get('isbn');
+	$subject = $app->request()->get('subject');	
+	$course_number = $app->request()->get('course_number');	
+	$current_state = $app->request()->get('current_state');	
+	$consignment_number = $app->request()->get('consignment_number');
+	$author = $app->request()->get('author');
+	$edition = $app->request()->get('edition');
+	$consignment_item = $app->request()->get('consignment_item');
+	
+	$params = array("isbn" => $isbn,
+				  "author" => $author,
+				  "title" => $title,
+				  "edition" => $edition,
+				  "subject" => $subject,
+				  "course_number" => $course_number,
+				  "current_state" => $current_state,
+				  "consignment_number" => $consignment_number);
+
+			return $params;
+}
 	
 function echoRespnse($status_code, $response) {
 $app = \Slim\Slim::getInstance();
