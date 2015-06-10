@@ -191,7 +191,7 @@ class Books_Courses_Getter extends Getter {
 			return $books;	
 	}
 
-	    private function set_isbn($query_param) {
+	private function set_isbn($query_param) {
     	if ($query_param != null) {
     		$cond = "books.isbn = " . $query_param;
     		    return $cond;
@@ -428,7 +428,7 @@ class Book_Consignment_Getter extends Getter {
 	
 	private function set_author($query_param) {
     	if ($query_param != null) {
-    		$cond = "author = " . $this->stringify($query_param);
+    		$cond = "author = " . stringify($query_param);
     		    return $cond;
     	}
 	}
@@ -442,7 +442,7 @@ class Book_Consignment_Getter extends Getter {
 
 	private function set_edition($query_param) {
     	if ($query_param != null) {
-    		$cond = "edition = " . $this->stringify($query_param);
+    		$cond = "edition = " . stringify($query_param);
     		    return $cond;
     	}
 	}    
@@ -455,7 +455,7 @@ class Book_Consignment_Getter extends Getter {
 
 	private function set_current_state($query_param) {
 		if ($query_param != null) {
-			$cond = "current_state = " . $this->stringify($query_param);
+			$cond = "current_state = " . stringify($query_param);
     		    return $cond;
     	}
 	}

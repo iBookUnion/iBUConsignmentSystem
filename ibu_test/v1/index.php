@@ -52,7 +52,7 @@ $app->get('/consignments(/:consignment_number)', function($consignment_number = 
 		
 				
 		$db = new DbConsignmentsResourceHandler();
-		$reponse["errors"] = false;
+		$response["errors"] = false;
 		$response["consignments"] = $db->get_method($params) ?: null;
 		
 		// manage errors
@@ -88,8 +88,21 @@ $app->get('/inventory(/:isbn)', function($isbn = null) use ($app){
 
 $app->patch('/users/:student_id', function($student_id) use ($app) {
 		$params = package_user_parameters($student_id, $app);
-		// create controller
+		
+				var_dump($params);
+		
+		$db = new DbUserResourceHandler();
+		
+		$res = $db->patch_method($params);
+		
+		if ($res) {
+			echo "this worked";
+		} else {
+			echo "something went wrong";
+		}
+		
 		//manage errors
+		
 });
 
 $app->delete('/users/:student_id', function($student_id) use ($app) {
@@ -104,6 +117,20 @@ $app->post('/books', function() use ($app) {
 
 $app->patch('/books/:isbn', function($isbn) use ($app) {
 		$params = package_book_parameters($isbn, $app);
+				
+				var_dump($params);
+		
+		$db = new DbBooksResourceHandler();
+		
+		$res = $db->patch_method($params);
+		
+		if ($res) {
+			echo "this worked";
+		} else {
+			echo "something went wrong";
+		}
+		
+		//manage errors
 });
 
 $app->delete('/books/:isbn', function() use ($app){
