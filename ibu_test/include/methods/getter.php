@@ -414,7 +414,7 @@ class Book_Consignment_Getter extends Getter {
 	}
 	    private function set_isbn($query_param) {
     	if ($query_param != null) {
-    		$cond = "isbn = " . $query_param;
+    		$cond = "books.isbn = " . $query_param;
     		    return $cond;
     	}
     }

@@ -15,12 +15,75 @@ $app->get('/users(/:student_id)', function($student_id = null) use ($app) {
 		$params = package_user_parameters($student_id, $app);
 				
 		$db = new DbUserResourceHandler();
-		$response = $db->get_method($params);
+		$response["errors"] = false;
+		$response["users"] = $db->get_method($params) ?: null;
 		
 		// manage errors
-		
-		echoRespnse(200, $response);
+		if (!empty($response["users"]))
+		{
+			echoRespnse(200, $response);
+		} else {
+			$response["error"] = true;
+			$response["message"] = "The requested resource doesn't exist";
+			echoRespnse(404, $response);
+		}
+});
 
+$app->get('/books(/:isbn)', function($isbn = null) use ($app) {
+		$params = package_book_parameters($isbn, $app);
+				
+		$db = new DbBooksResourceHandler();
+		$reponse["error"] = false;
+		$response["books"] = $db->get_method($params) ?: null;
+		
+		// manage errors
+		if (!empty($response["books"]))
+		{
+			echoRespnse(200, $response);
+		} else {
+			$response["error"] = true;
+			$response["message"] = "The requested resource doesn't exist";
+			echoRespnse(404, $response);
+		}
+});
+
+$app->get('/consignments(/:consignment_number)', function($consignment_number = null) use ($app){
+		$params = package_consignment_parameters($consignment_number, $app);
+		
+				
+		$db = new DbConsignmentsResourceHandler();
+		$reponse["errors"] = false;
+		$response["consignments"] = $db->get_method($params) ?: null;
+		
+		// manage errors
+		if (!empty($response["consignments"]))
+		{
+			echoRespnse(200, $response);
+		} else {
+			$response["error"] = true;
+			$response["message"] = "The requested resource doesn't exist";
+			echoRespnse(404, $response);
+		}
+});
+
+
+$app->get('/inventory(/:isbn)', function($isbn = null) use ($app){
+		
+		$params = package_inventory_parameters($isbn, $app);
+				
+		$db = new DbInventoryResourceHandler();
+		$reponse["error"] = false;
+		$response["books"] = $db->get_method($params);
+		
+		// manage errors
+		if (!empty($response["books"]))
+		{
+			echoRespnse(200, $response);
+		} else {
+			$response["error"] = true;
+			$response["message"] = "The requested resource doesn't exist";
+			echoRespnse(404, $response);
+		}	
 });
 
 $app->patch('/users/:student_id', function($student_id) use ($app) {
@@ -35,18 +98,6 @@ $app->delete('/users/:student_id', function($student_id) use ($app) {
 		//manage errors
 });
 
-
-$app->get('/books(/:isbn)', function($isbn = null) use ($app) {
-		$params = package_book_parameters($isbn, $app);
-				
-		$db = new DbBooksResourceHandler();
-		$response = $db->get_method($params);
-		
-		// manage errors
-		
-		echoRespnse(200, $response);
-});
-
 $app->post('/books', function() use ($app) {
 				// calll to functions
 });
@@ -59,18 +110,6 @@ $app->delete('/books/:isbn', function() use ($app){
 		$params = package_book_parameters($isbn, $app);
 });
 
-$app->get('/consignments(/:consignment_number)', function($consignment_number = null) use ($app){
-		$params = package_consignment_parameters($consignment_number, $app);
-		
-				
-		$db = new DbConsignmentsResourceHandler();
-		$response = $db->get_method($params);
-		
-		// manage errors
-		
-		echoRespnse(200, $response);
-});
-
 $app->post('/consignments', function() use ($app) {
 
 });
@@ -81,21 +120,6 @@ $app->patch('/consignments/:consignment_number', function() use ($app){
 
 $app->delete('/consignments/:consignment_number', function() use ($app){
 		$params = package_book_parameters($consignment_number, $app);
-});
-
-
-$app->get('/inventory(/:isbn)', function($isbn = null) use ($app){
-		
-		$params = package_inventory_parameters($isbn, $app);
-				
-		$db = new DbInventoryResourceHandler();
-		$response = $db->get_method($params);
-		
-		// manage errors
-		
-		echoRespnse(200, $response);
-
-		
 });
 
 function package_user_parameters($student_id, $app) {
@@ -152,7 +176,6 @@ function package_consignment_parameters($consignment_number, $app) {
 function package_inventory_parameters($isbn, $app) {
 	// need to be able to take approx titles..
 	$title = $app->request()->get('title');
-	$isbn = $app->request()->get('isbn');
 	$subject = $app->request()->get('subject');	
 	$course_number = $app->request()->get('course_number');	
 	$current_state = $app->request()->get('current_state');	

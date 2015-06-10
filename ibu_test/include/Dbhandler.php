@@ -7,13 +7,14 @@ abstract class DbHandler {
 	
 	// could I just implement here and have a method to fetch back proper getter?
 	public function get_method($params) {
+		$response = array();
 		$getter = $this->get_getter();
         
 		$res = $getter->retrieve($params);
-
+        
+        
 		// for now let's just have it return the response
 			return $res;
-
 	}
 
 	abstract protected function post_method($params);
