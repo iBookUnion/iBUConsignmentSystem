@@ -24,7 +24,7 @@ abstract class DbHandler {
 	        return $res;
 	}
 
-//	abstract protected function post_method($params);
+    //abstract protected function post_method($params);
 	//abstract protected function patch_method($params);
 	//abstract protected function delete_match($params);
 
@@ -103,7 +103,7 @@ class DbConsignmentsResourceHandler extends DbHandler {
     }
     
     protected function get_patcher() {
-        $patcher = new UserPatcher($this->conn);
+        $patcher = new Consignment_Patcher($this->conn);
             return $patcher;
     }
     

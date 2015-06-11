@@ -20,7 +20,7 @@ abstract class Patcher {
     protected function prepare_update_statement($conditions) {
         $alterations = $this->get_set_values($conditions);
         
-        var_dump($alterations);
+        //var_dump($alterations);
         
         $identity = $this->get_key($conditions);
         $statement = "UPDATE " . $this->get_table() . " SET " . $alterations . " WHERE " . $identity;
@@ -176,7 +176,156 @@ class Book_Patcher extends Patcher {
 
 	    }
 	}
+}
+
+// this needs to be able to update consignment forms
+// should be able to change the status of consigned items
+// should be able to change user info?
+
+
+class Consignment_Patcher extends Patcher {
+        protected $conn;
+	
+	function __construct($conn) {
+    require_once '../include/DbConnect.php';
+    // opening db connection
+ 		$this->conn = $conn;
+    }
     
+    protected function set_update_conditions($update_params) {
+	       $conditions = array();
+	    
+	    $conditions["consignment_number"] = $this->set_consignment_number($update_params["consignment_number"]);
+		$conditions["student_id"] = $this->set_isbn($update_params["student_id"]);
+		$conditions["first_name"] = $this->set_isbn($update_params["first_name"]);
+		$conditions["last_name"] = $this->set_isbn($update_params["last_name"]);
+		$conditions["email"] = $this->set_isbn($update_params["email"]);
+		$conditions["phone_number"] = $this->set_isbn($update_params["phone_number"]);
+		$conditions["consignment_item"] = $this->set_isbn($update_params["consignment_item"]);
+		$conditions["isbn"] = $this->set_isbn($update_params["isbn"]);
+		$conditions["title"] = $this->set_isbn($update_params["title"]);
+		$conditions["author"] = $this->set_isbn($update_params["author"]);
+		$conditions["edition"] = $this->set_isbn($update_params["edition"]);
+		$conditions["price"] = $this->set_isbn($update_params["price"]);
+		$conditions["current_state"] = $this->set_isbn($update_params["current_state"]);       
+	        
+	        return $conditions;
+	}
+    
+    protected function get_table() {
+            $table = "books
+	    	JOIN consigned_items
+		      ON books.isbn = consigned_items.isbn
+		    JOIN consignments
+		     ON consignments.consignment_number = consigned_items.consignment_number
+		    JOIN users
+		     ON consignments.student_id = users.student_id";  
+		     
+		    return $table;
+    }
+    
+    protected function get_key($conditions) {
+            return $conditions["consignment_number"];
+    }
+    
+        private function set_student_id($query_param) {
+    	if ($query_param != null) {
+			$cond = "student_id = " . $query_param;
+				return $cond;
+		}
+    }
+
+    private function set_first_name($query_param) {
+		if ($query_param != null) {
+			$cond = "first_name = " . stringify($query_param);
+				return $cond;		
+    	}
+    }
+
+    private function set_last_name($query_param) {
+    	if ($query_param != null) {
+			$cond = "last_name = " . stringify($query_param); 	
+				return $cond;		
+		}
+    }
+
+    private function set_email($query_param) {
+    	if ($query_param != null) {
+			$cond = "email = " . stringify($query_param);   
+				return $cond;
+		}
+    }
+
+    private function set_phone_number($query_param) {
+     	if ($query_param != null) {
+			$cond = "phone_number = " . $query_param;
+				return $cond;
+		}
+	}
+
+	private function set_isbn($query_param) {
+    	if ($query_param != null) {
+    		$cond = "books.isbn = " . $query_param;
+    		    return $cond;
+    	}
+    }
+
+	private function set_author($query_param) {
+    	if ($query_param != null) {
+    		$cond = "author = " . stringify($query_param);
+    		    return $cond;
+    	}
+	}
+
+	private function set_title($query_param) {
+    	if ($query_param != null) {
+    		$cond =  "(title LIKE '%" . ($query_param) . "%')";;
+    		    return $cond;
+    	}
+	}
+
+	private function set_edition($query_param) {
+    	if ($query_param != null) {
+    		$cond = "edition = " . stringify($query_param);
+    		    return $cond;
+    	}
+	}
+	
+	private function set_subject($query_param) {
+	    if ($query_param != null) {
+	        $cond = "subject = " . stringify($query_param);
+	            return $cond;
+	    }
+	}
+	
+	private function set_course_number($query_param) {
+	    if ($query_param != null) {
+	        $cond = "course_number = " . stringify($query_param);
+	            return $cond;
+
+	    }
+	}
+	
+	private function set_current_state($query_param) {
+		if ($query_param != null) {
+			$cond = "current_state = " . $this->stringify($query_param);
+    		    return $cond;
+    	}
+	}
+
+	private function set_date($query_param) {
+		if ($query_param != null) {
+			$cond = "date = " . $query_param;
+    		    return $cond;
+    	}
+	}
+	
+	private function set_consignment_number($query_param) {
+		if ($query_param != null) {
+			$cond = "consignments.consignment_number = " . $query_param;
+				return $cond;
+		}
+	}	
     
 }
 

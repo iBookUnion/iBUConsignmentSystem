@@ -118,7 +118,7 @@ $app->post('/books', function() use ($app) {
 $app->patch('/books/:isbn', function($isbn) use ($app) {
 		$params = package_book_parameters($isbn, $app);
 				
-				var_dump($params);
+				//var_dump($params);
 		
 		$db = new DbBooksResourceHandler();
 		
@@ -141,8 +141,20 @@ $app->post('/consignments', function() use ($app) {
 
 });
 
-$app->patch('/consignments/:consignment_number', function() use ($app){
+$app->patch('/consignments/:consignment_number', function($consignment_number = null) use ($app){
 		$params = package_book_parameters($consignment_number, $app);
+		
+		$db = new DbConsignmentsResourceHandler();
+		
+		$res = $db->patch_method($params);
+		
+		if ($res) {
+			echo "this worked";
+		} else {
+			echo "something went wrong";
+		}
+		
+		//manage errors
 });
 
 $app->delete('/consignments/:consignment_number', function() use ($app){
@@ -150,10 +162,10 @@ $app->delete('/consignments/:consignment_number', function() use ($app){
 });
 
 function package_user_parameters($student_id, $app) {
-	$first_name = $app->request()->post('first_name');
-	$last_name = $app->request()->post('last_name');
-	$email = $app->request()->post('email');
-	$phone_number = $app->request()->post('phone_number');
+	$first_name = $app->request()->params('first_name');
+	$last_name = $app->request()->params('last_name');
+	$email = $app->request()->params('email');
+	$phone_number = $app->request()->params('phone_number');
 	
 	$params = array("student_id" => $student_id,
 						  "first_name" => $first_name,
@@ -165,12 +177,12 @@ function package_user_parameters($student_id, $app) {
 }
 
 function package_book_parameters($isbn, $app) {
-	$author = $app->request()->get('author');
-	$title = $app->request()->get('title');
-	$edition = $app->request()->get('edition');
-	$courses = $app->request()->get('courses');
-	$subject = $app->request()->get('subject');
-	$course_number = $app->request()->get('course_number');
+	$author = $app->request()->params('author');
+	$title = $app->request()->params('title');
+	$edition = $app->request()->params('edition');
+	$courses = $app->request()->params('courses');
+	$subject = $app->request()->params('subject');
+	$course_number = $app->request()->params('course_number');
 
 	$params = array("isbn" => $isbn,
 				  "author" => $author,
@@ -184,11 +196,11 @@ function package_book_parameters($isbn, $app) {
 
 function package_consignment_parameters($consignment_number, $app) {
 
-		$isbn = $app->request()->get('isbn');
-		$student_id = $app->request()->get('student_id'); 
-		$price = $app->request()->get('price');
-		$current_state = $app->request()->get('current_state');
-		$date = $app->request()->get('date');
+		$isbn = $app->request()->params('isbn');
+		$student_id = $app->request()->params('student_id'); 
+		$price = $app->request()->params('price');
+		$current_state = $app->request()->params('current_state');
+		$date = $app->request()->params('date');
 
 		$params = array("consignment_number" => $consignment_number,		
 						"isbn" => $isbn,
@@ -200,16 +212,50 @@ function package_consignment_parameters($consignment_number, $app) {
 			return $params;
 }
 
+function package_consignment_patch_parameters($consignment_number, $app) {
+			
+			$student_id = $app->request()->params('student_id');
+			$first_name = $app->request()->params('first_name');
+			$last_name = $app->request()->params('last_name');
+			$email = $app->request()->params('email');
+			$phone_number = $app->request()->params('phone_number');
+			$consignment_item = $app->request()->params('consignment_item');
+			$isbn = $app->request()->params('isbn');
+			$title = $app->request()->params('title');
+			$author = $app->request()->params('author');
+			$edition = $app->request()->params('edition');
+			$price = $app->request()->params('price');
+			$current_state = $app->request()->params('current_state');
+			
+			$params = array("consignment_number" => $consignment_number,		
+						  "student_id" => $student_id,
+						  "first_name" => $first_name,
+						  "last_name" => $last_name,
+						  "email" => $email,
+					 	  "phone_number" => $phone_number,
+					      "isbn" => $isbn,
+					      "title" => $title,
+					      "author" => $author,
+					      "edition" => $edition,
+					    "price" => $price,
+					    "current_state" => $current_state,
+					    "consignment_item" => $consignment_item,
+					    );
+			
+			
+			return $params;
+}
+
 function package_inventory_parameters($isbn, $app) {
 	// need to be able to take approx titles..
-	$title = $app->request()->get('title');
-	$subject = $app->request()->get('subject');	
-	$course_number = $app->request()->get('course_number');	
-	$current_state = $app->request()->get('current_state');	
-	$consignment_number = $app->request()->get('consignment_number');
-	$author = $app->request()->get('author');
-	$edition = $app->request()->get('edition');
-	$consignment_item = $app->request()->get('consignment_item');
+	$title = $app->request()->params('title');
+	$subject = $app->request()->params('subject');	
+	$course_number = $app->request()->params('course_number');	
+	$current_state = $app->request()->params('current_state');	
+	$consignment_number = $app->request()->params('consignment_number');
+	$author = $app->request()->params('author');
+	$edition = $app->request()->params('edition');
+	$consignment_item = $app->request()->params('consignment_item');
 	
 	$params = array("isbn" => $isbn,
 				  "author" => $author,

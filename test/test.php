@@ -3,11 +3,6 @@
 
 require('vendor/autoload.php');
 
-
-<?php
-
-require('vendor/autoload.php');
-
 class UsersTest extends PHPUnit_Framework_TestCase
 {
     protected $client;
@@ -22,11 +17,7 @@ class UsersTest extends PHPUnit_Framework_TestCase
 
     public function testGet_ValidInput_UserObject()
     {
-        $response = $this->client->get('/users', [
-            'query' => [
-                'student_id' => '0'
-            ]
-        ]);
+        $response = $this->client->get('https://ibu-rcacho.c9.io/iBUConsignmentSitePrototype/ibu_test/v1/users/1');
 
         $this->assertEquals(200, $response->getStatusCode());
 
