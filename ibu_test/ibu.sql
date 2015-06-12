@@ -11,22 +11,28 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`student_id`)
 );
  
-CREATE TABLE IF NOT EXISTS `books` (
+CREATE TABLE `books` (
   `isbn` int(14) NOT NULL,
   `title` varchar(255) NOT NULL,
   `author` varchar(35) NOT NULL,
-  `edition` int(2) NOT NULL,
-  `courses` blob NOT NULL,
-  PRIMARY KEY (`isbn`)
+  `edition` int(2) NOT NULL
 );
  
-CREATE TABLE IF NOT EXISTS `consignments` (
+CREATE TABLE `consignments` (
   `isbn` int(14) NOT NULL,
   `student_id` int(11) NOT NULL,
   `price` decimal(6,0) NOT NULL,
   `current_state` char(4) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`isbn`,`student_ID`)
+  `consignment_number` int(11) DEFAULT NULL,
+  `consignment_item` int(11) DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS `courses` (
+  `isbn` int(13) NOT NULL,
+  `subject` varchar(4) NOT NULL,
+  `course_number` int(3) NOT NULL,
+  PRIMARY KEY (`isbn`,`subject`,`course_number`)
 );
  
  ALTER TABLE  `consignments` ADD FOREIGN KEY (  `student_id` ) REFERENCES  `ibu_test`.`users` (
