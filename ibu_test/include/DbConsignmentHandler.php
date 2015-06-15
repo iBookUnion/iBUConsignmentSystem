@@ -227,7 +227,7 @@ class DbConsignmentHandler extends DbHandler {
             return $insert;
    	}
    	
-   	private function obtain_insert_statement($params) {
+   	protected function obtain_insert_statement($params) {
         $stmt_base = "INSERT INTO consignments (isbn, student_id, price, current_state, consignment_number, consignment_item) VALUES ";
         $values = $this->get_consignment_values($params);
         

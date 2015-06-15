@@ -1,0 +1,282 @@
+
+
+
+title: IBookUnion
+baseUri: ---- (should be: ibookunionubc.com/{version})
+version: v1
+
+Schema:
+	
+	USERS:
+		student_id (KEY):
+			type: int(10)
+			required: true
+
+		first_name: 
+			type: CHAR(25)
+			required: true
+
+		last_name:
+			type: CHAR(25)
+			required: true
+
+		email:
+			type: CHAR(35)
+			required: true
+
+		phone_number:
+			type: int(10)
+			required: false
+	BOOKS:
+		isbn (KEY):
+			type: int(13)
+			required: true
+
+		title:
+			type: CHAR(35)
+			required: true
+
+		author:
+			type: CHAR(35)
+			required: true
+
+		edition:
+			type: CHAR(25)
+			required: false
+
+		course:
+			type: [COURSES]
+			required: false
+
+	CONSIGNMENTS:
+		isbn (KEY):
+			type: REFERENCE to BOOKS
+			required: true
+
+		student_id (KEY)
+			type: REFERENCE to USERS
+			required: true
+
+		consignment_number:
+			type: int
+			required: true
+			description: groups up all books consigned by one user during one consignment
+
+		consignment_item:
+			type: int
+			required: true
+			description: groups up books within consignment numbers so that they can be sold as one package				
+
+		price:
+			type: decimal(6,0)
+			required: true
+
+		current_state:
+			type: CHAR(25) one of:
+								"available" -- consigner has left book with us
+								"not in store" -- consigner has yet to leave book with us
+								"sold and not paid" -- book has been sold, consigner has yet to pick up money
+								"consignment complete" -- book has been sold, consigner has picked up money or book was not sold but it has been returned to consigner
+			required: true
+
+		date:
+			type: TIMESTAMP
+			required: true
+
+	COURSES:
+		isbn (KEY):
+			type: REFERENCE to BOOKS
+			required: true
+
+		subject:
+			type: CHAR(4) one of:
+							... (list of all subjects should exist somewhere)
+			required: true	
+
+		course_number
+			type: int(3)
+			required: true
+
+Resources:
+
+	/users
+		general description: use to update user information, or to find some user information
+		methods: GET, PATCH
+
+	/books
+		general description: use to maintain general archive of books
+		methods: GET, POST, PATCH, DELETE
+
+	/consignments
+		general description: use to maintain record of consigners, consignments are added through this endpoint
+		methods: GET, POST, PATCH, PUT, DELETE
+
+	/inventory
+		general description: use to see inventory (that is the join of books and consignments)
+		methods: GET
+
+---------
+
+	/users:
+			restriction: all methods open only to administrators			
+		get:
+			description: use to obtain broad user information
+
+			/{student_id}
+
+			queryParameters:
+				first_name:
+				last_name:
+				email:
+				phone_number:
+
+		patch:
+			description: use to update a user record 
+
+			/{student_id}
+
+			queryParameters:
+				first_name:
+				last_name:
+				email:
+				phone_number:			
+
+	/books:
+			restriction: all methods open only to administrators	
+		get:
+			/{isbn}
+
+			queryParameters:
+				title:
+					description: name of book, will take partial matches
+				author:
+				edition:
+				course:
+		post:
+
+			queryParameters:
+				isbn:
+					type: int(13)
+					required: true
+				title:
+					type: string
+					required: true
+				author:
+					type: string
+					required: true
+				edition:
+					type: string
+					required: false
+				course:
+					type: json:
+							{"courses":[{"subject": ..
+										 "classes": [{"course": ..,
+										 }]							
+							}]}
+
+					required: false
+		patch:
+			description: updates a book record, expects record to exist, partial updates are accepted (ex. if title is not given it will remain as it was)
+			/{isbn}
+			title:
+			author:
+			edition:
+			course:
+
+		delete:
+			/{isbn}
+
+	/consignments
+		restriction: all methods only open to administrators
+
+		get:
+			description: use to obtain list of consignments (join of users and consignments)
+
+			/{consignment_number}
+			queryParameters:
+				isbn:
+				student_id:
+				consignment_item:
+
+			response:
+				200:
+					{"error":false, "consignments":[{"student_id": ..,
+													 "first_name": ..,
+													 "last_name": ..,
+													 "email": ..,
+													 "phone_number": ..,
+													 "consignment_number":..,
+													"form": [{"consignment_item": ..,
+																		"isbn": ..,
+																		"price": ..,
+																		"current_state": ..,
+																		"date": ...,
+																		}]}]}
+
+		post:
+			description: use to add a consignment
+
+			queryParameter:
+				expects a json: {"student_id": ...,
+								 "first_name": ...,
+								 "last_name": ...,
+								 "email": ...,
+								 "phone_number": ...,
+								 "books": [{"isbn": ...,
+								 			"title": ...,
+								 			"author": ...,
+								 			"edition": ...,
+											"price": ...,
+											"consignment_item: ...,
+											"courses":[{"subject": ...,
+											"classes": [{"course": ...,
+																		}]
+								 }]
+
+				}]}
+
+		patch:
+			description: useful for changing the information for one consignment form
+			/{consignment_number}
+				description: use to change the information for an entire consignment form (let's say the consigner has picked up unsold books/money)
+				
+					/{consignment_item}
+					description: use to change the information for one consigned item (let's say the item has sold and you want to change current_state)
+
+					queryParameters:
+					price:
+		delete:
+			/{consignment_number}
+
+
+	/inventory
+		restriction: 
+
+		get: 
+			description: null current_state will retrieve those books that are currently in store 
+
+			/{isbn}
+			query_parameters:
+				title:
+					description: name of book, will take partial matches
+				courses:
+					description: takes one course
+				current_state:
+				author:
+
+			response:
+				200:
+					{"error":false, "books":[{consignment_number: ..
+											 consignment_item: ..
+											 isbn: ..
+											 title: .. 
+											 author: ..
+											 edition: ..
+											 price: ..
+											 courses: ..
+											 }]}
+
+
+
+
+
