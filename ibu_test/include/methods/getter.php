@@ -367,6 +367,23 @@ class Book_Consignment_Getter extends Getter {
     // opening db connection
  		$this->conn = $conn;
     }
+
+    protected function prepare_query_statement($conditions) {
+
+		$fields = "consignment_number, consignment_item, books.isbn, title, author, edition, price, current_state, GROUP_CONCAT( CONCAT(subject, ' ', course_number)) as courses ";
+		$query = "SELECT " . $fields . "FROM " . $this->get_table();
+	    $cnd_stmt = implode_and($conditions);
+	    
+
+		if ($cnd_stmt != "")
+		{
+			$query .= ' WHERE ' . $cnd_stmt;
+		}
+		
+		$query .=  " GROUP BY books.isbn";
+
+	    	return $query;
+	}
     
 	protected function set_search_conditions($query_params) {
 		$conditions = array();
@@ -383,14 +400,14 @@ class Book_Consignment_Getter extends Getter {
 	}
 	
 	protected function get_table() {
-		return "books JOIN consigned_items ON books.isbn = consigned_items.isbn";
+		return "books JOIN consigned_items ON books.isbn = consigned_items.isbn LEFT JOIN course_books ON books.isbn = course_books.isbn";
 	}
 	
 	protected function package_results($stmt) {
 		$rows = $stmt->num_rows;
 		$stmt->bind_result($isbn, $title, $author, $edition,
-						   $consignment_number, $isbn_alt, $price,
-						   $current_state, $consignment_item);
+						   $consignment_number, $price,
+						   $current_state, $consignment_item, $courses);
 		
 		$inventory = array();
 
@@ -404,6 +421,7 @@ class Book_Consignment_Getter extends Getter {
 			$book["current_state"] = $current_state;
 			$book["consignment_number"] = $consignment_number;
 			$book["consigned_item"] = $consignment_item;
+			$book["courses"] = $courses;
 			
 			$inventory[] = $book;	
 		}
