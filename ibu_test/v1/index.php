@@ -89,7 +89,7 @@ $app->get('/inventory(/:isbn)', function($isbn = null) use ($app){
 $app->patch('/users/:student_id', function($student_id) use ($app) {
 		$params = package_user_parameters($student_id, $app);
 		
-				var_dump($params);
+				//var_dump($params);
 		
 		$db = new DbUserResourceHandler();
 		
@@ -141,7 +141,7 @@ $app->post('/consignments', function() use ($app) {
 
 });
 
-$app->patch('/consignments/:consignment_number', function($consignment_number, $consignment_item = null) use ($app){
+$app->patch('/consignments/:consignment_number(/:consignment_item)', function($consignment_number, $consignment_item = null) use ($app){
 		$params = package_consignment_patch_parameters($consignment_number,$consignment_item, $app);
 		
 		$db = new DbConsignmentsResourceHandler();

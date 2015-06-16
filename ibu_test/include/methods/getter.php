@@ -8,7 +8,7 @@ abstract class Getter {
 		$conditions = $this->set_search_conditions($params);
 		$query = $this->prepare_query_statement($conditions);
 		
-		var_dump($query);
+		//var_dump($query);
 		
 		// should I leave the actual execuion to another class?
 		$stmt = $this->conn->prepare($query);
