@@ -1,7 +1,9 @@
 <?php
 
 abstract class Poster {
-
+	
+	// if a resource was successfully created its key should be returned
+	// this is in case it has to be rollbacked by the dbhandler
 	public function create($params) {
 		// check for prior existence will be taken care by handler
 	   	$insert = $this->obtain_insert_statement($params);
@@ -37,7 +39,7 @@ class User_Poster extends Poster {
 	}
 
 	protected function get_table() {
-		return "users"
+		return "users";
 	}
 
 }
@@ -49,7 +51,7 @@ class Book_Poster extends Poster {
 	}
 
 	protected function get_table() {
-		return "books"
+		return "books";
 	}
 
 }
@@ -66,7 +68,7 @@ class Course_Poster extends Poster {
 
 }
 
-class Book_Course_Poster extends Poster {
+class Course_Books_Poster extends Poster {
 	protected function get_columns() {
 		$columns = " (isbn, subject, course_number) ";
 			return $columns;
@@ -85,7 +87,7 @@ class Consignment_Poster extends Poster {
 	}
 	
 	protected function get_table() {
-		return "consignments"
+		return "consignments";
 	}
 
 }

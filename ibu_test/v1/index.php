@@ -141,8 +141,8 @@ $app->post('/consignments', function() use ($app) {
 
 });
 
-$app->patch('/consignments/:consignment_number', function($consignment_number = null) use ($app){
-		$params = package_book_parameters($consignment_number, $app);
+$app->patch('/consignments/:consignment_number', function($consignment_number, $consignment_item = null) use ($app){
+		$params = package_consignment_patch_parameters($consignment_number,$consignment_item, $app);
 		
 		$db = new DbConsignmentsResourceHandler();
 		
@@ -212,34 +212,15 @@ function package_consignment_parameters($consignment_number, $app) {
 			return $params;
 }
 
-function package_consignment_patch_parameters($consignment_number, $app) {
+function package_consignment_patch_parameters($consignment_number,$consignment_item, $app) {
 			
-			$student_id = $app->request()->params('student_id');
-			$first_name = $app->request()->params('first_name');
-			$last_name = $app->request()->params('last_name');
-			$email = $app->request()->params('email');
-			$phone_number = $app->request()->params('phone_number');
-			$consignment_item = $app->request()->params('consignment_item');
-			$isbn = $app->request()->params('isbn');
-			$title = $app->request()->params('title');
-			$author = $app->request()->params('author');
-			$edition = $app->request()->params('edition');
 			$price = $app->request()->params('price');
 			$current_state = $app->request()->params('current_state');
 			
 			$params = array("consignment_number" => $consignment_number,		
-						  "student_id" => $student_id,
-						  "first_name" => $first_name,
-						  "last_name" => $last_name,
-						  "email" => $email,
-					 	  "phone_number" => $phone_number,
-					      "isbn" => $isbn,
-					      "title" => $title,
-					      "author" => $author,
-					      "edition" => $edition,
-					    "price" => $price,
-					    "current_state" => $current_state,
-					    "consignment_item" => $consignment_item,
+						    "price" => $price,
+						    "current_state" => $current_state,
+						    "consignment_item" => $consignment_item,
 					    );
 			
 			

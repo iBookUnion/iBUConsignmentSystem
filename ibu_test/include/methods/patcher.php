@@ -196,18 +196,9 @@ class Consignment_Patcher extends Patcher {
 	       $conditions = array();
 	    
 	    $conditions["consignment_number"] = $this->set_consignment_number($update_params["consignment_number"]);
-		$conditions["student_id"] = $this->set_isbn($update_params["student_id"]);
-		$conditions["first_name"] = $this->set_isbn($update_params["first_name"]);
-		$conditions["last_name"] = $this->set_isbn($update_params["last_name"]);
-		$conditions["email"] = $this->set_isbn($update_params["email"]);
-		$conditions["phone_number"] = $this->set_isbn($update_params["phone_number"]);
-		$conditions["consignment_item"] = $this->set_isbn($update_params["consignment_item"]);
-		$conditions["isbn"] = $this->set_isbn($update_params["isbn"]);
-		$conditions["title"] = $this->set_isbn($update_params["title"]);
-		$conditions["author"] = $this->set_isbn($update_params["author"]);
-		$conditions["edition"] = $this->set_isbn($update_params["edition"]);
+		$conditions["consignment_item"] = $this->set_consignment_item($update_params["consignment_item"]);
 		$conditions["price"] = $this->set_isbn($update_params["price"]);
-		$conditions["current_state"] = $this->set_isbn($update_params["current_state"]);       
+		$conditions["current_state"] = $this->set_current_state($update_params["current_state"]);       
 	        
 	        return $conditions;
 	}
