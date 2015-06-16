@@ -100,6 +100,7 @@ class DbUserResourceHandler extends DbHandler {
         } else {
             $res["error"] = true;
             $res["message"] = "The Record Already Existed";
+            $res["keys"] = $params["student_id"];
                 return $res;
         }
     }
@@ -150,20 +151,142 @@ class DbBooksResourceHandler extends DbHandler {
     }
 
     protected function call_posters($list_of_posters, $params) {
-        $res["book"] = $list_of_posters["book"]->create($params);
+        if ($this->verify_nonexistance($params["isbn"])) {
+            $res = $this->get_res_array();
+
+            $book_result = $list_of_posters["book"]->create($params); 
+                                                                                        
+            $res["error"] = $book_result["error"];
+            $res["keys"]["book"] = $book_result;
+                                                                                        
+            // loops through what should be a list of courses
+            // each loops results is checked by union with previous results
+            $course_results = $this->call_poster_courses($params);
+
+            $res["error"] = $res["error"] && $course_results["error"];
+            $res["keys"]["courses"] = $course_results["courses"];
+            $res["keys"]["course_books"] = $course_results["course_books"];
+                
+                return $res;
+
+            } else {
+                $res["error"] = true;
+                $res["message"] = "The Record Already Existed";
+                $res["keys"]["book"] = $params["isbn"];
+                    return $res;
+            }
         
-        // loops through what should be a list of courses
-        // each loops results is checked by union with previous results
+    }
+    private function call_poster_courses($params) {
+        // set the base for the arrays here:
+        $res["error"] = false;
+        $course_results["error"] = false;
+        $course_book_results["error"] = false;
+        $course_results["courses"] = array();
+        $course_book_results["course_results"] = array();
+
+        // how is this getting the necessary isbn?
         foreach ($params["courses"] as $course) {
-            
-            $res["course"] = $res["course"] && $list_of_posters["course"]->create($course);
-            $res["course_book"] =  $res["course_book"] && $list_of_posters["course_book"]->create($course);
-            
-        }        
+
+            $course_result = $list_of_posters["course"]->create($course);
+            $course_results["error"] = $course_results["error"] && $course_result["error"];
+            $course_results["courses"][] = $course_result;
+
+            $course_books_result = $list_of_posters["course_book"]->create($course);
+            $course_books_results["error"] = $course_books_results["error"] && $course_book_result["error"];
+            $course_books_results["courses"][] = $course_books_result;
+        
+        }
+
+        $res["error"] = $course_results["error"] && $course_books_results["error"];
+        $res["courses"] = $course_results;
+        $res["keys"]["course_books"] = $course_book_results;
+            return $res;
+
+    }
+    private function get_res_array() {
+        $res["errors"] = false;
+        $res["keys"] = $this->get_key_array();
+        $res["message"] = "Records were successfully created."
+    }
+    private function get_key_array() {
+        $keys = array();
+        $keys["book"] = null;
+        $keys["courses"] = null;
+        $keys["course_books"] = null;
+            return $keys;
+    }
+
+    protected function verify_nonexistance($params) {
+        $getter = $this->get_getter();
+        $res = $getter->retrieve($params);
             return $res;
     }
 
+    protected function handle_errors($res) {
+        if ($res["error"]) {
+            
+            if ($res["keys"]["book"]["error"]) {
+
+                $this->handle_book_error($res);
+
+            } elseif ($res["keys"]["courses"]["error"]) {
+
+                $this->handle_course_error($res);
+
+            } elseif ($res["keys"]["course_books"]["error"]) {
+
+                $this->handle_course_book_errors($res);
+            }
+
+
+        } else {
+
+            return $res;
+
+        }
+
+    }
+
+    private function handle_book_error($res) {
+        // then courses should be deleted
+        // course_books will fail if book was not created
+        // need to ensure that the message specifies that the book has failed
+        if ($res["keys"]["courses"]["error"]) {
+
+            $deleter = new Course_deleter($this->conn);
+            foreach ($res["keys"]["courses"]["courses"] as $course) {
+                $deleter->delete($course);    
+            }
+        }
+    }
+    private function handle_course_error($res) {
+        // if a course fails then we do need to rollback the book 
+        if ($res["keys"]["book"]["error"]) {
+            
+            $deleter = new Book_deleter($this->conn);
+            $deleter->delete($res["keys"]["book"]["book"]);
+        }
+    }
+    private function handle_course_book_errors($res) {
+        // if a course_book fails we need to rollback book and courses
+        if ($res["keys"]["book"]["error"]) {
+            $deleter = new Book_deleter($this->conn);
+            $deleter->delete($res["keys"]["book"]["book"]);   
+        }
+
+        if (!$res["keys"]["courses"]["error"]) {
+
+            $deleter = new Course_deleter($this->conn);
+            foreach ($res["keys"]["courses"]["courses"] as $course) {
+                $deleter->delete($course);    
+            }
+        }
+    }
+
+
 }
+
 
 class DbConsignmentsResourceHandler extends DbHandler {
 		protected $conn;
@@ -204,11 +327,41 @@ class DbConsignmentsResourceHandler extends DbHandler {
     }
     
     protected function call_posters($list_of_posters, $params) {
-        $res["user"] = $list_of_posters["user"]->create($params);
-        $res["consignment"] = $list_of_posters["consignment"]->create($params);
-        
-        // loops through what should be a list 
-        // each loops results is checked by union with previous results
+       if (verify_nonexistence($params["consignment_number"])) {
+            $res = $this->get_res_array();
+
+            $consignment_results = $list_of_posters["consignment"]->create($params);
+            $user_results = $list_of_posters["user"]->create($params); 
+
+            $res["error"] = $user_results["error"] && $consignment_results["error"];
+            $res["keys"]["user"] = $user_results;
+            $res["keys"]["consignment"] = $consignment_results;
+
+            // loops through what should be a list 
+            // each loops results is checked by union with previous results
+            $book_results = $this->call_poster_books($params);
+
+            $res["error"] = $res["error"] && $book_results["error"];
+            $res["keys"]["books"] = $book_results["books"];
+            $res["keys"]["consigned_items"] = $book_results["consigned_item"];
+            $res["keys"]["courses"] = $book_results["courses"];
+            $res["keys"]["course_books"] = $book_results["course_books"];
+
+                    return $res;
+        } else {
+            $res["error"] = true;
+            $res["message"] = "The Record Already Existed";
+            $res["keys"]["consignment"] = $params["consignment_number"];
+
+                return $res;
+        }
+    }
+    private function call_poster_books() {
+        //set the base for the arrays here:
+        $res["error"] = false;
+        $book_results["error"] = false;
+        $consigned_item_results["error"] = false;
+
         foreach ($params["books"] as $book) {
             
             $res["books"] =  $res["books"] && $list_of_posters["book"]->create($book);
@@ -219,8 +372,80 @@ class DbConsignmentsResourceHandler extends DbHandler {
                     $res["course_book"] =  $res["course_book"] && $list_of_posters["course_book"]->create($course);
             }
             
-        }        
-                return $res;
+        }
+    }
+    private function call_poster_courses() {
+        //set the base for the arrays here:
+        // set the base for the arrays here:
+        $res["error"] = false;
+        $course_results["error"] = false;
+        $course_book_results["error"] = false;
+        $course_results["courses"] = array();
+        $course_book_results["course_results"] = array();
+
+        // how is this getting the necessary isbn?
+        foreach ($params["courses"] as $course) {
+
+            $course_result = $list_of_posters["course"]->create($course);
+            $course_results["error"] = $course_results["error"] && $course_result["error"];
+            $course_results["courses"][] = $course_result;
+
+            $course_books_result = $list_of_posters["course_book"]->create($course);
+            $course_books_results["error"] = $course_books_results["error"] && $course_book_result["error"];
+            $course_books_results["courses"][] = $course_books_result;
+        
+        }
+
+        $res["error"] = $course_results["error"] && $course_books_results["error"];
+        $res["courses"] = $course_results;
+        $res["keys"]["course_books"] = $course_book_results;
+            return $res;
+    }
+    private function get_res_array() {
+        $res["error"] = false;
+        $res["keys"] = $this->get_key_array();
+        $res["message"] = "Records were successfully created."
+    }
+    private function get_key_array() {
+        $keys = array();
+        $keys["consignment"] = null;
+        $keys["user"] = null
+        $keys["consigned_item"] = null;
+        $keys["books"] = null;
+        $keys["courses"] = null;
+        $keys["course_books"] = null;
+            return $keys;
+    }
+
+    protected function verify_nonexistance($params) {
+        $getter = $this->get_getter();
+        $res = $getter->retrieve($params);
+            return $res;
+    }
+
+    protected function handle_errors($res) {
+        if ($res["error"]) {
+            
+            if ($res["keys"]["book"]["error"]) {
+
+                $this->handle_book_error($res);
+
+            } elseif ($res["keys"]["courses"]["error"]) {
+
+                $this->handle_course_error($res);
+
+            } elseif ($res["keys"]["course_books"]["error"]) {
+
+                $this->handle_course_book_errors($res);
+            }
+
+
+        } else {
+
+            return $res;
+
+        }
+
     }
 
 }
