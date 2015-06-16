@@ -64,14 +64,3 @@ VALUES
 ('fawc', 201);
 
 
-INSERT INTO `ibu_test`.`course_books` (`subject`, `course_number`, `isbn`)
-VALUES
-('batm', 121, 9),
-('batm', 234, 6),
-('batm', 321, 9),
-('supm', 110, 4),
-('supm', 432, 7),
-('dccm', 100, 0),
-('dccm', 213, 12),
-('glcm', 113, 5),
-('fawc', 201, 0);

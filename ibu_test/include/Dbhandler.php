@@ -41,7 +41,7 @@ abstract class DbHandler {
 	   // this creates and calls on deleters if there was errors
 	   // id of the recource which was unsuccessfully created should be saved into $res....
 	   // need to make sure posters check their sql statements
-	   $results = $this->handle_results($res);
+	   $results = $this->handle_errors($res);
         
         // the result needs to be a specification of for which record the process failed for..
         // it may be the case that the resource being created already existed or that there was an error
@@ -61,7 +61,7 @@ abstract class DbHandler {
     
     abstract protected function call_posters($list_of_posters, $params);
     abstract protected function verify_nonexistance($params);
-    abstract protected function handle_results($res);
+    abstract protected function handle_errors($res);
 }
 
 class DbUserResourceHandler extends DbHandler {
@@ -113,7 +113,7 @@ class DbUserResourceHandler extends DbHandler {
     
     // For users this method doesn't actually do anything,
     // There is no case where we have to rollback or change message
-    protected function handle_results($res) {
+    protected function handle_errors($res) {
         return $res;
     } 
 
@@ -207,7 +207,7 @@ class DbBooksResourceHandler extends DbHandler {
     private function get_res_array() {
         $res["errors"] = false;
         $res["keys"] = $this->get_key_array();
-        $res["message"] = "Records were successfully created."
+        $res["message"] = "Records were successfully created.";
     }
     private function get_key_array() {
         $keys = array();
@@ -404,12 +404,13 @@ class DbConsignmentsResourceHandler extends DbHandler {
     private function get_res_array() {
         $res["error"] = false;
         $res["keys"] = $this->get_key_array();
-        $res["message"] = "Records were successfully created."
+        $res["message"] = "Records were successfully created.";
+            return $res;
     }
     private function get_key_array() {
         $keys = array();
         $keys["consignment"] = null;
-        $keys["user"] = null
+        $keys["user"] = null;
         $keys["consigned_item"] = null;
         $keys["books"] = null;
         $keys["courses"] = null;
@@ -478,7 +479,11 @@ class DbInventoryResourceHandler extends DbHandler {
          
      }
      
-     protected function handle_results($res) {
+     protected function handle_errors($res) {
+         
+     }
+     
+     protected function verify_nonexistance($params) {
          
      }
 

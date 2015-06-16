@@ -299,7 +299,7 @@ class Consignment_Patcher extends Patcher {
 	
 	private function set_current_state($query_param) {
 		if ($query_param != null) {
-			$cond = "current_state = " . $this->stringify($query_param);
+			$cond = "current_state = " . stringify($query_param);
     		    return $cond;
     	}
 	}
@@ -318,6 +318,12 @@ class Consignment_Patcher extends Patcher {
 		}
 	}	
     
+    private function set_consignment_item($query_param) {
+		if ($query_param != null) {
+			$cond = "consignments.consignment_item = " . $query_param;
+				return $cond;
+		}
+	}	
 }
 
 function stringify($param) {
