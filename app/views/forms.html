@@ -10,7 +10,7 @@
         <div class="col-sm-6">
             <div ng-if="isbn">
                 <h3 class="text-center">
-                    Clean Code: Some Book Title That Is Hardcoded and Long
+                    {{book.title}}
                 </h3>
                 <div class="row">
                     <div class="col-xs-5">
@@ -21,11 +21,11 @@
                     <div class="col-xs-7">
                         <dl>
                             <dt>Author</dt>
-                            <dd>Robert C. Martin</dd>
+                            <dd>{{book.author}}</dd>
                             <dt>Edition</dt>
-                            <dd>1st Edition</dd>
+                            <dd>{{book.edition}}</dd>
                             <dt>Related Courses</dt>
-                            <dd>TEST 101, IBU 201</dd>
+                            <dd>{{book.courseNumber}}</dd>
                         </dl>
 
                     </div>
@@ -53,13 +53,14 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
-                    <td>Student No.</td>
-                    <td>Name</td>
+                    <td>Consignment #</td>
+                    <td>Price</td>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="consignor in consignors" ng-click="viewConsignor();">
-                        <td>{{consignor.studentId}}</td>
-                        <td>{{consignor.firstName + " " + consignor.lastName}}</td>
+                    <tr ng-repeat="consignment in consignments"
+                        ng-click="viewConsignor(consignment);">
+                        <td>{{consignment.consignmentNumber}}</td>
+                        <td>{{consignment.price}}</td>
                     </tr>
                 </table>
             </div>
