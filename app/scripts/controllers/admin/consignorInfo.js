@@ -9,22 +9,22 @@
  */
 
 angular.module('consignmentApp')
-    .controller('ConsignorInfoCtrl', function ($scope, $routeParams, Consignor) {
+    .controller('ConsignorInfoCtrl', function ($scope, $routeParams, Consignors) {
 
         $scope.section = 'contact';
 
-        $scope.contact = Consignor.get({consignorId: $routeParams.consignorId},
-            function (response) {
-                $scope.contact = response;
-                $scope.contact.consignmentNo = $scope.contact.student_id; // jshint ignore:line
-                $scope.contact.sno = $scope.contact.student_id; // jshint ignore:line
-                $scope.contact.fname = $scope.contact.first_name; // jshint ignore:line
-                $scope.contact.lname = $scope.contact.last_name; // jshint ignore:line
-                $scope.contact.phno = $scope.contact.phone_number; // jshint ignore:line
-            });
+        $scope.contact = Consignors.getConsignors($routeParams.consignorId)
+          .then(function (consignor) {
+              // TODO: Get Consignment Object Instead When The API is Working
+              $scope.contact = consignor;
+              $scope.contact.consignmentNo = consignor.studentId;
+              $scope.contact.sno = consignor.studentId;
+              $scope.contact.fname = consignor.firstName;
+              $scope.contact.lname = consignor.lastName;
+              $scope.contact.phno = consignor.phoneNumber;
+          });
 
-
-        $scope.faculties = ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics'];
+      $scope.faculties = ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics'];
 
         $scope.selectSection = function (section) {
             $scope.section = section;

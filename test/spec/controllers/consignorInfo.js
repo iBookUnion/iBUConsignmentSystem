@@ -2,38 +2,51 @@
 
 describe('Controller: ConsignorInfoCtrl', function () {
 
-    // load the controller's module
-    beforeEach(module('consignmentApp'));
+  // load the controller's module
+  beforeEach(module('consignmentApp'));
 
-    var mockUserResponse = {
-        'error': false,
-        'student_id': 1,
-        'first_name': 'Clark',
-        'last_name': 'Kent',
-        'email': 'kent@mail.com',
-        'phone_number': 1234541234
-    };
+  var mockUserResponse = {
+    users: {
+      'student_id': 1,
+      'first_name': 'Clark',
+      'last_name': 'Kent',
+      'email': 'kent@mail.com',
+      'phone_number': 1234541234
+    }
+  };
 
-    var ConsignorInfoCtrl,
-        scope, httpBackend;
+  var expectedUserResponse = {
+    users: {
+      'studentId': 1,
+      'firstName': 'Clark',
+      'lastName': 'Kent',
+      'email': 'kent@mail.com',
+      'phoneNumber': 1234541234
+    }
+  };
 
-    beforeEach(inject(function ($httpBackend, $rootScope, $controller, API_URI) {
-        // Set up the mock http service responses
-        httpBackend = $httpBackend;
+var ConsignorInfoCtrl,
+  scope, httpBackend;
 
-        httpBackend.when('GET', API_URI.baseURL + '/user/1')
-            .respond(mockUserResponse);
+beforeEach(inject(function ($httpBackend, $rootScope, $controller, API_URI, Consignors) {
+  // Set up the mock http service responses
+  httpBackend = $httpBackend;
 
-        // Initialize the controller and a mock scope
-        scope = $rootScope.$new();
-        ConsignorInfoCtrl = $controller('ConsignorInfoCtrl', {
-            $scope: scope,
-            $routeParams: {consignorId: 1}
-        });
-    }));
+  httpBackend.when('GET', API_URI.baseURL + '/users/1')
+    .respond(mockUserResponse);
 
-    it('retrieves the correct consignor', function () {
-        httpBackend.flush();
-        expect(scope.contact).toEqual(jasmine.objectContaining(mockUserResponse));
-    });
+  // Initialize the controller and a mock scope
+  scope = $rootScope.$new();
+  ConsignorInfoCtrl = $controller('ConsignorInfoCtrl', {
+    $scope: scope,
+    $routeParams: {consignorId: 1},
+    Consignors: Consignors
+  });
+}));
+
+it('retrieves the correct consignor', function () {
+  httpBackend.flush();
+  expect(scope.contact).toEqual(jasmine.objectContaining(expectedUserResponse));
 });
+})
+;

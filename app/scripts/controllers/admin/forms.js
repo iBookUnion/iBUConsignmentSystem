@@ -8,27 +8,25 @@
  * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
-    .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'Consignors', 'Inventory',
-        function ($scope, $routeParams, $location, Consignors, Inventory) {
+  .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'ConsignmentAPI', 'Books',
+    function ($scope, $routeParams, $location, ConsignmentAPI, Books) {
 
-        if ($routeParams.isbn) {
-            $scope.isbn = $routeParams.isbn;
-        }
+      if ($routeParams.isbn) {
+        $scope.isbn = $routeParams.isbn;
+        $scope.book = Books.get({isbn : $scope.isbn},
+          function(book) {
+            console.log(book);
+          });
+      }
 
-        Consignors.get(function (payload) {
-            $scope.consignors = payload.users.map(function (apiConsignor) {
-                var consignor = {};
-                consignor.studentId = apiConsignor.student_id; // jshint ignore:line
-                consignor.firstName = apiConsignor.first_name; // jshint ignore:line
-                consignor.lastName = apiConsignor.last_name; // jshint ignore:line
-                return consignor;
-            });
+      ConsignmentAPI.searchConsignments({isbn: $routeParams.isbn})
+        .then(function(consignments) {
+          $scope.consignments = consignments;
         });
 
 
-        $scope.viewConsignor = function () {
-            $location.url($location.path);  // Clear query parameters
-            $location.path('/admin/consignorInfo/' + this.consignor.studentId);
-        };
-
+      $scope.viewConsignor = function (consignment) {
+        $location.url($location.path);  // Clear query parameters
+        $location.path('/admin/consignorInfo/' + consignment.studentId);
+      };
     }]);
