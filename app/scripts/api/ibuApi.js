@@ -8,8 +8,8 @@ angular.module('consignmentApp').
       getList: getList
     };
 
-    function getList() {
-      return Inventory.get().$promise
+    function getList(params) {
+      return Inventory.get(params).$promise
         .then(function (response) {
           return response.inventory;
         });

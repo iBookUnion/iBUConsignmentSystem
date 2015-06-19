@@ -8,21 +8,19 @@
  * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
-    .controller('InventoryCtrl', ['$scope', '$location', 'Inventory', function ($scope, $location, Inventory) {
+  .controller('InventoryCtrl', ['$scope', '$location', 'Inventory', function ($scope, $location, Inventory) {
 
-      $scope.selectBook = function(isbn) {
-        $location.search('isbn', isbn)
-            .path('admin/forms');
-      };
+    $scope.viewAvailableBookCopies = function () {
+      $location.search('isbn', this.book.isbn)
+        .path('admin/forms');
+    };
 
-      $scope.viewAvailableBookCopies = function() {
-        $location.search('isbn', this.book.isbn)
-            .path('admin/forms');
-      };
-
-      Inventory.getList()
+    $scope.searchBooks = function (params) {
+      Inventory.getList(params)
         .then(function (inventory) {
           $scope.books = inventory;
         });
+    };
 
-    }]);
+    $scope.searchBooks();
+  }]);
