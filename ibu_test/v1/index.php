@@ -99,14 +99,16 @@ $app->patch('/users/:student_id', function($student_id) use ($app) {
 		if ($res == "Successfully Updated") {
             $response["error"] = false;
             $response["message"] = "The User's Information was successfully changed!";
+            echoRespnse(200, $response);
         } else if ($res == "There Was An Error") {
             $response["error"] = true;
-            $response["message"] = "Oops! An error occurred!";                
+            $response["message"] = "Oops! An error occurred!";
+            echoRespnse(400, $response);
         } else if ($res == "Sorry, this record doesn't exist") {
             $response["error"] = true;
             $response["message"] = "Sorry, this user does not exists";
+            echoRespnse(404, $response);
         }
-        echoRespnse(200, $response);
 		
 		
 });
@@ -134,14 +136,16 @@ $app->patch('/books/:isbn', function($isbn) use ($app) {
 		if ($res == "Successfully Updated") {
             $response["error"] = false;
             $response["message"] = "The User's Information was successfully changed!";
+            echoRespnse(200, $response);
         } else if ($res == "There Was An Error") {
             $response["error"] = true;
-            $response["message"] = "Oops! An error occurred!";                
+            $response["message"] = "Oops! An error occurred!";
+            echoRespnse(400, $response);
         } else if ($res == "Sorry, this record doesn't exist") {
             $response["error"] = true;
             $response["message"] = "Sorry, this user does not exists";
-        }
-        echoRespnse(200, $response);		
+            echoRespnse(404, $response);
+        }		
 		
 		
 });
@@ -161,13 +165,22 @@ $app->patch('/consignments/:consignment_number(/:consignment_item)', function($c
 		
 		$res = $db->patch_method($params);
 		
-		if ($res) {
-			echo "this worked";
-		} else {
-			echo "something went wrong";
-		}
-		
 		//manage errors
+		
+		if ($res == "Successfully Updated") {
+            $response["error"] = false;
+            $response["message"] = "The User's Information was successfully changed!";
+            echoRespnse(200, $response);
+        } else if ($res == "There Was An Error") {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred!";
+            echoRespnse(400, $response);
+        } else if ($res == "Sorry, this record doesn't exist") {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this user does not exists";
+            echoRespnse(404, $response);
+        }
+        		
 });
 
 $app->delete('/consignments/:consignment_number', function() use ($app){
