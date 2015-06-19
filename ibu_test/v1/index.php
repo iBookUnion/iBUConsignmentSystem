@@ -95,13 +95,19 @@ $app->patch('/users/:student_id', function($student_id) use ($app) {
 		
 		$res = $db->patch_method($params);
 		
-		if ($res) {
-			echo "this worked";
-		} else {
-			echo "something went wrong";
-		}
-		
 		//manage errors
+		if ($res == "Successfully Updated") {
+            $response["error"] = false;
+            $response["message"] = "The User's Information was successfully changed!";
+        } else if ($res == "There Was An Error") {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred!";                
+        } else if ($res == "Sorry, this record doesn't exist") {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this user does not exists";
+        }
+        echoRespnse(200, $response);
+		
 		
 });
 
@@ -124,13 +130,20 @@ $app->patch('/books/:isbn', function($isbn) use ($app) {
 		
 		$res = $db->patch_method($params);
 		
-		if ($res) {
-			echo "this worked";
-		} else {
-			echo "something went wrong";
-		}
-		
 		//manage errors
+		if ($res == "Successfully Updated") {
+            $response["error"] = false;
+            $response["message"] = "The User's Information was successfully changed!";
+        } else if ($res == "There Was An Error") {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred!";                
+        } else if ($res == "Sorry, this record doesn't exist") {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this user does not exists";
+        }
+        echoRespnse(200, $response);		
+		
+		
 });
 
 $app->delete('/books/:isbn', function() use ($app){

@@ -8,7 +8,7 @@ abstract class Getter {
 		$conditions = $this->set_search_conditions($params);
 		$query = $this->prepare_query_statement($conditions);
 		
-		//var_dump($query);
+		var_dump($query);
 		
 		// should I leave the actual execuion to another class?
 		$stmt = $this->conn->prepare($query);
@@ -359,7 +359,7 @@ class ALL_Consignment_Getter extends Getter {
 	}
 }
 
-class Book_Consignment_Getter extends Getter {
+class Inventory_Getter extends Getter {
 			protected $conn;
 	
 	function __construct($conn) {
@@ -405,9 +405,9 @@ class Book_Consignment_Getter extends Getter {
 	
 	protected function package_results($stmt) {
 		$rows = $stmt->num_rows;
-		$stmt->bind_result($isbn, $title, $author, $edition,
-						   $consignment_number, $price,
-						   $current_state, $consignment_item, $courses);
+		$stmt->bind_result($consignment_number, $consignment_item,
+							$isbn, $title, $author, $edition, $price,
+							$current_state, $courses);
 		
 		$inventory = array();
 
@@ -417,11 +417,12 @@ class Book_Consignment_Getter extends Getter {
 			$book["title"] = $title;
 			$book["author"] = $author;
 			$book["edition"] = $edition;
+			$book["courses"] = $courses;
 			$book["price"] = $price;
 			$book["current_state"] = $current_state;
 			$book["consignment_number"] = $consignment_number;
 			$book["consigned_item"] = $consignment_item;
-			$book["courses"] = $courses;
+
 			
 			$inventory[] = $book;	
 		}

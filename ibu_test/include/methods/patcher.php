@@ -150,7 +150,7 @@ class Book_Patcher extends Patcher {
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
-    		$cond =  "(title LIKE '%" . ($query_param) . "%')";;
+    		$cond =  "title = " . stringify($query_param);
     		    return $cond;
     	}
 	}
@@ -197,20 +197,14 @@ class Consignment_Patcher extends Patcher {
 	    
 	    $conditions["consignment_number"] = $this->set_consignment_number($update_params["consignment_number"]);
 		$conditions["consignment_item"] = $this->set_consignment_item($update_params["consignment_item"]);
-		$conditions["price"] = $this->set_isbn($update_params["price"]);
+		$conditions["price"] = $this->set_price($update_params["price"]);
 		$conditions["current_state"] = $this->set_current_state($update_params["current_state"]);       
 	        
 	        return $conditions;
 	}
     
     protected function get_table() {
-            $table = "books
-	    	JOIN consigned_items
-		      ON books.isbn = consigned_items.isbn
-		    JOIN consignments
-		     ON consignments.consignment_number = consigned_items.consignment_number
-		    JOIN users
-		     ON consignments.student_id = users.student_id";  
+            $table = "consigned_items";  
 		     
 		    return $table;
     }
@@ -270,7 +264,7 @@ class Consignment_Patcher extends Patcher {
 
 	private function set_title($query_param) {
     	if ($query_param != null) {
-    		$cond =  "(title LIKE '%" . ($query_param) . "%')";;
+    		$cond =  "title = " . stringify($query_param);
     		    return $cond;
     	}
 	}
@@ -303,6 +297,14 @@ class Consignment_Patcher extends Patcher {
     		    return $cond;
     	}
 	}
+	
+	private function set_price($query_param) {
+	    if ($query_param != null) {
+	        $cond = "price = " . stringify($query_param);
+	            return $cond;
+
+	    }
+	}
 
 	private function set_date($query_param) {
 		if ($query_param != null) {
@@ -313,14 +315,14 @@ class Consignment_Patcher extends Patcher {
 	
 	private function set_consignment_number($query_param) {
 		if ($query_param != null) {
-			$cond = "consignments.consignment_number = " . $query_param;
+			$cond = "consignment_number = " . $query_param;
 				return $cond;
 		}
 	}	
     
     private function set_consignment_item($query_param) {
 		if ($query_param != null) {
-			$cond = "consignments.consignment_item = " . $query_param;
+			$cond = "consignment_item = " . $query_param;
 				return $cond;
 		}
 	}	

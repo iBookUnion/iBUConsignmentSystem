@@ -17,11 +17,12 @@ abstract class DbHandler {
 	}
 	
 	public function patch_method($params) {
+	    // this should check for existence
 	    $patcher = $this->get_patcher();
 	    
 	    $res = $patcher->update($params);
 	    
-	        return $res;
+	       return ($res) ? "Successfully Updated" : "There Was An Error";
 	}
 	 
 	public function post_method($params) {
@@ -462,7 +463,7 @@ class DbInventoryResourceHandler extends DbHandler {
     }
 
     protected function get_getter() {
-    	$getter = new Book_Consignment_Getter($this->conn);
+    	$getter = new Inventory_Getter($this->conn);
     		return $getter;
     }
     
