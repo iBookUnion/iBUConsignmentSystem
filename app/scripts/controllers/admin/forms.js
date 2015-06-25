@@ -24,8 +24,7 @@ angular.module('consignmentApp')
           $scope.consignments = consignments;
         });
 
-
-      $scope.viewConsignor = function (consignment) {
+      $scope.viewConsignment = function (consignment) {
         $location.url($location.path);  // Clear query parameters
         $location.path('/admin/consignorInfo/' + consignment.studentId);
       };

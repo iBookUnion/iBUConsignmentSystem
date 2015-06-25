@@ -16,12 +16,7 @@ angular.module('consignmentApp')
         $scope.contact = Consignors.getConsignors($routeParams.consignorId)
           .then(function (consignor) {
               // TODO: Get Consignment Object Instead When The API is Working
-              $scope.contact = consignor;
-              $scope.contact.consignmentNo = consignor.studentId;
-              $scope.contact.sno = consignor.studentId;
-              $scope.contact.fname = consignor.firstName;
-              $scope.contact.lname = consignor.lastName;
-              $scope.contact.phno = consignor.phoneNumber;
+              $scope.consignment = consignor;
           });
 
       $scope.faculties = ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics'];

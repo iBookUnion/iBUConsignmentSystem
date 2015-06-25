@@ -16,37 +16,35 @@ describe('Controller: ConsignorInfoCtrl', function () {
   };
 
   var expectedUserResponse = {
-    users: {
-      'studentId': 1,
-      'firstName': 'Clark',
-      'lastName': 'Kent',
-      'email': 'kent@mail.com',
-      'phoneNumber': 1234541234
-    }
+    'studentId': 1,
+    'firstName': 'Clark',
+    'lastName': 'Kent',
+    'email': 'kent@mail.com',
+    'phoneNumber': 1234541234
   };
 
-var ConsignorInfoCtrl,
-  scope, httpBackend;
+  var ConsignorInfoCtrl,
+    scope, httpBackend;
 
-beforeEach(inject(function ($httpBackend, $rootScope, $controller, API_URI, Consignors) {
-  // Set up the mock http service responses
-  httpBackend = $httpBackend;
+  beforeEach(inject(function ($httpBackend, $rootScope, $controller, API_URI, Consignors) {
+    // Set up the mock http service responses
+    httpBackend = $httpBackend;
 
-  httpBackend.when('GET', API_URI.baseURL + '/users/1')
-    .respond(mockUserResponse);
+    httpBackend.when('GET', API_URI.baseURL + '/users/1')
+      .respond(mockUserResponse);
 
-  // Initialize the controller and a mock scope
-  scope = $rootScope.$new();
-  ConsignorInfoCtrl = $controller('ConsignorInfoCtrl', {
-    $scope: scope,
-    $routeParams: {consignorId: 1},
-    Consignors: Consignors
+    // Initialize the controller and a mock scope
+    scope = $rootScope.$new();
+    ConsignorInfoCtrl = $controller('ConsignorInfoCtrl', {
+      $scope: scope,
+      $routeParams: {consignorId: 1},
+      Consignors: Consignors
+    });
+  }));
+
+  it('retrieves the correct consignor', function () {
+    httpBackend.flush();
+    expect(scope.consignment).toEqual(jasmine.objectContaining(expectedUserResponse));
   });
-}));
-
-it('retrieves the correct consignor', function () {
-  httpBackend.flush();
-  expect(scope.contact).toEqual(jasmine.objectContaining(expectedUserResponse));
-});
 })
 ;
