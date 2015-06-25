@@ -12,6 +12,7 @@
                 <h3 class="text-center">
                     {{book.title}}
                 </h3>
+
                 <div class="row">
                     <div class="col-xs-5">
                         <a class="thumbnail">
@@ -39,6 +40,7 @@
                     <h4 class="text-center">
                         Search for Consignors
                     </h4>
+
                     <div class="col-sm-6 col-sm-offset-3">
                         <input type="text" class="form-control" placeholder="Consignment ID">
                     </div>
@@ -48,19 +50,30 @@
 
         <div class="col-sm-6">
             <h3 class="text-center">
-                <div ng-if="isbn">Book Availability</div>
+                <span ng-if="isbn">
+                    Book Availability
+                </span>
+                <span class="nullable">
+                    <select ng-model="stateFilter" ng-options="state.name for state in states">
+                        <option value="">-- All --</option>
+                    </select>
+                </span>
+
+                <!--<span class="label label-default">Not in Store</span>-->
             </h3>
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
                     <td>Consignment #</td>
                     <td>Price</td>
+                    <td>Status</td>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="consignment in consignments"
+                    <tr ng-repeat="consignment in consignments | filter:{currentState : stateFilter.id}"
                         ng-click="viewConsignment(consignment);">
                         <td>{{consignment.consignmentNumber}}</td>
                         <td>{{consignment.price}}</td>
+                        <td ng-repeat="state in states | filter:{id: consignment.currentState}">{{state.name}}</td>
                     </tr>
                 </table>
             </div>
