@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('consignmentApp').
-  factory('Inventory', ['$resource', 'API_URI', function ($resource, API_URI) {
+angular.module('consignmentApp')
+  .factory('Inventory', ['$resource', 'API_URI', function ($resource, API_URI) {
 
     var Inventory = $resource(API_URI.inventory);
     return {
