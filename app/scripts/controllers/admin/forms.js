@@ -8,8 +8,8 @@
  * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
-  .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'ConsignmentAPI', 'Books',
-    function ($scope, $routeParams, $location, ConsignmentAPI, Books) {
+  .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'ConsignmentAPI', 'Books', 'OPTIONS',
+    function ($scope, $routeParams, $location, ConsignmentAPI, Books, OPTIONS) {
 
       if ($routeParams.isbn) {
         $scope.isbn = $routeParams.isbn;
@@ -29,22 +29,5 @@ angular.module('consignmentApp')
         $location.path('/admin/consignorInfo/' + consignment.studentId);
       };
 
-      $scope.states = [
-        {
-          id: 1,
-          name: 'Available'
-        },
-        {
-          id: 2,
-          name: 'Not in Store'
-        },
-        {
-          id: 3,
-          name: 'Sold'
-        },
-        {
-          id: 4,
-          name: 'Closed'
-        }
-      ];
+      $scope.states = OPTIONS.bookStates;
     }]);

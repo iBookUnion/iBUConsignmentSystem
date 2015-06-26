@@ -76,15 +76,8 @@
 
     <div class="form-group">
         <label for="faculty">Faculty</label>
-        <select id="faculty" ng-model="consignment.faculty" name="faculty" class="form-control">
-            <option>Arts</option>
-            <option>Commerce</option>
-            <option>Music</option>
-            <option>Science</option>
-            <option>Applied Science</option>
-            <option>Forestry</option>
-            <option>Dentistry</option>
-            <option>Human Kinetics</option>
+        <select id="faculty" ng-model="consignment.faculty" name="faculty" class="form-control"
+                ng-options="faculty in faculties">
         </select>
     </div>
 
@@ -93,5 +86,4 @@
         <textarea class="form-control" rows="2" id="how_you_know_ibu" ng-model="consignment.discovery"
                   name="how_you_know_ibu"></textarea>
     </div>
-
 </form>

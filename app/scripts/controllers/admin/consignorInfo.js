@@ -9,23 +9,25 @@
  */
 
 angular.module('consignmentApp')
-    .controller('ConsignorInfoCtrl', function ($scope, $routeParams, Consignors) {
+  .controller('ConsignorInfoCtrl', ['$scope', '$routeParams', 'Consignors', 'ConsignmentService', 'OPTIONS',
+    function ($scope, $routeParams, Consignors, ConsignmentService, OPTIONS) {
 
-        $scope.section = 'contact';
+      ConsignmentService.retrieveExistingForm($routeParams.consignorId)
+        .then(function (form) {
+          $scope.consignment = form.contactInfo;
+          $scope.books = form.books;
+        });
 
-        $scope.contact = Consignors.getConsignors($routeParams.consignorId)
-          .then(function (consignor) {
-              // TODO: Get Consignment Object Instead When The API is Working
-              $scope.consignment = consignor;
-          });
+      // TODO: Use some Auth library to determine if admin access is available
+      $scope.isAdmin = true;
+      $scope.section = 'contact';
+      $scope.states = OPTIONS.bookStates;
+      $scope.faculties = OPTIONS.faculties;
 
-      $scope.faculties = ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics'];
+      $scope.selectSection = function (section) {
+        $scope.section = section;
+      };
+      $scope.saveConsignor = function () {
 
-        $scope.selectSection = function (section) {
-            $scope.section = section;
-        };
-
-        $scope.saveConsignor = function () {
-
-        };
-    });
+      };
+    }]);

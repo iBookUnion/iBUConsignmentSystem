@@ -23,6 +23,7 @@
       .when('/admin/consignorInfo/:consignorId', {
         templateUrl: 'views/consignorInfo.html',
         controller: 'ConsignorInfoCtrl'
+
       })
       .otherwise({
         redirectTo: '/'
@@ -45,12 +46,6 @@
       return {
         restrict: 'E',
         templateUrl: 'views/consignmentForm/agreement.html'
-      };
-    })
-    .directive('adminBookList', function () {
-      return {
-        restrict: 'E',
-        templateUrl: 'views/admin/adminBookList.html'
       };
     });
 })();
