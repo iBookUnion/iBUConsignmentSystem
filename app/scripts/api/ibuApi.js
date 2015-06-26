@@ -86,7 +86,6 @@ function convertToCamelCase(object) {
 
 function convertObjectToCamelCase(object) {
   return _.mapKeys(object, function (value, key) {
-    console.log(key);
     return _.camelCase(key);
   });
 }

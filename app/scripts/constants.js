@@ -11,4 +11,27 @@ angular.module('consignmentApp')
       'consignor': baseURL + '/user/:consignorId',
       'consignment': baseURL + '/consignments'
     };
+  })())
+  .constant('OPTIONS', (function () {
+    return {
+      'bookStates': [
+        {
+          id: 1,
+          name: 'Available'
+        },
+        {
+          id: 2,
+          name: 'Not in Store'
+        },
+        {
+          id: 3,
+          name: 'Sold'
+        },
+        {
+          id: 4,
+          name: 'Closed'
+        }
+      ],
+      'faculties': ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics']
+    };
   })());
