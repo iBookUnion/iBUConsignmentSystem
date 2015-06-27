@@ -8,6 +8,7 @@ abstract class Resource
 	abstract public function getDeleter($conn);
 	//abstract public function getGetter($conn);
 	//abstract public function getKey();
+	abstract public function printOut();
 }
 
 class User extends Resource 
@@ -19,7 +20,13 @@ class User extends Resource
 	protected $email;
 	protected $phone_number;
 
-	function __construct($params) {
+	function __construct($params)
+	{	
+		$this->setStudentID($params["student_id"]);
+		$this->setFirstName($params["first_name"]);
+		$this->setLastName($params["last_name"]);
+		$this->setEmail($params["email"]);
+		$this->setPhoneNumber($params["phone_number"]);		
 	}
 // setters (should they be private or public)
 	private function setStudentID($student_id) { $this->studentID = $student_id;}
@@ -35,6 +42,25 @@ class User extends Resource
 	public function getEmail() {return $this->email;}
 	public function getPhoneNumber(){return $this->phone_number;}
 
+	public function printOut()
+	{
+		$student_id = $this->getStudentID();
+		$first_name = $this->getFirstName();
+		$last_name = $this->getLastName();
+		$email = $this->getEmail();
+		$phone_number = $this->getPhoneNumber();
+
+		echo "This is the student ID: \n";
+		var_dump($student_id);
+		echo "This is the first name: \n";
+		var_dump($first_name);
+		echo "This is the last name: \n";
+		var_dump($last_name);
+		echo "This is the email: \n";
+		var_dump($email);
+		echo "This is the phone number: \n";
+		var_dump($phone_number);
+	}
 
 	public function getPoster($conn) {
 		$poster = new UserPoster($conn);
@@ -111,26 +137,47 @@ class Book extends Resource
 }
 
 
-class ConsignedBook extends Book
+class ConsignedItem extends Resource
 {
-	protected $isbn;
+	protected $book;
 	protected $consigned_item;
 	protected $price;
-	protected $title;
-	protected $author;
-	protected $edition;
-	protected $courses; // an array of courses
+	protected $current_state;
 	
-	function __construct()
+	function __construct($params)
 	{
+		$this->setBook($params["book"]);
+		$this->setConsignedItem($params["ConsignedItem"]);
+		$this->setPrice($params["price"]);
+		$this->setCurrentState($params["current_state"]);
 	}
 
 //setters
 	private function setConsignedItem($consigned_item) {$this->consigned_item = $consigned_item;}
 	private function setPrice($price) {$this->price = $price;}
+	private function setBook($book) {$this->book = $book;}
+	private function setCurrentState($current_state) {$this->current_state = $current_state;}
 //getters
 	public function getConsignedItem() {return $this->consigned_item;}
 	public function getPrice() {return $this->price;}
+	public function getBook() {return $this->book;}
+	public function getCurrentState() {return $this->current_state;}
+
+	public function printOut() {
+		$consigned_item = $this->getConsignedItem();
+		$price = $this->getPrice();
+		$current_state = $this->getCurrentState();
+		$book = $this->getBook();
+
+		echo "This is the consigned_item number: \n";
+		var_dump($Consigned_item);
+		echo "This is the book: \n";
+		$book->printOut();
+		echo "This is the price: \n";
+		var_dump($price);
+		echo "This is the current state: \n";
+		var_dump($current_state);
+	}
 
 	public function getPoster($conn) {
 		$posters = array();
@@ -201,13 +248,19 @@ class Course extends Resource {
 	} 	
 }
 
-class consignment {
+class Consignment {
 	//protected $consignment_number; ----> don't forget the db is the one that sets thiis
+	// note: as we dno't yet have this key this will complicate the deletion
 	protected $student_id;
 	protected $books; //list of books
 
-	function __construct() {
-
+	function __construct() 
+	{
+		$this->setISBN($params["isbn"]);
+		$this->setTitle($params["title"]);
+		$this->setAuthor($params["author"]);
+		$this->setEdition($params["edition"]);
+		$this->setCourses($params["courses"]);
 	}
 
 //setters
@@ -219,6 +272,16 @@ class consignment {
 	//public function get_consignment_number() {return $this->consignment_number;}
 	public function getStudentID() {return $this->student_id;}
 	public function getBooks() {return $this->books;}
+
+	public function printOut() 
+	{
+		$student_id = $this->getStudentID();
+		$books = $this->getBooks();
+
+		foreach ($books as $book) {
+			$book->printOut();
+		}
+	}
 
 	public function getPoster($conn) {
 		$poster = new ConsignmentPoster($conn);
