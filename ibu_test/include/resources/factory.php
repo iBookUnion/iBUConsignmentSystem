@@ -1,14 +1,14 @@
 <?php
 
-	require('../resources/resources.php');
+	require('resources.php');
 
 // what should I do about objects not created through $app?
 // make another method or have it go through makeObject and change what goes throough it?
 
 abstract class Factory 
 {
-	abstract public function makeObject();
-	abstract protected function getParameters();
+	abstract public function makeObject($params);
+	abstract public function getParameters();
 }
 
 /**
@@ -23,14 +23,14 @@ class UserFactory extends Factory
 		$this->app = $app;
 	}
 
-	public function makeObject() 
+	public function makeObject($params) 
 	{
 		$params = $this->getParameters();
 		$user = new User($params);
 		return $user;
 	}
 
-	protected function getParameters() 
+	public function getParameters() 
 	{
 		$student_id = $this->app->request()->post('student_id');
 		$first_name = $this->app->request()->post('first_name');
@@ -62,14 +62,14 @@ class BookFactory extends Factory
 
 		$params = $this->getParameters();
 
-		$courses = $courseFactory->makeListOfObjects($params[courses]);
-		$params[courses] = $courses; 
+		$courses = $courseFactory->makeListOfObjects($params["isbn"], $params["courses"]);
+		$params["courses"] = $courses; 
 		
 		$book = new Book($params);
-		return $user;
+		return $book;
 	}
 
-	protected function getParameters() 
+	public function getParameters() 
 	{
 		$json = $this->app->request->getBody();
         $params = json_decode($json, true);
@@ -86,25 +86,26 @@ class CourseFactory extends Factory
 		$this->app = $app;
 	}
 
-	public function makeObject()
+	public function makeObject($params)
 	{
 		$params = $this->getParameters();
 		$course = new Course($params);
 		return $course;
 	}
 
-	public function makeListOfObjectes($courseParams)
+	public function makeListOfObjects($isbn, $courseParams)
 	{	
 		$courses = array();
 		foreach ($courseParams as $courseParam)
-		{
+		{	
+			$courseParam["isbn"] = $isbn;
 			$course = new Course($courseParam);
 			$courses[] = $course;
 		}
-
+		return $courses;
 	}
 
-	protected function getParameters() 
+	public function getParameters() 
 	{
 
 
@@ -118,14 +119,14 @@ class ConsignmentFactory extends Factory
 		$this->app = $app;
 	}
 
-	public function makeObject()
+	public function makeObject($params)
 	{
 		$params = $this->getParameters();
 		$consignment = new Consignment($params);
 		return $consignment;
 	}
 
-	protected function getParameters()
+	public function getParameters()
 	{
 
 	}

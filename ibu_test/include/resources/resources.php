@@ -4,10 +4,10 @@
 // This family of classes is meant to contain parameters
 abstract class Resource 
 {
-	abstract public function getPoster();
-	abstract public function getDeleter();
-	abstract public function getGetter();
-	abstract public function getKey();
+	abstract public function getPoster($conn);
+	abstract public function getDeleter($conn);
+	//abstract public function getGetter($conn);
+	//abstract public function getKey();
 }
 
 class User extends Resource 
@@ -60,6 +60,7 @@ class Book extends Resource
 		$this->setTitle($params["title"]);
 		$this->setAuthor($params["author"]);
 		$this->setEdition($params["edition"]);
+		$this->setCourses($params["courses"]);
 	}
 
 //setters
@@ -91,11 +92,12 @@ class Book extends Resource
 		var_dump($author);
 		echo "This is the edition: \n";
 		var_dump($edition);
-		
+
+
 		foreach ($courses as $course)
 		{
 			$course->printOut();
-		}
+		} 
 	}
 	
 	public function getPoster($conn) {
@@ -119,7 +121,7 @@ class ConsignedBook extends Book
 	protected $edition;
 	protected $courses; // an array of courses
 	
-	function __construct(argument)
+	function __construct()
 	{
 	}
 
@@ -149,10 +151,10 @@ class Course extends Resource {
 	protected $isbn;
 	
 
-	function __construct($subject, $course_number, $isbn) {
-		setISBN($isbn);
-		setSubject($subject);
-		setCourseNumber($course_number);
+	function __construct($parameters) {
+		$this->setISBN($parameters["isbn"]);
+		$this->setSubject($parameters["subject"]);
+		$this->setCourseNumber($parameters["course_number"]);
 	}
 
 
