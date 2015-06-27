@@ -2,6 +2,7 @@
 	
 	require_once('../include/Dbhandler.php');
 	require('../libs/Slim/Slim.php');
+	require('../include/resources/factory.php');
 
 	\Slim\Slim::registerAutoloader();
 
@@ -120,7 +121,13 @@ $app->delete('/users/:student_id', function($student_id) use ($app) {
 });
 
 $app->post('/books', function() use ($app) {
-				// calll to functions
+
+		$bookFactory = new bookFactory($app);
+      	$parameters = $bookFactory->getParameters();
+      	$book = $bookFactory->makeObject();
+      	$book->printOut();
+        
+ 
 });
 
 $app->patch('/books/:isbn', function($isbn) use ($app) {

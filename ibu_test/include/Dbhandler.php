@@ -2,6 +2,7 @@
 
 	require_once '../include/methods/getter.php';
 	require_once '../include/methods/patcher.php';
+	require_once '../include/methods/poster.php';
 	require_once '../include/DbConnect.php';
 
 abstract class DbHandler {
@@ -31,6 +32,7 @@ abstract class DbHandler {
 	   // at this point it would be easier to relegate to poster...but poster are not handlers....
 	   
 	   $list_of_posters = $this->get_posters();
+	   
 	   
 	   // this will need to handle distribution of the params to the posters
 	   // this will also need to check for the prior existence of the records
@@ -152,17 +154,33 @@ class DbBooksResourceHandler extends DbHandler {
     }
 
     protected function call_posters($list_of_posters, $params) {
-        if ($this->verify_nonexistance($params["isbn"])) {
+        if (true) {
             $res = $this->get_res_array();
+            
+            var_dump($res);
+            
+            $isbn = $params["isbn"];
+            $author = $params["author"];
+            $title = $params["title"];
+            $edition = $params["edition"];
+            $courses = $params["courses"]; // should be a list of courses
 
-            $book_result = $list_of_posters["book"]->create($params); 
+            $book_params = array("isbn" => $isbn,
+                                "author" => $author,
+                                "title" => $title,
+                                "edition" => $edition);
+
+            $courses_params = array("isbn" => $isbn,
+                                    "courses" => $courses);
+
+            $book_result = $list_of_posters["book"]->create($book_params); 
                                                                                         
             $res["error"] = $book_result["error"];
             $res["keys"]["book"] = $book_result;
                                                                                         
             // loops through what should be a list of courses
             // each loops results is checked by union with previous results
-            $course_results = $this->call_poster_courses($params);
+            $course_results = $this->call_poster_courses($courses_params);
 
             $res["error"] = $res["error"] && $course_results["error"];
             $res["keys"]["courses"] = $course_results["courses"];
@@ -178,7 +196,7 @@ class DbBooksResourceHandler extends DbHandler {
             }
         
     }
-    private function call_poster_courses($params) {
+    private function call_poster_courses($courses_params) {
         // set the base for the arrays here:
         $res["error"] = false;
         $course_results["error"] = false;
@@ -187,13 +205,22 @@ class DbBooksResourceHandler extends DbHandler {
         $course_book_results["course_results"] = array();
 
         // how is this getting the necessary isbn?
-        foreach ($params["courses"] as $course) {
+        foreach ($courses_params["courses"] as $course) {
 
-            $course_result = $list_of_posters["course"]->create($course);
+            // params for course
+            $course_course["subject"] = $course["subject"];
+            $course_course["course_number"] = $course["course_number"];
+
+            // params for course_book
+            $course_course_books["isbn"] = $courses_params["isbn"];
+            $course_course_books["subject"] = $course["subject"];
+            $course_course_books["course_number"] = $course["course_number"];
+
+            $course_result = $list_of_posters["course"]->create($course_course);
             $course_results["error"] = $course_results["error"] && $course_result["error"];
             $course_results["courses"][] = $course_result;
 
-            $course_books_result = $list_of_posters["course_book"]->create($course);
+            $course_books_result = $list_of_posters["course_book"]->create($course_course_books);
             $course_books_results["error"] = $course_books_results["error"] && $course_book_result["error"];
             $course_books_results["courses"][] = $course_books_result;
         
@@ -206,9 +233,10 @@ class DbBooksResourceHandler extends DbHandler {
 
     }
     private function get_res_array() {
-        $res["errors"] = false;
+        $res["error"] = false;
         $res["keys"] = $this->get_key_array();
         $res["message"] = "Records were successfully created.";
+            return $res;
     }
     private function get_key_array() {
         $keys = array();
@@ -288,169 +316,6 @@ class DbBooksResourceHandler extends DbHandler {
 
 }
 
-
-class DbConsignmentsResourceHandler extends DbHandler {
-		protected $conn;
-
-	function __construct() {
-    require_once dirname(__FILE__) . '/DbConnect.php';
-    // opening db connection
-    $db = new DbConnect();
-    $this->conn = $db->connect();
-    }		
-
-
-    protected function get_getter() {
-    	$getter = new ALL_Consignment_Getter($this->conn);
-    		return $getter;
-    }
-    
-    protected function get_patcher() {
-        $patcher = new Consignment_Patcher($this->conn);
-            return $patcher;
-    }
-    
-    protected function get_posters() {
-        $user_poster = new User_Poster($this->conn);
-        $book_poster = new Book_Poster($this->conn);
-        $course_poster = new Course_Poster($this->conn);
-        $course_book_poster = new Course_Books_Poster($this->conn);
-        $consignment_poster = new Consignment_Poster($this->conn);
-        $consigned_item_poster = new Consigned_Item_Poster($this->conn);
-        
-        $list_of_posters["user"] = $user_poster;
-        $list_of_posters["book"] = $book_poster;
-        $list_of_posters["course"] = $course_poster;
-        $list_of_posters["course_book"] = $course_book_poster;
-        $list_of_posters["consignment"] = $consignment_poster;
-        $list_of_posters["consigned_item"] = $consigned_item_poster;
-            return $list_of_posters;
-    }
-    
-    protected function call_posters($list_of_posters, $params) {
-       if (verify_nonexistence($params["consignment_number"])) {
-            $res = $this->get_res_array();
-
-            $consignment_results = $list_of_posters["consignment"]->create($params);
-            $user_results = $list_of_posters["user"]->create($params); 
-
-            $res["error"] = $user_results["error"] && $consignment_results["error"];
-            $res["keys"]["user"] = $user_results;
-            $res["keys"]["consignment"] = $consignment_results;
-
-            // loops through what should be a list 
-            // each loops results is checked by union with previous results
-            $book_results = $this->call_poster_books($params);
-
-            $res["error"] = $res["error"] && $book_results["error"];
-            $res["keys"]["books"] = $book_results["books"];
-            $res["keys"]["consigned_items"] = $book_results["consigned_item"];
-            $res["keys"]["courses"] = $book_results["courses"];
-            $res["keys"]["course_books"] = $book_results["course_books"];
-
-                    return $res;
-        } else {
-            $res["error"] = true;
-            $res["message"] = "The Record Already Existed";
-            $res["keys"]["consignment"] = $params["consignment_number"];
-
-                return $res;
-        }
-    }
-    private function call_poster_books() {
-        //set the base for the arrays here:
-        $res["error"] = false;
-        $book_results["error"] = false;
-        $consigned_item_results["error"] = false;
-
-        foreach ($params["books"] as $book) {
-            
-            $res["books"] =  $res["books"] && $list_of_posters["book"]->create($book);
-            $res["consigned_items"] = $res["consigned_items"] && $list_of_posters["consigned_item"]->create($book);
-            
-            foreach ($params["books"]["courses"] as $course) {
-                    $res["course"] = $res["course"] && $list_of_posters["course"]->create($course);
-                    $res["course_book"] =  $res["course_book"] && $list_of_posters["course_book"]->create($course);
-            }
-            
-        }
-    }
-    private function call_poster_courses() {
-        //set the base for the arrays here:
-        // set the base for the arrays here:
-        $res["error"] = false;
-        $course_results["error"] = false;
-        $course_book_results["error"] = false;
-        $course_results["courses"] = array();
-        $course_book_results["course_results"] = array();
-
-        // how is this getting the necessary isbn?
-        foreach ($params["courses"] as $course) {
-
-            $course_result = $list_of_posters["course"]->create($course);
-            $course_results["error"] = $course_results["error"] && $course_result["error"];
-            $course_results["courses"][] = $course_result;
-
-            $course_books_result = $list_of_posters["course_book"]->create($course);
-            $course_books_results["error"] = $course_books_results["error"] && $course_book_result["error"];
-            $course_books_results["courses"][] = $course_books_result;
-        
-        }
-
-        $res["error"] = $course_results["error"] && $course_books_results["error"];
-        $res["courses"] = $course_results;
-        $res["keys"]["course_books"] = $course_book_results;
-            return $res;
-    }
-    private function get_res_array() {
-        $res["error"] = false;
-        $res["keys"] = $this->get_key_array();
-        $res["message"] = "Records were successfully created.";
-            return $res;
-    }
-    private function get_key_array() {
-        $keys = array();
-        $keys["consignment"] = null;
-        $keys["user"] = null;
-        $keys["consigned_item"] = null;
-        $keys["books"] = null;
-        $keys["courses"] = null;
-        $keys["course_books"] = null;
-            return $keys;
-    }
-
-    protected function verify_nonexistance($params) {
-        $getter = $this->get_getter();
-        $res = $getter->retrieve($params);
-            return $res;
-    }
-
-    protected function handle_errors($res) {
-        if ($res["error"]) {
-            
-            if ($res["keys"]["book"]["error"]) {
-
-                $this->handle_book_error($res);
-
-            } elseif ($res["keys"]["courses"]["error"]) {
-
-                $this->handle_course_error($res);
-
-            } elseif ($res["keys"]["course_books"]["error"]) {
-
-                $this->handle_course_book_errors($res);
-            }
-
-
-        } else {
-
-            return $res;
-
-        }
-
-    }
-
-}
 
 class DbInventoryResourceHandler extends DbHandler {
 		protected $conn;
