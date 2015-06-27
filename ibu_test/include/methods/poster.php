@@ -1,176 +1,398 @@
 <?php
 
+//needs to require helper
+
 abstract class Poster {
-	
-	// if a resource was successfully created its key should be returned
-	// this is in case it has to be rollbacked by the dbhandler
-	public function create($params) {
-		// check for prior existence will be taken care by handler
-	   	$insert = $this->obtain_insert_statement($params);
-		
-		var_dump($insert);
-		
-	   // relegate use of DB
-	   	$stmt = $this->conn->prepare($insert);
-		$res = $stmt->execute();
-		$stmt->store_result();
-		
-		$result = $this->get_result($res, $params);
 
-        return $result;
+	protected function commitToDatabase($insert)
+	{
+		$stmt = $this->conn->prepare($insert);
+        $res = $stmt->execute();
+        $stmt->store_result();
+        return $res;
 	}
 
-	protected function obtain_insert_statement($params) {
-		$columns = $this->get_columns();
-        $values = $this->get_values($params);
-        $statement = "INSERT INTO " . $this->get_table() . $columns . " VALUES" . $values; 
-            return $statement;
+	protected function constructStatement()
+	{
+		$insert = "INSERT INTO ";
+		$table = $this->getTable();
+		$columns = $this->getColumns();
+		$values = $this->getValues();
+
+		$insert = $insert . $table . $columns . $values;
+		return $insert;
 	}
 
-	protected function get_values($params) {
-		$params = $this->prepare_strings($params);
-        $values = " (" . implode_comma($params) . ") ";
-            return $values;
-	}
-
-	abstract protected function get_columns();
-	abstract protected function get_table();
-	abstract protected function get_result($res, $params);
-
+	abstract protected function getTable();
+	abstract protected function getColumns();
+	abstract protected function getValues();
 }
 
-class User_Poster extends Poster {
-	protected function get_columns() {
+class UserPoster extends Poster {
+	private $user;
+	protected $conn;
+
+	function __construct($user, $conn) {
+		$this->setUser($user);
+		$this->setConn($conn);
+	}
+
+//setters
+	private function setUser($user) {$this->user = $user;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getUser() {return $this->user;}
+
+	protected function insert() 
+	{	
+		$result = new User_Result($this->user);
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
+
+        $result->setResult($res);
+
+		return $result;
+	}
+
+	protected function getTable() 
+	{
+		$table = "users";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
     	$columns = " (student_id, first_name, last_name, email, phone_number) ";
     		return $columns;		
 	}
 
-	protected function get_table() {
-		return "users";
+	protected function getValues() 
+	{
+		$user = $this->getUser();
+		$student_id = $user->getStudentID();
+		$first_name = $user->getFirstName();
+		$last_name = $user->getLastName();
+		$email = $user->getEmail();
+		$phone_number = $user->getPhoneNumber();
+
+		//make string
+		$first_name = stringify($first_name);
+		$last_name = stringify($last_name);
+		$email = stringify($email);
+
+		$params = array();
+		$params[] = $student_id;
+		$params[] = $first_name;
+		$params[] = $last_name;
+		$params[] = $email;
+		$params[] = $phone_number;
+
+		$string = implode_comma($params);
+
+		$values = " (" . $string . ") ";
 	}
+
 	
-	protected function get_result($res, $params) {
-		$result["error"] = $res;
-		$result["user"] = $params["student_id"];
-		
-		return $result;
-	}
 }
 
-class Book_Poster extends Poster {
-        protected $conn;
-	
-	function __construct($conn) {
-    require_once '../include/DbConnect.php';
-    // opening db connection
- 		$this->conn = $conn;
-    }
-    
-	protected function get_columns() {
-        $columns = " (isbn, title, author, edition)";
-            return $columns;
+class BookPoster extends Poster 
+{
+	private $book;
+	protected $conn;
+
+	function __construct($book, $conn) {
+		$this->setBook($book);
+		$this->setConn($conn);
 	}
 
-	protected function get_table() {
-		return "books";
-	}
-	
-	protected function prepare_strings($params) {
-        $params["title"] = stringify($params["title"]);  
-        $params["author"] =  stringify($params["author"]);
-        //$params["courses"] = $this->stringify($params["courses"]);
-            return $params;
-    }
-    
-    protected function get_result($res, $params) {
-		$result["error"] = $res;
-		$result["book"] = $params["isbn"];
-		
-		return $result;
-	}
-}
+//setters
+	private function setBook($book) {$this->book = $book;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getBook() {return $this->book;}
 
-class Course_Poster extends Poster {
-        protected $conn;
-	
-	function __construct($conn) {
-    require_once '../include/DbConnect.php';
-    // opening db connection
- 		$this->conn = $conn;
-    }	
-	protected function get_columns() {
-		$columns = " (subject, course_number) ";
-			return $columns;
-	}
+	protected function insert() 
+	{
+		$result = new BookResult($this->book);
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
 
-	protected function get_table() {
-		return "courses";
-	}
-	
-	protected function get_result($res, $params) {
-		$result["error"] = $res;
-		// how do I handle double key here?
-		$result["course"] = $params["student_id"];
-		
+        $result->setResult($res);
+
 		return $result;
 	}
 
+	protected function getTable() 
+	{
+		$table = "books";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
+    	$columns = " (isbn, title, author, edition) ";
+    	return $columns;		
+	}
+
+	protected function getValues() 
+	{
+		$book = $this->getBook();
+		$isbn = $book->getISBN();
+		$title = $book->getTitle();
+		$author = $book->getAuthor();
+		$edition = $book->getEdition();
+
+		//make string
+		$title = stringify($title);
+		$author = stringify($author);
+
+		$params = array();
+		$params[] = $isbn;
+		$params[] = $title;
+		$params[] = $author;
+		$params[] = $edition;
+		$string = implode_comma($params);
+
+		$values = " (" . $string . ") ";
+	}
+
 }
 
-class Course_Books_Poster extends Poster {
-	   protected $conn;
-	
-	function __construct($conn) {
-    require_once '../include/DbConnect.php';
-    // opening db connection
- 		$this->conn = $conn;
-    }
-	protected function get_columns() {
-		$columns = " (isbn, subject, course_number) ";
-			return $columns;
+class ConsignedItemPoster extends Poster 
+{
+	private $consignedItem;
+	protected $conn;
+
+	function __construct($consignedItem, $conn) {
+		$this->setConsignedItem($consignedItem);
+		$this->setConn($conn);
 	}
 
-	protected function get_table() {
-		return "";
-	}
-	
-	protected function get_result($res, $params) {
-		$result["error"] = $res;
-		// how do I handle the double key here?
-		$result["course_books"] = $params["student_id"];
-		
+//setters
+	private function setConsignedItem($consignedItem) {$this->consignedItem = $consignedItem;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getConsignedItem() {return $this->consignedItem;}
+
+	protected function insert() {
+		$result = new CourseResult($this->course);
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
+
+        $result->setResult($res);
+
 		return $result;
 	}
 
+	protected function getTable() 
+	{
+		$table = "consigned_items";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
+    	$columns = " (consignment_number, isbn, price, current_state) ";
+    	return $columns;		
+	}
+
+	protected function getValues() 
+	{
+		$consignedItem = $this->getConsignedItem();
+		$consignment_number = $consignedItem->getConsignmentNumber();
+		$isbn = $consignedItem->getISBN();
+		$price = $consignedItem->getPrice();
+		$current_state = $consignedItem->getCurrentState();
+
+		//make string
+		$current_state = stringify($current_state);
+
+		$params = array();
+		$params[] = $consignedItem;
+		$params[] = $consignment_number;
+		$params[] = $isbn;
+		$params[] = $price;
+		$param[] = $current_state;
+		$string = implode_comma($params);
+
+		$values = " (" . $string . ") ";
+	}
 }
 
-class Consignment_Poster extends Poster {
-	protected function get_columns() {
-		$columns = " (consignment_number, student_id, date) ";
-			return $columns;
-	}
-	
-	protected function get_table() {
-		return "consignments";
+class CoursePoster extends Poster 
+{
+	private $course;
+	protected $conn;
+
+	function __construct($course, $conn) {
+		$this->setCourse($course);
+		$this->setConn($conn);
 	}
 
+//setters
+	private function setCourse($course) {$this->course = $course;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getCourse() {return $this->course;}
+
+	protected function insert() {
+		$result = new CourseResult($this->course);
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
+
+        $result->setResult($res);
+
+		return $result;
+	}
+
+	protected function getTable() 
+	{
+		$table = "courses";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
+    	$columns = " (subject, course_number) ";
+    		return $columns;		
+	}
+
+	protected function getValues() 
+	{
+		$course = $this->getCourse();
+		$subject = $course->getSubject();
+		$course_number = $course->getCourseNumber();
+
+		//make string
+
+		$values = "( " . $string . ") ";
+	}
 }
 
-class Consigned_Item_Poster extends Poster {
-	        protected $conn;
-	
-	function __construct($conn) {
-    require_once '../include/DbConnect.php';
-    // opening db connection
- 		$this->conn = $conn;
-    }
-	protected function get_columns() {
-		$columns = " (consignment_number, isbn, consignment_item, current_state, price) ";
-			return $columns;
+class CourseBookPoster extends Poster
+{
+	private $course;
+	protected $conn;
+
+	function __construct($course, $conn) {
+		$this->setCourse($course);
+		$this->setConn($conn);
 	}
 
-	protected function get_table() {
-		return "consignment_items";
+//setters
+	private function setCourse($course) {$this->course = $course;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getCourse() {return $this->course;}
+
+	protected function insert() {
+		$result = new CourseResult($this->course);
+
+		$result = new User_Result($this->user);
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
+
+        $result->setResult($res);
+
+		return $result;
+	}
+
+	protected function getTable() 
+	{
+		$table = "course_books";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
+    	$columns = " (subject, course_number, isbn) ";
+    	return $columns;		
+	}
+
+	protected function getValues() 
+	{
+		$course = $this->getCourse();
+		$subject = $course->getSubject();
+		$course_number = $course->getCourseNumber();
+		$isbn = $course->getISBN();
+
+		//make string
+		$subject = stringify($subject);
+
+		$params = array();
+		$params[] = $subject;
+		$params[] = $course_number;
+		$params[] = $isbn;
+		$string = implode_comma($params);
+
+		$values = " (" . $string . ") ";
+	}
+}
+
+class ConsignmentPoster extends Poster
+{
+	private $consignment;
+	protected $conn;
+
+	function __construct($consignment, $conn) {
+		$this->setConsignment($consignment);
+		$this->setConn($conn);
+	}
+
+//setters
+	private function setConsignment($consignment) {$this->consignment = $consignment;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getConsignment() {return $this->consignment;}
+
+	protected function insert() {
+		$result = new CourseResult($this->course);
+
+		// constuct the sql statment
+		$insert = $this->constructStatement();
+		// commit it to the db
+		$res = $this->commitToDatabase($insert);
+
+        $result->setResult($res);
+
+		return $result;
+	}
+
+	protected function getTable() 
+	{
+		$table = "consignments";
+		return $table;
+	}
+
+	protected function getColumns() 
+	{
+    	$columns = " (consignment_number, student_id) ";
+    	return $columns;		
+	}
+
+	protected function getValues() 
+	{
+		$consignment = $this->getConsignment();
+		$consignment_number = $consignment->getConsignmentNumber();
+		$student_id = $consignment->getStudentID();
+
+		// make string
+		$params = array();
+		$params[] = $consignment_number;
+		$params[] = $student_id;
+		$string = implode_comma($params);
+
+		$values = " (" . $string . ") ";
 	}
 
 }
