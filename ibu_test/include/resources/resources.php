@@ -147,7 +147,7 @@ class ConsignedItem extends Resource
 	function __construct($params)
 	{
 		$this->setBook($params["book"]);
-		$this->setConsignedItem($params["ConsignedItem"]);
+		$this->setConsignedItem($params["consigned_item"]);
 		$this->setPrice($params["price"]);
 		$this->setCurrentState($params["current_state"]);
 	}
@@ -170,7 +170,7 @@ class ConsignedItem extends Resource
 		$book = $this->getBook();
 
 		echo "This is the consigned_item number: \n";
-		var_dump($Consigned_item);
+		var_dump($consigned_item);
 		echo "This is the book: \n";
 		$book->printOut();
 		echo "This is the price: \n";
@@ -254,13 +254,10 @@ class Consignment {
 	protected $student_id;
 	protected $books; //list of books
 
-	function __construct() 
+	function __construct($params) 
 	{
-		$this->setISBN($params["isbn"]);
-		$this->setTitle($params["title"]);
-		$this->setAuthor($params["author"]);
-		$this->setEdition($params["edition"]);
-		$this->setCourses($params["courses"]);
+		$this->setStudentID($params["student_id"]);
+		$this->setBooks($params["books"]);
 	}
 
 //setters

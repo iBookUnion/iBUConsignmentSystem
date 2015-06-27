@@ -33,8 +33,12 @@ $app->post('/users', function() use ($app) {
 $app->post('/consignments', function() use ($app) {
 	
 		$consignmentsFactory = new ConsignmentFactory($app);
+		
+		$json = $app->request->getBody();
+        $params = json_decode($json, true);
+		
 		$parameters = $consignmentsFactory->getParameters();
-		$consignment = $consignmentsFactory->makeObject();
+		$consignment = $consignmentsFactory->makeObject($parameters);
 		$consignment->printOut();
 });
 
