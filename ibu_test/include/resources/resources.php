@@ -251,29 +251,30 @@ class Course extends Resource {
 class Consignment {
 	//protected $consignment_number; ----> don't forget the db is the one that sets thiis
 	// note: as we dno't yet have this key this will complicate the deletion
-	protected $student_id;
+	protected $user;
 	protected $books; //list of books
 
 	function __construct($params) 
 	{
-		$this->setStudentID($params["student_id"]);
+		$this->setUser($params["user"]);
 		$this->setBooks($params["books"]);
 	}
 
 //setters
 	//private function set_consignment_number($consignment_number) {$this->consignment_number = $consignment_number;}
-	private function setStudentID($student_id) {$this->student_id = $student_id;}
+	private function setUser($user) {$this->user = $user;}
 	private function setBooks($books) {$this->books = $books;}
 
 //getters
 	//public function get_consignment_number() {return $this->consignment_number;}
-	public function getStudentID() {return $this->student_id;}
+	public function getUser() {return $this->user;}
 	public function getBooks() {return $this->books;}
 
 	public function printOut() 
 	{
-		$student_id = $this->getStudentID();
+		$user = $this->getUser();
 		$books = $this->getBooks();
+		$user->printOut();
 
 		foreach ($books as $book) {
 			$book->printOut();
@@ -290,7 +291,3 @@ class Consignment {
 	}
 
 }
-
-
-
-

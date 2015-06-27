@@ -24,8 +24,7 @@ class UserFactory extends Factory
 	}
 
 	public function makeObject($params) 
-	{
-		$params = $this->getParameters();
+	{	
 		$user = new User($params);
 		return $user;
 	}
@@ -43,6 +42,7 @@ class UserFactory extends Factory
 						"last_name" => $last_name,
 						"email" => $email,
 						"phone_number" => $phone_number);
+
 		return $params;
 	}
 }
@@ -57,11 +57,9 @@ class BookFactory extends Factory
 	}
 
 	public function makeObject($params)
-	{
+	{	
 		$courseFactory = new CourseFactory($this->app);
-
-		$params = $this->getParameters();
-
+		
 		$courses = $courseFactory->makeListOfObjects($params["isbn"], $params["courses"]);
 		$params["courses"] = $courses; 
 		
@@ -80,7 +78,8 @@ class BookFactory extends Factory
 
 class CourseFactory extends Factory
 {
-	
+	protected $app;
+
 	function __construct($app)
 	{
 		$this->app = $app;
@@ -114,21 +113,77 @@ class CourseFactory extends Factory
 
 class ConsignmentFactory extends Factory 
 {
+	protected $app;
+	
 	function __construct($app)
 	{
 		$this->app = $app;
 	}
 
 	public function makeObject($params)
-	{
+	{	
+		$consignedItemFactory = new ConsignedItemFactory($this->app);
+		$userFactory = new UserFactory($this->app);
+
 		$params = $this->getParameters();
+		
+		$books = $consignedItemFactory->makeListOfObjects($params["books"]);
+		$params["books"] = $books; 
+
+		$user = $userFactory->makeObject($params);
+		$params["user"] = $user;
+
 		$consignment = new Consignment($params);
 		return $consignment;
 	}
 
 	public function getParameters()
 	{
-
+		$json = $this->app->request->getBody();
+        $params = json_decode($json, true);
+        
+        return $params;
 	}
 
+}
+
+class ConsignedItemFactory extends Factory
+{
+	protected $app;
+	
+	function __construct($app)
+	{
+		$this->app = $app;
+	} 
+
+	public function makeObject($params)
+	{
+		// make the a consigned item
+		// create a book to pass it on to the consigned item
+		// this will require passing on the task of creating the course within 
+		// books to the bookfactory, which will hopefully work
+		$bookfactory = new BookFactory($this->app);
+		
+		$book = $bookfactory->makeObject($params);
+		$params["book"] = $book;
+		
+		$consignedItem = new ConsignedItem($params);
+		return $consignedItem;
+	}
+
+	public function makeListOfObjects($consignedbookParams)
+	{	
+		$consignedbooks = array();
+		foreach ($consignedbookParams as $consignedbookParam)
+		{	
+			$consignedbook = $this->makeObject($consignedbookParam);
+			$consignedbooks[] = $consignedbook;
+		}
+		return $consignedbooks;
+	}
+
+	public function getParameters()
+	{
+
+	}
 }
