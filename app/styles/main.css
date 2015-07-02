@@ -131,6 +131,8 @@ input.ng-valid {
     }
 }
 
+/*Book List*/
+
 .book-entry {
     display : table;
     height: 100%;
@@ -157,6 +159,9 @@ input.ng-valid {
     float: right;
 }
 
+.remove-button {
+    float : none;
+}
 /*.book-entry {*/
 /*.make-row();*/
 /*display: table;*/

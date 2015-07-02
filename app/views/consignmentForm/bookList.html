@@ -24,7 +24,8 @@
                 </div>
 
                 <div class="col-xs-1 book-entry-secondary">
-                    <span class="badge" style="float: none;" ng-click="removeBook(book)">
+                    <span class="badge remove-button"
+                          ng-click="$event.stopPropagation(); removeBook(book)">
                         <span class="glyphicon glyphicon-remove white"></span>
                     </span>
                 </div>
