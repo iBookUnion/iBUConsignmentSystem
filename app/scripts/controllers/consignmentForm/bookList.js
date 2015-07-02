@@ -2,11 +2,10 @@
 
 var app = angular.module('consignmentApp');
 
-app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'ConsignmentService',
-  function ($scope, $modal, $log, ConsignmentService) {
+app.controller('BookFormCtrl', ['$scope', '$modal', '$log',
+  function ($scope, $modal, $log) {
     $scope.removeBook = function (book) {
-      //BookCartService.removeItem(book);
-      _.remove($scope.consignment.books, function (e) {
+      _.remove($scope.consignment.form.books, function (e) {
         return e === book;
       });
     };

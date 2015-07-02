@@ -123,6 +123,8 @@ input.ng-valid {
     }
 }
 
+/*Book List*/
+
 .book-entry {
     display : table;
     height: 100%;
@@ -139,6 +141,10 @@ input.ng-valid {
     display: table-cell;
     vertical-align: middle;
     padding-left: 5px; padding-right: 5px;
+}
+
+.remove-button {
+    float : none;
 }
 
 /*.book-entry {*/
