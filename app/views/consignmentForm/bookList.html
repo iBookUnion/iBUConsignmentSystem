@@ -1,9 +1,9 @@
-<div class="form-section" ng-controller="BookFormCtrl as consignedBooks">
-    <p class="text-center text-info" ng-show="books.length == 0">You currently have no items added to the consignment
+<div class="form-section" ng-controller="BookFormCtrl">
+    <p class="text-center text-info" ng-show="consignment.form.books.length == 0">You currently have no items added to the consignment
         form.</p>
 
     <div class="list-group">
-        <a class="list-group-item" ng-repeat="book in books" ng-click="openBookModal(book)">
+        <a class="list-group-item" ng-repeat="book in consignment.form.books" ng-click="openBookModal(book)">
             <div class="row book-entry">
                 <div class="col-xs-8 book-entry-main">
                     <h4 class="list-group-item-heading">{{book.title}}

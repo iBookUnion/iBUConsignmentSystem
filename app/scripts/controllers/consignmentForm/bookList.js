@@ -2,12 +2,13 @@
 
 var app = angular.module('consignmentApp');
 
-app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
-  function ($scope, $modal, $log, BookCartService) {
-    $scope.books = BookCartService.getItems();
-
+app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'ConsignmentService',
+  function ($scope, $modal, $log, ConsignmentService) {
     $scope.removeBook = function (book) {
-      BookCartService.removeItem(book);
+      //BookCartService.removeItem(book);
+      _.remove($scope.consignment.books, function (e) {
+        return e === book;
+      });
     };
 
     $scope.openBookModal = function (book) {
@@ -29,8 +30,8 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'BookCartService',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCartService', 'existingBook',
-  function ($scope, $log, $modalInstance, BookCartService, existingBook) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingBook', 'ConsignmentService',
+  function ($scope, $log, $modalInstance, existingBook, ConsignmentService) {
 
     //TODO: Either complete or remove support multiple courses.
     // Need to instantiate empty array for courses on init.
@@ -38,12 +39,13 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCa
       courses: []
     };
 
-    $scope.consignedBook = existingBook ? existingBook : anEmptyBook;
+    $scope.consignedBook = existingBook || angular.copy(anEmptyBook);
 
     $scope.addBook = function () {
-      $log.info('Consigning book ' + this.consignedBook.isbn + ' for course ' + this.consignedBook.courses[0]);
+      $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses[0]);
       if (!existingBook) {
-        BookCartService.addItem(this.consignedBook);
+        ConsignmentService.form.books.push($scope.consignedBook);
+        console.log(ConsignmentService.form);
       }
       this.resetForm();
     };
@@ -53,7 +55,7 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'BookCa
     };
 
     $scope.resetForm = function () {
-      this.consignedBook = anEmptyBook;
+      $scope.consignedBook = angular.copy(anEmptyBook);
       $scope.consignForm.$setPristine();
     };
   }]);

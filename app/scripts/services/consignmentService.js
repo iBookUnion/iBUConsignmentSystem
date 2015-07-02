@@ -1,71 +1,62 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('ConsignmentService', ['BookCartService', 'ConsignmentAPI', 'Consignors',
-    function (BookCartService, ConsignmentAPI, Consignors) {
-    var contactInfo = {};
+  .factory('ConsignmentService', ['ConsignmentAPI', 'Consignors',
+    function (ConsignmentAPI, Consignors) {
+      var self = this;
+      var defaultForm = {
+        books: []
+      };
 
-    return {
-      'submitForm': submitForm,
-      'retrieveExistingForm': retrieveExistingForm,
-      'getContactInfo': getContactInfo,
-      'getBookList': getBookList
-    };
+      self.form = angular.copy(defaultForm);
 
-    function submitForm() {
-      var consignmentInfo = buildConsignmentInfo(contactInfo, getBookList());
-      ConsignmentAPI.submitForm(consignmentInfo);
-    }
+      return {
+        'form': self.form,
+        'createNewForm': createNewForm,
+        'submitForm': submitForm,
+        'retrieveExistingForm': retrieveExistingForm
+      };
 
-    function retrieveExistingForm(consignmentId) {
-      var mockBooks =
-        [
-          {
-            'isbn': 1234567890321,
-            'title': 'crisis on infinite earths',
-            'author': 'wolfman',
-            'edition': 0,
-            'subject': 'TEST',
-            'course_number': 100,
-            'price' : 20
-          },
-          {
-            'isbn': 1987654321321,
-            'title': 'long halloween',
-            'author': 'loeb',
-            'edition': 1,
-            'subject': 'TEST',
-            'course_number': 101,
-            'price' : 21
-          }
-        ];
+      function submitForm() {
+        ConsignmentAPI.submitForm(self.form);
+      }
 
-      return Consignors.getConsignors(consignmentId)
-        .then(function (consignor) {
-          // TODO: Get Consignment Object Instead When The API is Working
-          contactInfo = consignor;
+      function createNewForm() {
+        self.form = angular.copy(defaultForm);
+        return self.form;
+      }
 
-          // TODO: Get real books associated with the consignment
-          BookCartService.addItem(mockBooks);
+      function retrieveExistingForm(consignmentId) {
+        var mockBooks =
+          [
+            {
+              'isbn': 1234567890321,
+              'title': 'crisis on infinite earths',
+              'author': 'wolfman',
+              'edition': 0,
+              'subject': 'TEST',
+              'course_number': 100,
+              'price': 20
+            },
+            {
+              'isbn': 1987654321321,
+              'title': 'long halloween',
+              'author': 'loeb',
+              'edition': 1,
+              'subject': 'TEST',
+              'course_number': 101,
+              'price': 21
+            }
+          ];
 
-          return {
-            contactInfo : contactInfo,
-            books : getBookList()
-          };
-        });
-    }
+        return Consignors.getConsignors(consignmentId)
+          .then(function (consignor) {
+            // TODO: Get Consignment Object Instead When The API is Working
+            self.form = angular.copy(consignor);
 
-    function getContactInfo() {
-      return contactInfo;
-    }
-
-    function getBookList() {
-      return BookCartService.getItems();
-    }
-
-    function buildConsignmentInfo(contactInfo, books) {
-      var consignmentInfo = angular.copy(contactInfo);
-      consignmentInfo['books'] = books;
-      return consignmentInfo;
-    }
-  }]);
+            // TODO: Get real books associated with the consignment
+            self.form.books = mockBooks;
+            return self;
+          });
+      }
+    }]);
