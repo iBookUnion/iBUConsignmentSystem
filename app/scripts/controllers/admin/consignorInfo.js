@@ -13,9 +13,10 @@ angular.module('consignmentApp')
     function ($scope, $routeParams, Consignors, ConsignmentService, OPTIONS) {
 
       ConsignmentService.retrieveExistingForm($routeParams.consignorId)
-        .then(function (form) {
-          $scope.consignment = form.contactInfo;
-          $scope.books = form.books;
+        .then(function (consignment) {
+          $scope.consignment = consignment;
+          console.log(consignment);
+          //$scope.books = form.books;
         });
 
       // TODO: Use some Auth library to determine if admin access is available
