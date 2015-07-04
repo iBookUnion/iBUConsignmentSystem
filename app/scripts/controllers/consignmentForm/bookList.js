@@ -29,8 +29,8 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingBook', 'ConsignmentService',
-  function ($scope, $log, $modalInstance, existingBook, ConsignmentService) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingBook', 'ConsignmentService', 'Books',
+  function ($scope, $log, $modalInstance, existingBook, ConsignmentService, Books) {
 
     //TODO: Either complete or remove support multiple courses.
     // Need to instantiate empty array for courses on init.
@@ -38,13 +38,25 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
       courses: []
     };
 
+    $scope.alertMessage = '';
+
+    $scope.existingBook = existingBook;
+
     $scope.consignedBook = existingBook || angular.copy(anEmptyBook);
 
-    $scope.addBook = function () {
+    $scope.findBookMetadata = function (isbn) {
+      Books.get({isbn: isbn}, function (book) {
+        $scope.consignedBook = book;
+      });
+    };
+
+    $scope.submitForm = function () {
       $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses[0]);
       if (!existingBook) {
         ConsignmentService.form.books.push($scope.consignedBook);
-        console.log(ConsignmentService.form);
+        makeAlert('Added ' + $scope.consignedBook.title + ' into your book list.');
+      } else {
+        makeAlert('Saved changes.');
       }
       this.resetForm();
     };
@@ -57,4 +69,8 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
       $scope.consignedBook = angular.copy(anEmptyBook);
       $scope.consignForm.$setPristine();
     };
+
+    function makeAlert(msg) {
+      $scope.alertMessage = msg;
+    }
   }]);
