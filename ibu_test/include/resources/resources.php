@@ -75,15 +75,15 @@ class User extends Resource
 			$poster = new UserPoster($this, $conn);			
 		} else {
 			// blank poster, will not actually attempt to push to db
-			$poster = new NullPoster();
+			$poster = new NullPoster($this, $conn);
 		}
 
 		return $poster;
 	}
 
-	private function confirmResourceDoesNotExist() 
+	private function confirmResourceDoesNotExist($conn) 
 	{
-		$getter = getGetter($conn);
+		$getter = $this->getGetter($conn);
 		$result = $getter->retrieve();
 		return $result;
 	}
@@ -168,9 +168,9 @@ class Book extends Resource
 		return $poster;
 	}
 
-	private function confirmResourceDoesNotExist() 
+	private function confirmResourceDoesNotExist($conn) 
 	{
-		$getter = getGetter($conn);
+		$getter = $this->getGetter($conn);
 		$result = $getter->retrieve();
 		return $result;
 	}
@@ -252,7 +252,7 @@ class ConsignedItem extends Resource
 	// should check if the consigned item exists
 	// if it does there is no need to check if the book does
 	// if it doesn't should check if the book does
-	private function confirmResourceDoesNotExist() 
+	private function confirmResourceDoesNotExist($conn) 
 	{
 		$results = array();
 		$getter = $this->getGetter($conn);
@@ -337,7 +337,7 @@ class Course extends Resource {
 	// should check if the consigned item exists
 	// if it does there is no need to check if the book does
 	// if it doesn't should check if the book does
-	private function confirmResourceDoesNotExist() 
+	private function confirmResourceDoesNotExist($conn) 
 	{
 		$results = array();
 		$getter = $this->getGetter($conn);
@@ -423,9 +423,9 @@ class Consignment {
 		return $poster;
 	}
 
-	private function confirmResourceDoesNotExist() 
+	private function confirmResourceDoesNotExist($conn) 
 	{
-		$getter = getGetter($conn);
+		$getter = $this->getGetter($conn);
 		$result = $getter->retrieve();
 		return $result;
 	}

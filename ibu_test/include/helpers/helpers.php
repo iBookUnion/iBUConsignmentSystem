@@ -5,18 +5,28 @@
     }
     
     function implode_and($conditions) {
-            return $this->implode_recursive($conditions, " AND ");
+            return implode_recursive($conditions, " AND ");
     }
     function implode_comma($conditions) {
-            return $this->implode_recursive($conditions, ", ");
+            return implode_recursive($conditions, ", ");
     }
     function implode_recursive($conditions, $glue) {
         if ($conditions != null) {
             $condition = array_shift($conditions);
             if ($condition == null) {
-                return $this->implode_recursive($conditions, $glue);
+                return implode_recursive($conditions, $glue);
             } else {
-                return $condition . $this->implode_helper($conditions, $glue);
+                return $condition . implode_helper($conditions, $glue);
             }
         }
     }
+    function implode_helper($conditions, $glue) {
+    if ($conditions != null) {    
+        $condition = array_shift($conditions);
+        if ($condition == null) {
+            return implode_helper($conditions, $glue);
+        } else {
+            return $glue . $condition . implode_helper($conditions, $glue);
+        }
+    }    
+}

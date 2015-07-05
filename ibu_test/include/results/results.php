@@ -26,9 +26,9 @@
 abstract class Result
 {
 
-	abstract function produceResponse();
+	//abstract function produceResponse();
 
-	public function setresultAsExisted() {
+	public function setResourceAsExisted() {
 		$this->setStatusCode(409);
 	}
 
@@ -42,13 +42,13 @@ class UserResult extends Result
 
 	function __construct($user) 
 	{
-		$this->setStudentID($user);
+		$this->setUser($user);
 		$this->setResult(false);
 		$this->setStatusCode(400);
 	}
 
 //setters
-	private function setUser($student_id) {$this->user = $user;}
+	private function setUser($user) {$this->user = $user;}
 	
 	public function setResult($res) {
 		$this->res = $res;
@@ -58,7 +58,7 @@ class UserResult extends Result
 		}
 	}
 	
-	private function setStatusCode($status_code) {$this->statusCode = $status_code;}
+	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
 //getters
 	public function getRes() {return $this->res;}
 	public function getStatusCode() {return $this->statusCode;}	
@@ -98,7 +98,9 @@ class BookResult extends Result
 	public function setResult($res) {$this->res = $res;}
 	public function getResult() {return $this->res;}
 
-	public function produceResponse();
+	public function produceResponse() {
+	    
+	}
 }
 
 class CourseResult extends Result
@@ -116,7 +118,9 @@ class CourseResult extends Result
 	public function setResults($res) {$this->res = $res;}
 	public function getResult() {return $this->res;}
 
-	public function produceResponse();
+	public function produceResponse() {
+	    
+	}
 }
 
 class ConsignmentResult extends Result
@@ -134,5 +138,7 @@ class ConsignmentResult extends Result
 	public function setResults($res) {$this->res = $res;}
 	public function getResult() {return $this->res;}
 
-	public function produceResponse();	
+	public function produceResponse() {
+	    
+	}
 }

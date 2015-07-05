@@ -1,11 +1,17 @@
 <?php
-
+	
+	require('../include/results/results.php');
+	require('../include/helpers/helpers.php');
+	
 //needs to require helper
 
 abstract class Poster {
 
 	protected function commitToDatabase($insert)
-	{
+	{	
+		echo "there is likely a problem with statement\n";
+		var_dump($insert);
+		
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();
         $stmt->close();
@@ -19,14 +25,15 @@ abstract class Poster {
 		$table = $this->getTable();
 		$columns = $this->getColumns();
 		$values = $this->getValues();
+		
 
 		$insert = $insert . $table . $columns . $values;
 		return $insert;
 	}
 
-	abstract protected function getTable();
-	abstract protected function getColumns();
-	abstract protected function getValues();
+	// abstract protected function getTable();
+	// abstract protected function getColumns();
+	// abstract protected function getValues();
 }
 
 class UserPoster extends Poster {
@@ -34,6 +41,7 @@ class UserPoster extends Poster {
 	protected $conn;
 
 	function __construct($user, $conn) {
+		
 		$this->setUser($user);
 		$this->setConn($conn);
 	}
@@ -44,7 +52,7 @@ class UserPoster extends Poster {
 //getter
 	public function getUser() {return $this->user;}
 
-	protected function insert() 
+	public function insert() 
 	{	
 		$result = new UserResult($this->user);
 		// constuct the sql statment
@@ -92,7 +100,9 @@ class UserPoster extends Poster {
 
 		$string = implode_comma($params);
 
-		$values = " (" . $string . ") ";
+		$values = "VALUES (" . $string . ") ";
+		
+		return $values;
 	}
 
 	
@@ -418,7 +428,7 @@ class NullPoster extends Poster {
 
 	// create a result instance for the given resource specifiing
 	// to the result class that the reosurce aready existed
-	protected function insert() {
+	public function insert() {
 		$result = $this->getResultForResource();
 		// no need to construct an sql senetence....
 
@@ -441,19 +451,19 @@ class NullPoster extends Poster {
 		// create a instance of a result for the gven class
 		if (is_a($this->resource, $user))
 		{
-			$result = new UserResult;
+			$result = new UserResult($this);
 		}
 		else if (is_a($this->resource, $book))
 		{
-			$result = new BookResult;
+			$result = new BookResult($this);
 		}
 		else if (is_a($this->resource, $consignedItem)) 
 		{
-			$result = new ConsignedItemResult;
+			$result = new ConsignedItemResult($this);
 		}	
 		else if (is_a($this->resource, $course))
 		{
-			$result = new CourseResult;
+			$result = new CourseResult($this);
 		}
 		else if (is_a($this->resource, $consignment))
 		{

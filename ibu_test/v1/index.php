@@ -3,6 +3,7 @@
 	//require_once('../include/Dbhandler.php');
 	require('../libs/Slim/Slim.php');
 	require('../include/resources/factory.php');
+	require('../include/Dbhandler.php');
 
 	\Slim\Slim::registerAutoloader();
 
@@ -25,11 +26,15 @@ $app->post('/books', function() use ($app) {
 $app->post('/users', function() use ($app) {
 		
 		$userFactory = new UserFactory($app);
+		$dbHandler = new DbUserResourceHandler;
 		$parameters = $userFactory->getParameters();
 		
 		$user = $userFactory->makeObject($parameters);
 		
+		$result = $dbHandler->postMethod($user);
+		
 		$user->printOut();
+		echoRespnse($result->getStatusCode(), $result->produceResponse());
 });
 
 $app->post('/consignments', function() use ($app) {
