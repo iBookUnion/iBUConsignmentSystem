@@ -62,12 +62,40 @@ class User extends Resource
 		var_dump($phone_number);
 	}
 
+
+	// instead of having the object pass itself around
+	// this could be changed to have the handler set the 
+	// resource object to hte mthod object after the reosurce
+	// object has returned the method object
 	public function getPoster($conn) {
-		$poster = new UserPoster($conn);
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
+		$result = $this->confirmResourceDoesNotExist($conn);
+		if ($result) {
+			$poster = new UserPoster($this, $conn);			
+		} else {
+			// blank poster, will not actually attempt to push to db
+			$poster = new NullPoster();
+		}
+
 		return $poster;
-	} 
+	}
+
+	private function confirmResourceDoesNotExist() 
+	{
+		$getter = getGetter($conn);
+		$result = $getter->retrieve();
+		return $result;
+	}
+
+	public function getGetter($conn)
+	{
+		$getter = new UserGetter($this, $conn);
+		return $getter;
+	}
+
 	public function getDeleter($conn) {
-		$deleter = new UserDeleter($conn);
+		$deleter = new UserDeleter($this, $conn);
 		return $deleter;
 	}
 }
@@ -127,9 +155,32 @@ class Book extends Resource
 	}
 	
 	public function getPoster($conn) {
-		$poster = new BookPoster($conn);
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
+		$result = $this->confirmResourceDoesNotExist($conn);
+		if ($result) {
+			$poster = new BookPoster($this, $conn);			
+		} else {
+			// blank poster, will not actually attempt to push to db
+			$poster = new NullPoster();
+		}
+
 		return $poster;
-	} 
+	}
+
+	private function confirmResourceDoesNotExist() 
+	{
+		$getter = getGetter($conn);
+		$result = $getter->retrieve();
+		return $result;
+	}
+
+	public function getGetter($conn)
+	{
+		$getter = new BookGetter($this, $conn);
+		return $getter;
+	}
+
 	public function getDeleter($conn) {
 		$deleter = new BookDeleter($conn);
 		return $deleter;
@@ -180,13 +231,49 @@ class ConsignedItem extends Resource
 	}
 
 	public function getPoster($conn) {
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
 		$posters = array();
-		$bookPoster = new BookPoster($conn);
-		$consignedItemPoster = new ConsignedItemPoster($conn);
-		$posters["bookPoster"] = $bookPoster;
-		$posters["ConsignedItemPoster"] = $consignedItemPoster;
+		$results = array();
+
+		$results = $this->confirmResourceDoesNotExist($conn);
+		if ($results["consignedItemResult"])
+			$posters[] = new NullPoster();
+		else if ($results["bookResult"]) {
+			$posters[] = new ConsignedItemPoster($this, $conn);
+		} else {
+			$posters[] = new ConsignedItemPoster($this, $conn);
+			$posters[] = new BookPoster($this, $conn);
+		}
+		
 		return $posters;
 	}
+
+	// should check if the consigned item exists
+	// if it does there is no need to check if the book does
+	// if it doesn't should check if the book does
+	private function confirmResourceDoesNotExist() 
+	{
+		$results = array();
+		$getter = $this->getGetter($conn);
+		$consignedItemGetter = $getter["consignedItem"];
+		$bookGetter = $getter["book"];
+
+		$results["consignedItemResult"] = $consignedItemGetter->retrieve();
+		$results["bookResult"] = $bookGetterGetter->retrieve();
+		return $results;
+	}
+
+	public function getGetter($conn)
+	{
+		$getters = array();
+		$consignedItemGetter = new ConsignedItemGetter($this, $conn);
+		$bookGetter = new BookGetter($this, $conn);
+		$getters["consignedItem"] = $consignedItemGetter;
+		$getters["book"] = $book;
+		return $getters;
+	}
+
 	public function getDeleter($conn) {
 
 	}
@@ -229,14 +316,49 @@ class Course extends Resource {
 	}
 
 	public function getPoster($conn) {
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
 		$posters = array();
-		$coursePoster = new CoursePoster($conn);
-		$courseBookPoster = new courseBookPoster($conn);
-		$poster["coursePoster"] = $coursePoster;
-		$poster["courseBookPoster"] = $courseBookPoster;
+		$results = array();
 
-		return $poster;
+		$results = $this->confirmResourceDoesNotExist($conn);
+		if ($results["courseBookResult"])
+			$posters[] = new NullPoster();
+		else if ($results["courseResult"]) {
+			$posters[] = new CourseBookPoster($this, $conn);
+		} else {
+			$posters[] = new CourseBookPoster($this, $conn);
+			$posters[] = new CoursePoster($this, $conn);
+		}
+		
+		return $posters;
 	}
+
+	// should check if the consigned item exists
+	// if it does there is no need to check if the book does
+	// if it doesn't should check if the book does
+	private function confirmResourceDoesNotExist() 
+	{
+		$results = array();
+		$getter = $this->getGetter($conn);
+		$courseBookGetter = $getter["courseBookGetter"];
+		$courseGetter = $getter["CourseGetter"];
+
+		$results["courseBookResult"] = $courseBookGetter->retrieve();
+		$results["courseResult"] = $courseGetterGetter->retrieve();
+		return $results;
+	}
+
+	public function getGetter($conn)
+	{
+		$getters = array();
+		$courseGetter = new CourseGetter($this, $conn);
+		$courseBookGetter = new CourseBookGetter($this, $conn);
+		$getters["courseGetter"] = $courseGetter;
+		$getters["courseBookGetter"] = $courseBookGetter;
+		return $getters;
+	}
+
 	public function getDeleter($conn) {
 		$deleters = array();
 		$courseDeleter = new CourseDeleter($conn);
@@ -251,28 +373,34 @@ class Course extends Resource {
 class Consignment {
 	//protected $consignment_number; ----> don't forget the db is the one that sets thiis
 	// note: as we dno't yet have this key this will complicate the deletion
+	protected $student_id;
 	protected $user;
 	protected $books; //list of books
 
 	function __construct($params) 
-	{
-		$this->setUser($params["user"]);
+	{	
+		$user = $params["user"];
+		$this->setUser($user);
+		$this->setStudentID($user->getStudentID());
 		$this->setBooks($params["books"]);
+
 	}
 
 //setters
 	//private function set_consignment_number($consignment_number) {$this->consignment_number = $consignment_number;}
+	private function setStudentID($student_id) {$this->student_id = $student_id;}
 	private function setUser($user) {$this->user = $user;}
 	private function setBooks($books) {$this->books = $books;}
 
 //getters
 	//public function get_consignment_number() {return $this->consignment_number;}
+	public function getStudentID() {return $this->student_id;}
 	public function getUser() {return $this->user;}
 	public function getBooks() {return $this->books;}
 
 	public function printOut() 
 	{
-		$user = $this->getUser();
+		$user = $this->getUser;
 		$books = $this->getBooks();
 		$user->printOut();
 
@@ -282,12 +410,36 @@ class Consignment {
 	}
 
 	public function getPoster($conn) {
-		$poster = new ConsignmentPoster($conn);
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
+		$result = $this->confirmResourceDoesNotExist($conn);
+		if ($result) {
+			$poster = new NullPoster();			
+		} else {
+			// blank poster, will not actually attempt to push to db
+			$poster = new ConsignmentPoster();
+		}
+
 		return $poster;
-	} 
+	}
+
+	private function confirmResourceDoesNotExist() 
+	{
+		$getter = getGetter($conn);
+		$result = $getter->retrieve();
+		return $result;
+	}
+
+	public function getGetter($conn)
+	{
+		$getter = new ConsignmentGetter($this, $conn);
+		return $getter;
+	}
+
 	public function getDeleter($conn) {
 		$deleter = new ConsignmentDeleter($conn);
 		return $deleter;
 	}
 
 }
+

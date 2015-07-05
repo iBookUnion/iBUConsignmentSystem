@@ -26,7 +26,9 @@ $app->post('/users', function() use ($app) {
 		
 		$userFactory = new UserFactory($app);
 		$parameters = $userFactory->getParameters();
+		
 		$user = $userFactory->makeObject($parameters);
+		
 		$user->printOut();
 });
 

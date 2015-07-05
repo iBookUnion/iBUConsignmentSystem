@@ -36,7 +36,7 @@ class UserFactory extends Factory
 		$last_name = $this->app->request()->post('last_name');
 		$email = $this->app->request()->post('email');
 		$phone_number = $this->app->request()->post('phone_number');
-
+		
 		$params = array("student_id" => $student_id,
 						"first_name" => $first_name,
 						"last_name" => $last_name,
