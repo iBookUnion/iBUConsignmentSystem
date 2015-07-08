@@ -15,8 +15,6 @@ angular.module('consignmentApp')
       ConsignmentService.retrieveExistingForm($routeParams.consignorId)
         .then(function (consignment) {
           $scope.consignment = consignment;
-          console.log(consignment);
-          //$scope.books = form.books;
         });
 
       // TODO: Use some Auth library to determine if admin access is available
@@ -24,11 +22,28 @@ angular.module('consignmentApp')
       $scope.section = 'contact';
       $scope.states = OPTIONS.bookStates;
       $scope.faculties = OPTIONS.faculties;
+      $scope.consignorPayout = 0;
 
       $scope.selectSection = function (section) {
         $scope.section = section;
       };
+
       $scope.saveConsignor = function () {
 
       };
+
+      $scope.$watch('consignment.form.books',
+        function (newValue) {
+          $scope.consignorPayout = calculateConsignorPayout(newValue);
+        }, true);
+
+      function calculateConsignorPayout(books) {
+        var totalPayout = 0;
+        _.forEach(books, function (book) {
+          if (book.current_state === OPTIONS.bookState.sold) {
+            totalPayout += book.price;
+          }
+        });
+        return totalPayout;
+      }
     }]);

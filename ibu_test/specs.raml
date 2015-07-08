@@ -73,10 +73,10 @@ Schema:
 
 		current_state:
 			type: CHAR(25) one of:
-								"available" -- consigner has left book with us
-								"not in store" -- consigner has yet to leave book with us
-								"sold and not paid" -- book has been sold, consigner has yet to pick up money
-								"consignment complete" -- book has been sold, consigner has picked up money or book was not sold but it has been returned to consigner
+								"Available" -- consigner has left book with us
+								"Not in Store" -- consigner has yet to leave book with us
+								"Sold" -- book has been sold, consigner has yet to pick up money
+								"Consignment Complete" -- book has been sold, consigner has picked up money or book was not sold but it has been returned to consigner
 			required: true
 
 		date:

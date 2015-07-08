@@ -13,25 +13,15 @@ angular.module('consignmentApp')
     };
   })())
   .constant('OPTIONS', (function () {
+    var bookStateMapping = {
+      'available': 'Available',
+      'sold': 'Sold',
+      'unavailable': 'Not in Store',
+      'complete': 'Consignment Complete'
+    };
     return {
-      'bookStates': [
-        {
-          id: 1,
-          name: 'Available'
-        },
-        {
-          id: 2,
-          name: 'Not in Store'
-        },
-        {
-          id: 3,
-          name: 'Sold'
-        },
-        {
-          id: 4,
-          name: 'Closed'
-        }
-      ],
+      'bookState': bookStateMapping,
+      'bookStates': _.values(bookStateMapping),
       'faculties': ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics']
     };
-  })());
+  }()));

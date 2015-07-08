@@ -16,7 +16,7 @@
                     <select ng-if="isAdmin"
                             ng-model="book.current_state"
                             ng-click="$event.stopPropagation()"
-                            ng-options="state.name for state in states">
+                            ng-options="state for state in states">
                     </select>
                 </div>
                 <div class="col-xs-1 book-entry-secondary">
