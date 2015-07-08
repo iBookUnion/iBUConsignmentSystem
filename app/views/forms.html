@@ -54,7 +54,7 @@
                     Book Availability
                 </span>
                 <span class="nullable">
-                    <select ng-model="stateFilter" ng-options="state.name for state in states">
+                    <select ng-model="stateFilter" ng-options="state for state in states">
                         <option value="">-- All --</option>
                     </select>
                 </span>
@@ -69,11 +69,11 @@
                     <td>Status</td>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="consignment in consignments | filter:{currentState : stateFilter.id}"
+                    <tr ng-repeat="consignment in consignments | filter:{currentState : stateFilter}"
                         ng-click="viewConsignment(consignment);">
                         <td>{{consignment.consignmentNumber}}</td>
                         <td>{{consignment.price}}</td>
-                        <td ng-repeat="state in states | filter:{id: consignment.currentState}">{{state.name}}</td>
+                        <td>{{consignment.currentState}}</td>
                     </tr>
                 </table>
             </div>
