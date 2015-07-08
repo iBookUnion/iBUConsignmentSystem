@@ -19,7 +19,10 @@
       .when('/admin/consignorInfo/:consignorId', {
         templateUrl: 'views/consignorInfo.html',
         controller: 'ConsignorInfoCtrl'
-
+      })
+      .when('/admin/login', {
+        templateUrl: 'views/admin/login.html',
+        controller: 'AdminLoginCtrl'
       })
       .otherwise({
         redirectTo: '/'
