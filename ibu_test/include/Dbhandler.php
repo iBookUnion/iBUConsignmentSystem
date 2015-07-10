@@ -91,12 +91,12 @@ class DbConsignmentsResourceHandler extends DbHandler
 
         //need to create the user first to create the consignmn
         $user = $consignment->getUser();
-        $userPoster = $user->getPoster();
+        $userPoster = $user->getPoster($this->conn);
         $listOfResults[] = $userPoster->insert();
 
         // create the consignment and obtain the generated consignment number
         // so the consigned items can be created
-        $consignmentPoster = $consignment->getPoster($conn);
+        $consignmentPoster = $consignment->getPoster($this->conn);
         $listOfResults[] = $consignmentPoster->insert();
         $consignmentNumber = $this->assignConsignmentNUmberFromDatabase($consignment);
 
@@ -118,7 +118,7 @@ class DbConsignmentsResourceHandler extends DbHandler
     // make sure the consignment number is correctly assigned to all the objects that require it
     private function assignConsignmentNUmberFromDatabase($consignment)
     {
-        $consignmentGetter = $consignment->getGetter();
+        $consignmentGetter = $consignment->getGetter($this->conn);
         $consignmentNumber = $consignmentGetter->determineConsignmentNumber();
         $consignment->setConsignmentNumber($consignmentNumber);
         $consignment->assignConsignmentNumberToConsignmentItems();
@@ -128,7 +128,7 @@ class DbConsignmentsResourceHandler extends DbHandler
     {
         $listOfPosters = array();
         foreach ($books as $book) {
-            $listOfPosters =+ $book->getPoster(); // returns two posters
+            $listOfPosters =+ $book->getPoster($this->conn); // returns two posters
         }
         return $listOfPosters;
     }
@@ -138,7 +138,7 @@ class DbConsignmentsResourceHandler extends DbHandler
         $courses = $this->getAllCourses($books);
         $listOfPosters = array();
         foreach ($courses as $course) {
-            $listOfPosters[] = $course->getPoster(); // returns two posters
+            $listOfPosters[] = $course->getPoster($this->conn); // returns two posters
         }
         return $listOfPosters;
     }

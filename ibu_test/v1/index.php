@@ -15,6 +15,7 @@
 
 
 
+
 $app->post('/books', function() use ($app) {
 
 		$bookFactory = new BookFactory($app);
@@ -40,13 +41,18 @@ $app->post('/users', function() use ($app) {
 $app->post('/consignments', function() use ($app) {
 	
 		$consignmentsFactory = new ConsignmentFactory($app);
+		$dbHandler = new DbConsignmentsResourceHandler;
 		
 		$json = $app->request->getBody();
         $params = json_decode($json, true);
 		
 		$parameters = $consignmentsFactory->getParameters();
 		$consignment = $consignmentsFactory->makeObject($parameters);
+		
+		$result = $dbHandler->postMethod($consignment);
+		
 		$consignment->printOut();
+		echoRespnse($result->getStatusCode(), $result->produceResponse());
 });
 
 

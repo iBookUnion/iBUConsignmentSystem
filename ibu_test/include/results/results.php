@@ -76,7 +76,8 @@ class UserResult extends Result
         } else if ($this->statusCode == 409) {
             $response["error"] = true;
             $response["message"] = "Sorry, this user already exists";
-        }
+        }		$response = array();
+
 		
 		return $response;	
 	}	
@@ -87,19 +88,43 @@ class BookResult extends Result
 {
 	protected $res;
 	protected $book;
+	protected $statusCode;
 
 	function __construct($book)
 	{
-		$this->setISBN($book->getISBN());
+		$this->setBook($book);
 		$this->setResult(false);
+		$this->setStatusCode(400);
 	}
 
 	private function setBook($book) {$this->book = $book;}
-	public function setResult($res) {$this->res = $res;}
+	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
+	public function setResult($res) {
+		$this->res = $res;
+
+		if ($res) {
+			setStatusCode(201);
+		}
+	}
+
 	public function getResult() {return $this->res;}
+	protected function getStatusCode() {return $this->statusCode;}
 
 	public function produceResponse() {
-	    
+	    $response = array();
+
+        if ($this->statusCode  == 201) {
+            $response["error"] = false;
+            $response["message"] = "The Book was Successfully Created.";
+        } else if ($this->statusCode == 400) {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred while creating the Book.";                
+        } else if ($this->statusCode == 409) {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this book already exists";
+        }		$response = array();
+		
+		return $response;	
 	}
 }
 
@@ -107,19 +132,40 @@ class CourseResult extends Result
 {
 	protected $res;
 	protected $course;
+	protected $statusCode;
 
 	function __construct($course)
 	{
 		$this->setCourse($course);
-		$this->setResult(false);
+		$this->setResults(false);
+		$this->setStatusCode(400);
 	}
 
 	private function setCourse($course) {$this->course = $course;}
-	public function setResults($res) {$this->res = $res;}
+	public function setResults($res) {
+		$this->res = $res;
+		if ($res) {
+			$this->setStatusCode(201);
+		}
+	}
+	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
 	public function getResult() {return $this->res;}
 
 	public function produceResponse() {
-	    
+	    		$response = array();
+
+        if ($this->statusCode  == 201) {
+            $response["error"] = false;
+            $response["message"] = "the course book was successfully created.";
+        } else if ($this->statusCode == 400) {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred while registereing";                
+        } else if ($this->statusCode == 409) {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this course_book already exists";
+        }		$response = array();
+		
+		return $response;	
 	}
 }
 
@@ -127,18 +173,39 @@ class ConsignmentResult extends Result
 {
 	protected $res;
 	protected $consignment;
+	protected $statusCode;
 
 	function __construct($consignment)
 	{
 		$this->setConsignment($consignment);
-		$this->setResult(false);
+		$this->setResults(false);
+		$this->setStatusCode(400);
 	}
 
 	private function setConsignment($consignment) {$this->consignment = $consignment;}
-	public function setResults($res) {$this->res = $res;}
+	public function setResults($res) {
+		$this->res = $res;
+		if ($res) {
+			$this->setStatusCode(201);
+		}
+	}
+	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
 	public function getResult() {return $this->res;}
 
 	public function produceResponse() {
-	    
+	    		$response = array();
+
+        if ($this->statusCode  == 201) {
+            $response["error"] = false;
+            $response["message"] = "The consignment was successfully created.";
+        } else if ($this->statusCode == 400) {
+            $response["error"] = true;
+            $response["message"] = "Oops! An error occurred while consigning";                
+        } else if ($this->statusCode == 409) {
+            $response["error"] = true;
+            $response["message"] = "Sorry, this consignment already exists";
+        }		$response = array();
+
+		return $response;	
 	}
 }
