@@ -1,8 +1,10 @@
 <?php
 
+	require('user.php');
+
 // need some classed to create these objects
 // This family of classes is meant to contain parameters
-abstract class Resource 
+abstract class Resources 
 {
 	abstract public function getPoster($conn);
 	abstract public function getDeleter($conn);

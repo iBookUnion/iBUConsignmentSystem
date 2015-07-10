@@ -1,4 +1,11 @@
 <?php
+	require('user_getter.php');
+	require('book_getter.php');
+	require('consigneditem_getter.php');
+	require('course_getter.php');
+	require('coursebook_getter.php');
+	require('consignment_getter.php');
+
 
 // create getters that can work with resource objects to identify existence
 // need to create a way to figure out consignment number after consignment has been created
@@ -11,8 +18,6 @@ abstract class Getter
 	// push this up a class to a method class as all the methods are going to have this method
 	protected function commitToDatabase($insert)
 	{   
-	    echo "there is something wrong with the insert\n";
-	    var_dump($insert);
 	    
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();

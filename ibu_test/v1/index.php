@@ -3,7 +3,15 @@
 	//require_once('../include/Dbhandler.php');
 	require('../libs/Slim/Slim.php');
 	require('../include/resources/factory.php');
+	require('../include/resources/resources.php');
+	require('../include/resources/book.php');
+	require('../include/resources/consigneditems.php');
+	require('../include/resources/consignment.php');
+	require('../include/resources/course.php');
 	require('../include/Dbhandler.php');
+	require('../include/results/results.php');
+	require('../include/helpers/helpers.php');
+	
 
 	\Slim\Slim::registerAutoloader();
 
@@ -13,16 +21,6 @@
 // users are all very repetitive could technically refactor into one call
 // use methods to determine what to do, set up is
 
-
-
-
-$app->post('/books', function() use ($app) {
-
-		$bookFactory = new BookFactory($app);
-      	$parameters = $bookFactory->getParameters();
-      	$book = $bookFactory->makeObject($parameters);
-      	$book->printOut();
-});
 
 $app->post('/users', function() use ($app) {
 		
@@ -36,24 +34,9 @@ $app->post('/users', function() use ($app) {
 		
 		$user->printOut();
 		echoRespnse($result->getStatusCode(), $result->produceResponse());
+
 });
 
-$app->post('/consignments', function() use ($app) {
-	
-		$consignmentsFactory = new ConsignmentFactory($app);
-		$dbHandler = new DbConsignmentsResourceHandler;
-		
-		$json = $app->request->getBody();
-        $params = json_decode($json, true);
-		
-		$parameters = $consignmentsFactory->getParameters();
-		$consignment = $consignmentsFactory->makeObject($parameters);
-		
-		$result = $dbHandler->postMethod($consignment);
-		
-		$consignment->printOut();
-		echoRespnse($result->getStatusCode(), $result->produceResponse());
-});
 
 
 	

@@ -1,6 +1,6 @@
 <?php
 
-class User extends Resource 
+class User extends Resources 
 {
 
 	protected $studentID;

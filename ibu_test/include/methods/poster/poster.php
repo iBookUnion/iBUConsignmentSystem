@@ -1,7 +1,12 @@
 <?php
 	
-	require('../include/results/results.php');
-	require('../include/helpers/helpers.php');
+	require('user_poster.php');
+	require('book_poster.php');
+	require('consignedItem_poster.php');
+	require('course_poster.php');
+	require('coursebook_poster.php');
+	require('consignment_poster.php');
+	require('null_poster.php');
 	
 //needs to require helper
 
@@ -9,8 +14,6 @@ abstract class Poster {
 
 	protected function commitToDatabase($insert)
 	{	
-		echo "there is likely a problem with statement\n";
-		var_dump($insert);
 		
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();

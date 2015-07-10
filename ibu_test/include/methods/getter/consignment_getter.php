@@ -5,7 +5,10 @@ class ConsignmentGetter extends Getter
 	protected $consignment;
 	protected $conn;
 
-
+	protected function getKeyAsSentence() {
+		
+	}
+	
 	protected function getTable()
 	{
 		return "consignments";

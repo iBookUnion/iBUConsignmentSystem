@@ -1,7 +1,7 @@
 <?php 
 
-	require_once '../include/methods/getter.php';
-	require_once '../include/methods/poster.php';
+	require_once '../include/methods/getter/getter.php';
+	require_once '../include/methods/poster/poster.php';
 	require_once '../include/DbConnect.php';
 
 abstract class DbHandler {
@@ -73,93 +73,93 @@ class DbBooksResourceHandler extends DbHandler
 
 }
 
-class DbConsignmentsResourceHandler extends DbHandler 
-{
-    protected $conn;
+// class DbConsignmentsResourceHandler extends DbHandler 
+// {
+//     protected $conn;
 
-    function __construct() {
-    require_once  '../include/DbConnect.php';
-    // opening db connection
-    $db = new DbConnect();
-    $this->conn = $db->connect();
-    }
+//     function __construct() {
+//     require_once  '../include/DbConnect.php';
+//     // opening db connection
+//     $db = new DbConnect();
+//     $this->conn = $db->connect();
+//     }
 
-    public function postMethod($consignment)
-    {
-        $listOfResults = array();
-        $listOfPosters = array();
+//     public function postMethod($consignment)
+//     {
+//         $listOfResults = array();
+//         $listOfPosters = array();
 
-        //need to create the user first to create the consignmn
-        $user = $consignment->getUser();
-        $userPoster = $user->getPoster($this->conn);
-        $listOfResults[] = $userPoster->insert();
+//         //need to create the user first to create the consignmn
+//         $user = $consignment->getUser();
+//         $userPoster = $user->getPoster($this->conn);
+//         $listOfResults[] = $userPoster->insert();
 
-        // create the consignment and obtain the generated consignment number
-        // so the consigned items can be created
-        $consignmentPoster = $consignment->getPoster($this->conn);
-        $listOfResults[] = $consignmentPoster->insert();
-        $consignmentNumber = $this->assignConsignmentNUmberFromDatabase($consignment);
+//         // create the consignment and obtain the generated consignment number
+//         // so the consigned items can be created
+//         $consignmentPoster = $consignment->getPoster($this->conn);
+//         $listOfResults[] = $consignmentPoster->insert();
+//         $consignmentNumber = $this->assignConsignmentNUmberFromDatabase($consignment);
 
-        // have the consigned item return posters for itself and its respective book
-        $books = $consignment->getBooks();
-        $bookPosters = $this->getBookPosters($books);
-        $listOfResults =+ $this->usePosters($bookPosters);
+//         // have the consigned item return posters for itself and its respective book
+//         $books = $consignment->getBooks();
+//         $bookPosters = $this->getBookPosters($books);
+//         $listOfResults =+ $this->usePosters($bookPosters);
 
-        // need to create the courses as well
-        $coursePosters = $this->getCoursePosters($books);
-        $listOfResults =+ $this->usePosters($coursePosters);
+//         // need to create the courses as well
+//         $coursePosters = $this->getCoursePosters($books);
+//         $listOfResults =+ $this->usePosters($coursePosters);
 
-        //$this->rollback($listOfResults);
+//         //$this->rollback($listOfResults);
 
-        return $listOfResults;
-    }
+//         return $listOfResults;
+//     }
 
-    // this should not only figure out the consignment number it should also
-    // make sure the consignment number is correctly assigned to all the objects that require it
-    private function assignConsignmentNUmberFromDatabase($consignment)
-    {
-        $consignmentGetter = $consignment->getGetter($this->conn);
-        $consignmentNumber = $consignmentGetter->determineConsignmentNumber();
-        $consignment->setConsignmentNumber($consignmentNumber);
-        $consignment->assignConsignmentNumberToConsignmentItems();
-    }
+//     // this should not only figure out the consignment number it should also
+//     // make sure the consignment number is correctly assigned to all the objects that require it
+//     private function assignConsignmentNUmberFromDatabase($consignment)
+//     {
+//         $consignmentGetter = $consignment->getGetter($this->conn);
+//         $consignmentNumber = $consignmentGetter->determineConsignmentNumber();
+//         $consignment->setConsignmentNumber($consignmentNumber);
+//         $consignment->assignConsignmentNumberToConsignmentItems();
+//     }
 
-    private function getBookPosters($books) 
-    {
-        $listOfPosters = array();
-        foreach ($books as $book) {
-            $listOfPosters =+ $book->getPoster($this->conn); // returns two posters
-        }
-        return $listOfPosters;
-    }
+//     private function getBookPosters($books) 
+//     {
+//         $listOfPosters = array();
+//         foreach ($books as $book) {
+//             $listOfPosters =+ $book->getPoster($this->conn); // returns two posters
+//         }
+//         return $listOfPosters;
+//     }
 
-    private function getCoursePosters($books)
-    {
-        $courses = $this->getAllCourses($books);
-        $listOfPosters = array();
-        foreach ($courses as $course) {
-            $listOfPosters[] = $course->getPoster($this->conn); // returns two posters
-        }
-        return $listOfPosters;
-    }
+//     private function getCoursePosters($books)
+//     {
+//         $courses = $this->getAllCourses($books);
+//         $listOfPosters = array();
+//         foreach ($courses as $course) {
+//             $listOfPosters[] = $course->getPoster($this->conn); // returns two posters
+//         }
+//         return $listOfPosters;
+//     }
 
-    private function getAllCourses($books)
-    {
-        $courses = array();
-        foreach ($books as $key => $book) {
-            $courses =+ $book->getCourses();
-        }
-        return $courses;
-    }
+//     private function getAllCourses($books)
+//     {
+//         $courses = array();
+//         foreach ($books as $key => $book) {
+//             $courses =+ $book->getCourses();
+//         }
+//         return $courses;
+//     }
 
-    // should generalize to make it work on any list of posters
-    private function usePosters($Posters)
-    {
-        $listOfResults = array();
-        foreach ($Posters as $poster) {
-            $listOfResults[] = $poster->insert();            
-        }
-        return $listOfResults;
-    }
-}
+//     // should generalize to make it work on any list of posters
+//     private function usePosters($Posters)
+//     {
+//         $listOfResults = array();
+//         foreach ($Posters as $poster) {
+//             $listOfResults[] = $poster->insert();            
+//         }
+//         return $listOfResults;
+//     }
+// }
 
