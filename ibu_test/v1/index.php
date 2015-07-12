@@ -26,7 +26,7 @@ $app->post('/users', function() use ($app) {
 		
 		$result = $dbHandler->postMethod($user);
 		
-		$user->printOut();
+		//$user->printOut();
 		echoRespnse($result->getStatusCode(), $result->produceResponse());
 });
 
@@ -54,7 +54,10 @@ $app->post('/consignments', function() use ($app) {
 		
 		$results = $dbHandler->postMethod($consignment);
 		
-		$consignment->printOut();
+		echo "these are the results:";
+		var_dump($results);
+		
+		//$consignment->printOut();
 		echoRespnse($results[0]->getStatusCode(), $results[0]->produceResponse());
 });
 

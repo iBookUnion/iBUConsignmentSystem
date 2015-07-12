@@ -144,7 +144,7 @@ class DbConsignmentsResourceHandler extends DbHandler
         $courses = $this->getAllCourses($books);
         $listOfPosters = array();
         foreach ($courses as $course) {
-            $listOfPosters += $course->getPoster($this->conn); // returns two posters
+            $listOfPosters = array_merge($listOfPosters, $course->getPoster($this->conn)); // returns two posters
         }
         return $listOfPosters;
     }
@@ -153,7 +153,7 @@ class DbConsignmentsResourceHandler extends DbHandler
     {
         $courses = array();
         foreach ($books as $key => $book) {
-            $courses += $book->getBook()->getCourses();
+            $courses = array_merge($courses, $book->getBook()->getCourses());
         }
         return $courses;
     }

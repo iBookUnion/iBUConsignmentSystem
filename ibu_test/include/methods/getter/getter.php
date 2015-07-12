@@ -17,8 +17,7 @@ abstract class Getter
     
 	// push this up a class to a method class as all the methods are going to have this method
 	protected function commitToDatabase($insert)
-	{   		echo "there is something wrong with this select sql statement:";
-	    var_dump($insert);
+	{   
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();
         $stmt->store_result();
