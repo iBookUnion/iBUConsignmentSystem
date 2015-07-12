@@ -23,7 +23,7 @@ class CoursePoster extends Poster
 		// commit it to the db
 		$res = $this->commitToDatabase($insert);
 
-        $result->setResult($res);
+        $result->setResults($res);
 
 		return $result;
 	}
@@ -48,7 +48,7 @@ class CoursePoster extends Poster
 
 		//make string
 
-		$values = "VALUES ( " . $string . ") ";
+		$values = "VALUES (" . stringify($subject) . ',' . $course_number . ") ";
 		return $values;
 	}
 }

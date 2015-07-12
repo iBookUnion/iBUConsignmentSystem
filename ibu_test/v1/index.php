@@ -39,9 +39,13 @@ $app->post('/books', function() use ($app) {
       	$book = $bookFactory->makeObject($parameters);
 
       	$result = $dbHandler->postMethod($book);
-
-        $book->printOut();
-      	echoRespnse($result->getStatusCode(), $result->produceResponse());
+		
+		echo "thes are the results";
+		var_dump($result);
+		
+		
+        //$book->printOut();
+      	echoRespnse($result[0]->getStatusCode(), $result[0]->produceResponse());
 });
 
 function echoRespnse($status_code, $response) {

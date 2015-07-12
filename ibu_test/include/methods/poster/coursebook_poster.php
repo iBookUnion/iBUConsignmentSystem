@@ -19,13 +19,15 @@ class CourseBookPoster extends Poster
 	public function insert() {
 		$result = new CourseResult($this->course);
 
-		$result = new User_Result($this->user);
 		// constuct the sql statment
 		$insert = $this->constructStatement();
 		// commit it to the db
 		$res = $this->commitToDatabase($insert);
-
-        $result->setResult($res);
+		
+		echo "this should have gotten submitted to the db:";
+		var_dump($this->getCourse());
+		
+        $result->setResults($res);
 
 		return $result;
 	}

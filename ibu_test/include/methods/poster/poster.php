@@ -16,6 +16,7 @@ abstract class Poster {
 	{	
 		echo "there is something wrong with this sql statement:";
 	    var_dump($insert);
+	    
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();
         $stmt->close();

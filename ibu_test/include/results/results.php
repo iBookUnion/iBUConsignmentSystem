@@ -108,7 +108,7 @@ class BookResult extends Result
 	}
 
 	public function getResult() {return $this->res;}
-	protected function getStatusCode() {return $this->statusCode;}
+	public function getStatusCode() {return $this->statusCode;}
 
 	public function produceResponse() {
 	    $response = array();

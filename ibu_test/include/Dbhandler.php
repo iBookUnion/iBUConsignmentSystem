@@ -46,10 +46,11 @@ class DbBooksResourceHandler extends DbHandler
         
         $listOfPosters[] = $book->getPoster($this->conn); 
  
-        $listOfPosters += $this->getCoursePosters($book);
+        $listOfPosters = array_merge($listOfPosters, $this->getCoursePosters($book));
 
         $listOfResults = $this->usePosters($listOfPosters);
 
+        
         //$this->rollback($listOfResults);
 
         return $listOfResults;
@@ -58,20 +59,23 @@ class DbBooksResourceHandler extends DbHandler
     private function getCoursePosters($book)
     {   
         $courses = $book->getCourses();
+        
         $listOfPosters = array();
         foreach ($courses as $course) {
-            $listOfPosters = $listOfPosters + $course->getPoster($this->conn); // this returns two posters not one
+            $listOfPosters = array_merge($listOfPosters, $course->getPoster($this->conn));
         }
+                
         return $listOfPosters;
     }
 
     private function usePosters($listOfPosters)
     {
         $listOfResults = array();
-        
+
         foreach ($listOfPosters as $poster) {
             $listOfResults[] = $poster->insert();
         }
+        return $listOfResults;
     }
 }
 

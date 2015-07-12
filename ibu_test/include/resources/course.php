@@ -44,15 +44,15 @@ class Course extends Resource {
 		$results = array();
 
 		$results = $this->confirmResourceDoesNotExist($conn);
-		if ($results["courseBookResult"])
-			$posters[] = new NullPoster($this, $conn);
-		else if ($results["courseResult"]) {
+		if ($results["courseResult"]) {
+            $posters[] = new CourseBookPoster($this, $conn);
+			$posters[] = new CoursePoster($this, $conn);			
+		} else if ($results["courseBookResult"]) {
 			$posters[] = new CourseBookPoster($this, $conn);
 		} else {
-			$posters[] = new CourseBookPoster($this, $conn);
-			$posters[] = new CoursePoster($this, $conn);
+		    $posters[] = new NullPoster($this, $conn);
 		}
-		
+
 		return $posters;
 	}
 
@@ -68,6 +68,7 @@ class Course extends Resource {
 
 		$results["courseBookResult"] = $courseBookGetter->retrieve();
 		$results["courseResult"] = $courseGetter->retrieve();
+		
 		return $results;
 	}
 
