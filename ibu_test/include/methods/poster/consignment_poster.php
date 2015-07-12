@@ -25,7 +25,7 @@ class ConsignmentPoster extends Poster
 		// commit it to the db
 		$res = $this->commitToDatabase($insert);
 
-        $result->setResult($res);
+        $result->setResults($res);
 
 		return $result;
 	}
@@ -52,7 +52,7 @@ class ConsignmentPoster extends Poster
 		$params[] = $student_id;
 		$string = implode_comma($params);
 
-		$values = " (" . $string . ") ";
+		$values = "VALUES (" . $string . ") ";
 		
 		return $values;
 	}

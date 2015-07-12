@@ -4,18 +4,28 @@ class ConsignedItemGetter extends Getter
 {
 	protected $consignedItem;
 	protected $conn;
+	
+	function __construct($consignedItem, $conn) {
+	    
+		$this->setConsignedItem($consignedItem);
+		$this->setConn($conn);
+	}
+//setters
+	private function setConsignedItem($consignedItem) {$this->consignedItem = $consignedItem;}
+	private function setConn($conn) {$this->conn = $conn;}
+//getter
+	public function getConsignedItem() {return $this->consignedItem;}
 
 	protected function getTable()
 	{
-		return "consigned_items";
+		return "consigned_items ";
 	}
 
 
 	protected function getKeyAsSentence() {
 	    $consigneditem = $this->consignedItem;
-		$student_id = $consigneditem->getStudentID();
 		$consignmentNumber = $consigneditem->getConsignmentNumber();
-		$keyAsSentence = "student_id = " . $student_id . " AND " . "consignment_number = " . $consignmentNumber;
+		$keyAsSentence = "consignment_number = " . $consignmentNumber;
 		return $keyAsSentence;  
 	}
 }

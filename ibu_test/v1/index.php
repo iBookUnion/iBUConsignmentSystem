@@ -38,14 +38,24 @@ $app->post('/books', function() use ($app) {
 
       	$book = $bookFactory->makeObject($parameters);
 
-      	$result = $dbHandler->postMethod($book);
-		
-		echo "thes are the results";
-		var_dump($result);
-		
+      	$results = $dbHandler->postMethod($book);
 		
         //$book->printOut();
-      	echoRespnse($result[0]->getStatusCode(), $result[0]->produceResponse());
+      	echoRespnse($results[0]->getStatusCode(), $results[0]->produceResponse());
+});
+
+$app->post('/consignments', function() use ($app) {
+	
+		$consignmentsFactory = new ConsignmentFactory($app);
+		$dbHandler = new DbConsignmentsResourceHandler;
+		$parameters = $consignmentsFactory->getParameters();
+		
+		$consignment = $consignmentsFactory->makeObject($parameters);
+		
+		$results = $dbHandler->postMethod($consignment);
+		
+		$consignment->printOut();
+		echoRespnse($results[0]->getStatusCode(), $results[0]->produceResponse());
 });
 
 function echoRespnse($status_code, $response) {

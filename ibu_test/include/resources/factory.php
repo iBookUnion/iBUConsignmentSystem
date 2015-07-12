@@ -107,79 +107,78 @@ class CourseFactory extends Factory
 	}
 }
 
-// class ConsignmentFactory extends Factory 
-// {
-// 	protected $app;
+class ConsignmentFactory extends Factory 
+{
+	protected $app;
 	
-// 	function __construct($app)
-// 	{
-// 		$this->app = $app;
-// 	}
+	function __construct($app)
+	{
+		$this->app = $app;
+	}
 
-// 	public function makeObject($params)
-// 	{	
-// 		$consignedItemFactory = new ConsignedItemFactory($this->app);
-// 		$userFactory = new UserFactory($this->app);
+	public function makeObject($params)
+	{	
+		$consignedItemFactory = new ConsignedItemFactory($this->app);
+		$userFactory = new UserFactory($this->app);
 
-// 		$params = $this->getParameters();
+		$params = $this->getParameters();
 		
-// 		$books = $consignedItemFactory->makeListOfObjects($params["books"]);
-// 		$params["books"] = $books; 
+		$books = $consignedItemFactory->makeListOfObjects($params["books"]);
+		$params["books"] = $books; 
 
-// 		$user = $userFactory->makeObject($params);
-// 		$params["user"] = $user;
+		$user = $userFactory->makeObject($params);
+		$params["user"] = $user;
 
-// 		$consignment = new Consignment($params);
-// 		return $consignment;
-// 	}
+		$consignment = new Consignment($params);
+		return $consignment;
+	}
 
-// 	public function getParameters()
-// 	{
-// 		$json = $this->app->request->getBody();
-//         $params = json_decode($json, true);
+	public function getParameters()
+	{
+		$json = $this->app->request->getBody();
+        $params = json_decode($json, true);
         
-//         return $params;
-// 	}
+        return $params;
+	}
+}
 
-// }
-
-// class ConsignedItemFactory extends Factory
-// {
-// 	protected $app;
+class ConsignedItemFactory extends Factory
+{
+	protected $app;
 	
-// 	function __construct($app)
-// 	{
-// 		$this->app = $app;
-// 	} 
+	function __construct($app)
+	{
+		$this->app = $app;
+	} 
 
-// 	public function makeObject($params)
-// 	{
-// 		// make the a consigned item
-// 		// create a book to pass it on to the consigned item
-// 		// this will require passing on the task of creating the course within 
-// 		// books to the bookfactory, which will hopefully work
-// 		$bookfactory = new BookFactory($this->app);
+	public function makeObject($params)
+	{
+		// make the a consigned item
+		// create a book to pass it on to the consigned item
+		// this will require passing on the task of creating the course within 
+		// books to the bookfactory, which will hopefully work
+		$bookfactory = new BookFactory($this->app);
 		
-// 		$book = $bookfactory->makeObject($params);
-// 		$params["book"] = $book;
+		$book = $bookfactory->makeObject($params);
+		$params["book"] = $book;
 		
-// 		$consignedItem = new ConsignedItem($params);
-// 		return $consignedItem;
-// 	}
+		$consignedItem = new ConsignedItem($params);
+		return $consignedItem;
+	}
 
-// 	public function makeListOfObjects($consignedbookParams)
-// 	{	
-// 		$consignedbooks = array();
-// 		foreach ($consignedbookParams as $consignedbookParam)
-// 		{	
-// 			$consignedbook = $this->makeObject($consignedbookParam);
-// 			$consignedbooks[] = $consignedbook;
-// 		}
-// 		return $consignedbooks;
-// 	}
+	public function makeListOfObjects($consignedbookParams)
+	{	
+		$consignedbooks = array();
+		foreach ($consignedbookParams as $consignedbookParam)
+		{	
+			$consignedbook = $this->makeObject($consignedbookParam);
+			$consignedbooks[] = $consignedbook;
+		}
+		return $consignedbooks;
+	}
 
-// 	public function getParameters()
-// 	{
+	public function getParameters()
+	{
 
-// 	}
-// }
+	}
+}

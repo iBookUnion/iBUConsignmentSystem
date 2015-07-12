@@ -14,7 +14,7 @@ class BookGetter extends Getter
 	private function setBook($book) {$this->book = $book;}
 	private function setConn($conn) {$this->conn = $conn;}
 //getter
-	public function getUser() {return $this->user;}
+	public function getBook() {return $this->book;}
 
 	protected function getTable()
 	{
