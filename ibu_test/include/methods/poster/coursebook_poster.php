@@ -58,6 +58,7 @@ class CourseBookPoster extends Poster
 		$params[] = $isbn;
 		$string = implode_comma($params);
 
-		$values = " (" . $string . ") ";
+		$values = "VALUES (" . $string . ") ";
+		return $values;
 	}
 }

@@ -103,7 +103,7 @@ class BookResult extends Result
 		$this->res = $res;
 
 		if ($res) {
-			setStatusCode(201);
+			$this->setStatusCode(201);
 		}
 	}
 

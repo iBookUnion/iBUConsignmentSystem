@@ -12,15 +12,9 @@
 	require('../include/results/results.php');
 	require('../include/helpers/helpers.php');
 	
-
 	\Slim\Slim::registerAutoloader();
 
 	$app = new \Slim\Slim();
-
-
-// users are all very repetitive could technically refactor into one call
-// use methods to determine what to do, set up is
-
 
 $app->post('/users', function() use ($app) {
 		
@@ -34,12 +28,22 @@ $app->post('/users', function() use ($app) {
 		
 		$user->printOut();
 		echoRespnse($result->getStatusCode(), $result->produceResponse());
-
 });
 
+$app->post('/books', function() use ($app) {
 
+		$bookFactory = new BookFactory($app);
+		$dbHandler = new DbBooksResourceHandler;
+      	$parameters = $bookFactory->getParameters();
 
-	
+      	$book = $bookFactory->makeObject($parameters);
+
+      	$result = $dbHandler->postMethod($book);
+
+        $book->printOut();
+      	echoRespnse($result->getStatusCode(), $result->produceResponse());
+});
+
 function echoRespnse($status_code, $response) {
 $app = \Slim\Slim::getInstance();
 
@@ -49,9 +53,6 @@ $app->response->setStatus($status_code);
 
 // Allow CORS
 $app->response->headers->set('Access-Control-Allow-Origin', '*');
-
-//echo json_encode($response);
-
 
 $app->response->setBody(json_encode($response));
 }

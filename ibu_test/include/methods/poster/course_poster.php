@@ -16,7 +16,7 @@ class CoursePoster extends Poster
 //getter
 	public function getCourse() {return $this->course;}
 
-	protected function insert() {
+	public function insert() {
 		$result = new CourseResult($this->course);
 		// constuct the sql statment
 		$insert = $this->constructStatement();
@@ -48,6 +48,7 @@ class CoursePoster extends Poster
 
 		//make string
 
-		$values = "( " . $string . ") ";
+		$values = "VALUES ( " . $string . ") ";
+		return $values;
 	}
 }

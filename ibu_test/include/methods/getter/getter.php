@@ -6,10 +6,10 @@
 	require('coursebook_getter.php');
 	require('consignment_getter.php');
 
-
 // create getters that can work with resource objects to identify existence
 // need to create a way to figure out consignment number after consignment has been created
 abstract class Getter 
+
 {   
     
     abstract protected function getKeyAsSentence();
@@ -18,7 +18,6 @@ abstract class Getter
 	// push this up a class to a method class as all the methods are going to have this method
 	protected function commitToDatabase($insert)
 	{   
-	    
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();
         $stmt->store_result();
@@ -49,12 +48,3 @@ abstract class Getter
 		return $select . $from . $where;
 	}
 }
-
-
-
-
-
-
-
-
-

@@ -1,3 +1,4 @@
+
 <?php
 
 class UserPoster extends Poster {
@@ -68,6 +69,4 @@ class UserPoster extends Poster {
 		
 		return $values;
 	}
-
-	
 }

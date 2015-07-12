@@ -27,9 +27,6 @@ class ConsignmentGetter extends Getter
         
 		$stmt->bind_result($consignment_number);
 
-
 		return $consignment_number;
 	}
-	
-
 }

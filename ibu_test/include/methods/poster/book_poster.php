@@ -16,7 +16,7 @@ class BookPoster extends Poster
 //getter
 	public function getBook() {return $this->book;}
 
-	protected function insert() 
+	public function insert() 
 	{
 		$result = new BookResult($this->book);
 		// constuct the sql statment
@@ -60,7 +60,8 @@ class BookPoster extends Poster
 		$params[] = $edition;
 		$string = implode_comma($params);
 
-		$values = " (" . $string . ") ";
+		$values = "VALUES (" . $string . ") ";
+		return $values;
 	}
 
 }

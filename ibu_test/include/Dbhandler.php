@@ -46,7 +46,8 @@ class DbBooksResourceHandler extends DbHandler
         
         $listOfPosters[] = $book->getPoster($this->conn); 
  
-        $listOfPosters =+ $this->getCoursePosters($book);
+        $listOfPosters += $this->getCoursePosters($book);
+
         $listOfResults = $this->usePosters($listOfPosters);
 
         //$this->rollback($listOfResults);
@@ -59,18 +60,19 @@ class DbBooksResourceHandler extends DbHandler
         $courses = $book->getCourses();
         $listOfPosters = array();
         foreach ($courses as $course) {
-            $listOfPosters = $listOfPosters + $course->getPoster(); // this returns two posters not one
+            $listOfPosters = $listOfPosters + $course->getPoster($this->conn); // this returns two posters not one
         }
+        return $listOfPosters;
     }
 
     private function usePosters($listOfPosters)
     {
         $listOfResults = array();
+        
         foreach ($listOfPosters as $poster) {
             $listOfResults[] = $poster->insert();
         }
     }
-
 }
 
 // class DbConsignmentsResourceHandler extends DbHandler 

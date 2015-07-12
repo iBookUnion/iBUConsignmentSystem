@@ -45,69 +45,67 @@ class UserFactory extends Factory
 	}
 }
 
-// class BookFactory extends Factory
-// {
-// 	protected $app;
+class BookFactory extends Factory
+{
+	protected $app;
 
-// 	function __construct($app) 
-// 	{
-// 		$this->app = $app;
-// 	}
+	function __construct($app) 
+	{
+		$this->app = $app;
+	}
 
-// 	public function makeObject($params)
-// 	{	
-// 		$courseFactory = new CourseFactory($this->app);
+	public function makeObject($params)
+	{	
+		$courseFactory = new CourseFactory($this->app);
 		
-// 		$courses = $courseFactory->makeListOfObjects($params["isbn"], $params["courses"]);
-// 		$params["courses"] = $courses; 
+		$courses = $courseFactory->makeListOfObjects($params["isbn"], $params["courses"]);
+		$params["courses"] = $courses; 
 		
-// 		$book = new Book($params);
-// 		return $book;
-// 	}
-
-// 	public function getParameters() 
-// 	{
-// 		$json = $this->app->request->getBody();
-//         $params = json_decode($json, true);
-//         return $params;
-// 	}
-// }
-
-
-// class CourseFactory extends Factory
-// {
-// 	protected $app;
-
-// 	function __construct($app)
-// 	{
-// 		$this->app = $app;
-// 	}
-
-// 	public function makeObject($params)
-// 	{
-// 		$params = $this->getParameters();
-// 		$course = new Course($params);
-// 		return $course;
-// 	}
-
-// 	public function makeListOfObjects($isbn, $courseParams)
-// 	{	
-// 		$courses = array();
-// 		foreach ($courseParams as $courseParam)
-// 		{	
-// 			$courseParam["isbn"] = $isbn;
-// 			$course = new Course($courseParam);
-// 			$courses[] = $course;
-// 		}
-// 		return $courses;
-// 	}
-
-// 	public function getParameters() 
-// 	{
+		$book = new Book($params);
+		return $book;
+	}
+	
+	public function getParameters() 
+	{
+		$json = $this->app->request->getBody();
+        $params = json_decode($json, true);
+        return $params;
+	}
+}
 
 
-// 	}
-// }
+class CourseFactory extends Factory
+{
+	protected $app;
+
+	function __construct($app)
+	{
+		$this->app = $app;
+	}
+
+	public function makeObject($params)
+	{
+		$params = $this->getParameters();
+		$course = new Course($params);
+		return $course;
+	}
+
+	public function makeListOfObjects($isbn, $courseParams)
+	{	
+		$courses = array();
+		foreach ($courseParams as $courseParam)
+		{	
+			$courseParam["isbn"] = $isbn;
+			$course = new Course($courseParam);
+			$courses[] = $course;
+		}
+		return $courses;
+	}
+
+	public function getParameters() 
+	{
+	}
+}
 
 // class ConsignmentFactory extends Factory 
 // {
