@@ -108,6 +108,14 @@ input.ng-valid {
     color: green;
 }
 
+.error-container {
+    display:inline;
+}
+
+.check-container {
+    display:inline;
+}
+
 @media (max-width: 767px) {
     .navbar-default .navbar-nav .open .dropdown-menu > li > a {
         color: #b2d39d;
