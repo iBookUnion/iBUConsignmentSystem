@@ -7,10 +7,6 @@
               ng-submit="consignForm.$valid && addBook()" novalidate>
             <div class="form-group">
                 <label for="isbn">ISBN</label>
-                <input type="text" class="form-control input-medium" ng-maxlength=13 ng-minlength=13 id="isbn"
-                       name="isbn"
-                       ng-model="consignedBook.isbn" placeholder="Enter ISBN(13 digit)" required>
-
                 <div class="error-container"
                      ng-show="consignForm.isbn.$dirty && consignForm.isbn.$invalid">
                     <small class="error"
@@ -29,39 +25,40 @@
                            ng-show="consignForm.isbn.$badInput">
                         That is not a valid ISBN. Please input a valid ISBN.
                     </small>
-
                 </div>
                 <div class="check-container" ng-show="consignForm.isbn.$dirty && consignForm.isbn.$valid">
                     <small class="checked">
                         &#10003;
                     </small>
                 </div>
+
+                <input type="text" class="form-control input-medium" ng-maxlength=13 ng-minlength=13 id="isbn"
+                       name="isbn"
+                       ng-model="consignedBook.isbn" placeholder="Enter ISBN(13 digit)" required>
             </div>
 
             <div class="row">
 
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label for="course">Course Number</label>
-                        <input type="text" class="form-control input-medium" id="course" name="course"
-                               ng-model="consignedBook.courses[0]" ng-pattern="/^\w{4}\s?\d{3}$/"
-                               placeholder="Enter Course Number" required>
-
-                        <div class="error-container"
-                             ng-show="consignForm.course.$dirty && consignForm.course.$invalid">
-
-                            <small class="error"
-                                   ng-show="consignForm.course.$invalid">
-                                A valid course number consists of four letters and three numbers.
-                            </small>
-                        </div>
-                        <div class="check-container" ng-show="consignForm.course.$dirty && consignForm.course.$valid">
+                        <label for="edition">Edition</label>
+                        <div class="check-container" ng-show="consignForm.edition.$dirty && consignForm.edition.$valid">
                             <small class="checked">
                                 &#10003;
                             </small>
                         </div>
-                    </div>
+                        <input type="text" class="form-control input-medium" id="edition" name="edition"
+                               ng-model="consignedBook.edition" ng-pattern=""
+                               placeholder="Enter Edition">
+                        <div class="error-container"
+                             ng-show="consignForm.edition.$dirty && consignForm.edition.$invalid">
 
+                            <small class="error"
+                                   ng-show="consignForm.edition.$invalid">
+                                Please enter the edition number.
+                            </small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-1">
@@ -81,11 +78,8 @@
                                  ng-show="consignForm.price.$dirty && consignForm.price.$invalid">
                                 <small class="error"
                                        ng-show="consignForm.price.$invalid">
-
                                 </small>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -113,10 +107,6 @@
 
             <div class="form-group">
                 <label for="author">Book Author</label>
-                <input type="text" class="form-control input-medium" id="author" name="author"
-                       ng-model="consignedBook.author" ng-pattern="/[a-zA-Z]+/" placeholder="Enter Book Author"
-                       required>
-
                 <div class="error-container"
                      ng-show="consignForm.author.$dirty && consignForm.author.$invalid">
                     <small class="error"
@@ -129,6 +119,29 @@
                     </small>
 
                 </div>
+                <input type="text" class="form-control input-medium" id="author" name="author"
+                       ng-model="consignedBook.author" ng-pattern="/[a-zA-Z]+/" placeholder="Enter Book Author"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="course">Course Number</label>
+                <div class="error-container"
+                     ng-show="consignForm.course.$dirty && consignForm.course.$invalid">
+
+                    <small class="error"
+                           ng-show="consignForm.course.$invalid">
+                        A valid course number consists of four letters and three numbers.
+                    </small>
+                </div>
+                <div class="check-container" ng-show="consignForm.course.$dirty && consignForm.course.$valid">
+                    <small class="checked">
+                        &#10003;
+                    </small>
+                </div>
+                <input type="text" class="form-control input-medium" id="course" name="course"
+                       ng-model="consignedBook.courses[0]" ng-pattern="/^\w{4}\s?\d{3}$/"
+                       placeholder="Enter Course Number" required>
             </div>
 
             <!--/div-->
