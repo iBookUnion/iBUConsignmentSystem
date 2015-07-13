@@ -18,7 +18,7 @@ class ConsignmentPoster extends Poster
 	public function getConsignment() {return $this->consignment;}
 
 	public function insert() {
-		$result = new CourseResult($this->consignment);
+		$result = new ConsignmentResult($this->consignment);
 
 		// constuct the sql statment
 		$insert = $this->constructStatement();
@@ -46,7 +46,6 @@ class ConsignmentPoster extends Poster
 	{
 		$consignment = $this->getConsignment();
 		$student_id = $consignment->getStudentID();
-		var_dump($student_id);
 		// make string
 		$params = array();
 		$params[] = $student_id;

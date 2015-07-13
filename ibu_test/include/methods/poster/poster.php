@@ -14,9 +14,6 @@ abstract class Poster {
 
 	protected function commitToDatabase($insert)
 	{	
-		echo "there is something wrong with this sql statement:";
-	    var_dump($insert);
-	    
 		$stmt = $this->conn->prepare($insert);
         $res = $stmt->execute();
         $stmt->close();

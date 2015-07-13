@@ -53,12 +53,9 @@ $app->post('/consignments', function() use ($app) {
 		$consignment = $consignmentsFactory->makeObject($parameters);
 		
 		$results = $dbHandler->postMethod($consignment);
-		
-		echo "these are the results:";
-		var_dump($results);
-		
+	
 		//$consignment->printOut();
-		echoRespnse($results[0]->getStatusCode(), $results[0]->produceResponse());
+		echoRespnse($results[1]->getStatusCode(), $results[1]->produceResponse());
 });
 
 function echoRespnse($status_code, $response) {

@@ -75,9 +75,6 @@ class ConsignedItem extends Resource
 		$consignedItemGetter = $getter["consignedItem"];
 		$bookGetter = $getter["book"];
 
-    echo "what is in this array of getters?";
-    var_dump($getter);
-
 		$results["consignedItemResult"] = $consignedItemGetter->retrieve();
 		$results["bookResult"] = $bookGetter->retrieve();
 		return $results;

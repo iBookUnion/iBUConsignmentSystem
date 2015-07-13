@@ -122,7 +122,7 @@ class BookResult extends Result
         } else if ($this->statusCode == 409) {
             $response["error"] = true;
             $response["message"] = "Sorry, this book already exists";
-        }		$response = array();
+        }
 		
 		return $response;	
 	}
@@ -149,7 +149,9 @@ class CourseResult extends Result
 		}
 	}
 	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
+
 	public function getResult() {return $this->res;}
+	public function getStatusCode() {return $this->statusCode;}
 
 	public function produceResponse() {
 	    		$response = array();
@@ -163,7 +165,7 @@ class CourseResult extends Result
         } else if ($this->statusCode == 409) {
             $response["error"] = true;
             $response["message"] = "Sorry, this course_book already exists";
-        }		$response = array();
+        }
 		
 		return $response;	
 	}
@@ -190,10 +192,12 @@ class ConsignmentResult extends Result
 		}
 	}
 	protected function setStatusCode($status_code) {$this->statusCode = $status_code;}
+	
 	public function getResult() {return $this->res;}
+	public function getStatusCode() {return $this->statusCode;}
 
 	public function produceResponse() {
-	    		$response = array();
+	    $response = array();
 
         if ($this->statusCode  == 201) {
             $response["error"] = false;
@@ -204,7 +208,7 @@ class ConsignmentResult extends Result
         } else if ($this->statusCode == 409) {
             $response["error"] = true;
             $response["message"] = "Sorry, this consignment already exists";
-        }		$response = array();
+        }
 
 		return $response;	
 	}
