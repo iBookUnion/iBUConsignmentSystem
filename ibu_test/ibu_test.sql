@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
 );
  
 CREATE TABLE IF NOT EXISTS `consignments` (
-  `consignment_number` int NOT NULL,
+  `consignment_number` int AUTO_INCREMENT,
   `student_ID` int(10) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`consignment_number`)
