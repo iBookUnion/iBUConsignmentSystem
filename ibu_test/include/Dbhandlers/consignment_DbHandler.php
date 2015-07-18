@@ -1,83 +1,5 @@
-<?php 
+<?php
 
-	require_once '../include/methods/getter/getter.php';
-	require_once '../include/methods/poster/poster.php';
-	require_once '../include/DbConnect.php';
-
-abstract class DbHandler {
-
-}
-
-class DbUserResourceHandler extends DbHandler 
-{
-		protected $conn;
-
-	function __construct() {
-    require_once dirname(__FILE__) . '/DbConnect.php';
-    // opening db connection
-    $db = new DbConnect();
-    $this->conn = $db->connect();
-    }	
-
-    public function postMethod($user) 
-    {
-        $poster = $user->getPoster($this->conn);
-        $result = $poster->insert();
-        return $result;
-    }
-
-}
-
-class DbBooksResourceHandler extends DbHandler 
-{
-		protected $conn;
-
-	function __construct() {
-    require_once  '../include/DbConnect.php';
-    // opening db connection
-    $db = new DbConnect();
-    $this->conn = $db->connect();
-    }
-
-    public function postMethod($book) 
-    {
-        $listOfResults = array();
-        $listOfPosters = array();
-        
-        $listOfPosters[] = $book->getPoster($this->conn); 
- 
-        $listOfPosters = array_merge($listOfPosters, $this->getCoursePosters($book));
-
-        $listOfResults = $this->usePosters($listOfPosters);
-
-        
-        //$this->rollback($listOfResults);
-
-        return $listOfResults;
-    }
-
-    private function getCoursePosters($book)
-    {   
-        $courses = $book->getCourses();
-        
-        $listOfPosters = array();
-        foreach ($courses as $course) {
-            $listOfPosters = array_merge($listOfPosters, $course->getPoster($this->conn));
-        }
-                
-        return $listOfPosters;
-    }
-
-    private function usePosters($listOfPosters)
-    {
-        $listOfResults = array();
-
-        foreach ($listOfPosters as $poster) {
-            $listOfResults[] = $poster->insert();
-        }
-        return $listOfResults;
-    }
-}
 
 class DbConsignmentsResourceHandler extends DbHandler 
 {
@@ -90,24 +12,24 @@ class DbConsignmentsResourceHandler extends DbHandler
     $this->conn = $db->connect();
     }
 
-    public function postMethod($consignment)
+    public function postMethod($resource)
     {
         $listOfResults = array();
         $listOfPosters = array();
 
         //need to create the user first to create the consignmn
-        $user = $consignment->getUser();
+        $user = $resource->getUser();
         $userPoster = $user->getPoster($this->conn);
         $listOfResults[] = $userPoster->insert();
 
         // create the consignment and obtain the generated consignment number
         // so the consigned items can be created
-        $consignmentPoster = $consignment->getPoster($this->conn);
+        $consignmentPoster = $resource->getPoster($this->conn);
         $listOfResults[] = $consignmentPoster->insert();
-        $consignmentNumber = $this->assignConsignmentNUmberFromDatabase($consignment);
+        $consignmentNumber = $this->assignConsignmentNUmberFromDatabase($resource);
 
         // have the consigned item return posters for itself and its respective book
-        $books = $consignment->getBooks();
+        $books = $resource->getBooks();
         $bookPosters = $this->getBookPosters($books);
         $listOfResults = array_merge($listOfResults, $this->usePosters($bookPosters));
 
@@ -168,4 +90,3 @@ class DbConsignmentsResourceHandler extends DbHandler
         return $listOfResults;
     }
 }
-

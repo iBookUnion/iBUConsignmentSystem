@@ -66,8 +66,10 @@ class UserResult extends Result
 
 	public function produceResponse() {
 		$response = array();
-
+		
         if ($this->statusCode  == 201) {
+        	echo "we made it into the correct spot";
+        	
             $response["error"] = false;
             $response["message"] = "You are successfully registered";
         } else if ($this->statusCode == 400) {
@@ -76,8 +78,7 @@ class UserResult extends Result
         } else if ($this->statusCode == 409) {
             $response["error"] = true;
             $response["message"] = "Sorry, this user already exists";
-        }		$response = array();
-
+        }
 		
 		return $response;	
 	}	

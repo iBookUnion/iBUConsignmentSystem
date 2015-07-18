@@ -51,40 +51,4 @@ class User extends Resource
 		var_dump($phone_number);
 	}
 
-
-	// instead of having the object pass itself around
-	// this could be changed to have the handler set the 
-	// resource object to hte mthod object after the reosurce
-	// object has returned the method object
-	public function getPoster($conn) {
-		// check whether the resouce to be created existed prior
-		// to trying to create it again
-		$result = $this->confirmResourceDoesNotExist($conn);
-		if ($result) {
-			$poster = new UserPoster($this, $conn);			
-		} else {
-			// blank poster, will not actually attempt to push to db
-			$poster = new NullPoster($this, $conn);
-		}
-
-		return $poster;
-	}
-
-	private function confirmResourceDoesNotExist($conn) 
-	{
-		$getter = $this->getGetter($conn);
-		$result = $getter->retrieve();
-		return $result;
-	}
-
-	public function getGetter($conn)
-	{
-		$getter = new UserGetter($this, $conn);
-		return $getter;
-	}
-
-	public function getDeleter($conn) {
-		$deleter = new UserDeleter($this, $conn);
-		return $deleter;
-	}
 }

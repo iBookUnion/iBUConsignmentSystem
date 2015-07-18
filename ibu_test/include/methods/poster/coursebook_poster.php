@@ -24,9 +24,6 @@ class CourseBookPoster extends Poster
 		// commit it to the db
 		$res = $this->commitToDatabase($insert);
 		
-		echo "this should have gotten submitted to the db:";
-		var_dump($this->getCourse());
-		
         $result->setResults($res);
 
 		return $result;

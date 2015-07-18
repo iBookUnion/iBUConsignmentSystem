@@ -8,7 +8,9 @@
 	require('../include/resources/consigneditems.php');
 	require('../include/resources/consignment.php');
 	require('../include/resources/course.php');
-	require('../include/Dbhandler.php');
+	require('../include/Dbhandlers/Dbhandler.php');
+	require('../include/Dbhandlers/user_DbHandler.php');
+	require('../include/Dbhandlers/books_DbHandler.php');
 	require('../include/results/results.php');
 	require('../include/helpers/helpers.php');
 	
@@ -27,6 +29,9 @@ $app->post('/users', function() use ($app) {
 		$result = $dbHandler->postMethod($user);
 		
 		//$user->printOut();
+		
+		var_dump($result->produceResponse());
+		
 		echoRespnse($result->getStatusCode(), $result->produceResponse());
 });
 
