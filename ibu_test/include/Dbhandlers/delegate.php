@@ -136,5 +136,113 @@ class Delegate
 		return $deleters;
 	} 
 
+#pragma mark - methods for Consignment Post retrieval
+
+	public function getConsignmentPoster($consignment, $conn) {
+		if ($this->confirmConsignmentDoesNotExist($consignment, $conn)) {
+			$poster = new NullPoster($consignment, $conn);
+		} else {
+			$poster = new ConsignmentPoster($consignment,$conn);
+		}
+
+		return $poster;
+	}
+	
+	private function confirmConsignmentDoesNotExist($consignment, $conn) 
+	{
+		$getter = $this->getConsignmentGetter($consignment, $conn);
+		$consignmentExisted = $getter->checkForPreExistingConsignment();
+		return $consignmentExisted;
+	}
+
+	public function getConsignmentGetter($consignment, $conn)
+	{
+		$getter = new ConsignmentGetter($consignment, $conn);
+		return $getter;
+	}
+
+	public function getDeleter($consignment, $conn) {
+		$deleter = new ConsignmentDeleter($consignment, $conn);
+		return $deleter;
+	}
+	
+	public function getConsignmentItemPosters($consignmentItems, $conn) 
+    {
+        $listOfPosters = array();
+        foreach ($consignmentItems as $consignmentItem) {
+            $listOfPosters = array_merge($listOfPosters, $this->getConsignmentItemPoster($consignmentItem, $conn)); // can return two posters
+        }
+        return $listOfPosters;
+    }
+    
+#pragma mark - methods for ConsignedItems Poster retrieval
+
+	public function getPoster($conn) {
+		// check whether the resouce to be created existed prior
+		// to trying to create it again
+		$posters = array();
+		$results = array();
+
+		$results = $this->confirmResourceDoesNotExist($conn);
+		if ($results["bookResult"]) {
+			$posters[] = new ConsignedItemPoster($this, $conn);
+			$posters[] = new BookPoster($this->getBook(), $conn);
+		} else if ($results["consignedItemResult"]) {
+			$posters[] = new ConsignedItemPoster($this, $conn);
+		} else {
+		    $posters[] = new NullPoster($this, $conn);
+		}
+		
+		return $posters;
+	}
+
+	// should check if the consigned item exists
+	// if it does there is no need to check if the book does
+	// if it doesn't should check if the book does
+	private function confirmConsignmentItemDoesNotExist($consignmentItem, $conn) 
+	{
+		$results = array();
+		$getters = $this->getConsignmentItemGetter($consignmentItem, $conn);
+		$consignedItemGetter = $getters["consignedItem"];
+		$bookGetter = $getters["book"];
+
+		$results["consignedItemResult"] = $consignedItemGetter->retrieve();
+		$results["bookResult"] = $bookGetter->retrieve();
+		return $results;
+	}
+
+	public function getConsignedItemGetter($consignmentItem, $conn)
+	{
+		$getters = array();
+		$consignedItemGetter = new ConsignedItemGetter($consignmentItem, $conn);
+		$bookGetter = new BookGetter($consignmentItem, $conn);
+		$getters["consignedItem"] = $consignedItemGetter;
+		$getters["book"] = $bookGetter;
+		return $getters;
+	}
+
+	public function getConsignedItemDeleter($conn) 
+	{
+
+	}
+	
+	private function getCoursePosters($consignmentItems, $conn)
+    {
+        $courses = $this->getAllCourses($consignmentItems);
+        $listOfPosters = array();
+        foreach ($courses as $course) {
+            $listOfPosters = array_merge($listOfPosters, $course->getCoursePoster($conn)); // returns two posters
+        }
+        return $listOfPosters;
+    }
+
+    private function getAllCourses($consignmentItems)
+    {
+        $courses = array();
+        foreach ($consignmentItems as $consignmentItems) {
+            $courses = array_merge($courses, $consignmentItem->getBook()->getCourses());
+        }
+        return $courses;
+    }
 
 }

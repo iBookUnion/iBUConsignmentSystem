@@ -6,31 +6,30 @@ class Consignment {
 	protected $student_id;
 	protected $consignment_number;
 	protected $user;
-	protected $books; //list of books
+	protected $consignmentItems; 
 
 	function __construct($params) 
 	{	
 		$user = $params["user"];
 		$this->setUser($user);
 		$this->setStudentID($user->getStudentID());
-		$this->setBooks($params["books"]);
+		$this->setConsignmentItems($params["books"]);
 
 	}
 
 //setters
-	//private function set_consignment_number($consignment_number) {$this->consignment_number = $consignment_number;}
 	private function setStudentID($student_id) {$this->student_id = $student_id;}
 	private function setUser($user) {$this->user = $user;}
-	private function setBooks($books) {$this->books = $books;}
+	private function setConsignmentItems($consignmentItems) {$this->consignmentItems = $consignmentItems;}
 	public function setConsignmentNumber($consignment_number) {$this->consignment_number = $consignment_number;}
 
 //getters
 	//public function get_consignment_number() {return $this->consignment_number;}
 	public function getStudentID() {return $this->student_id;}
 	public function getUser() {return $this->user;}
-	public function getBooks() {return $this->books;}
+	public function getConsignmentItems() {return $this->consignmentItems;}
 	public function getConsignmentNumber() {return $this->consignment_number;}
-
+	
 	public function printOut() 
 	{
 		$user = $this->getUser();
@@ -44,36 +43,12 @@ class Consignment {
 	
 	public function assignConsignmentNumberToConsignmentItems()
 	{
-	    foreach ($this->getBooks() as $consignmentItem)
+	    foreach ($this->getConsignmentItems() as $consignmentItem)
 	    {
 	        $consignmentItem->setConsignmentNumber($this->getConsignmentNumber());
 	    }
 	}
 
-	public function getPoster($conn) {
-		// check whether the resouce to be created existed prior
-		// to trying to create it again
-		$poster = new ConsignmentPoster($this,$conn);
 
-		return $poster;
-	}
-
-	private function confirmResourceDoesNotExist($conn) 
-	{
-		$getter = $this->getGetter($conn);
-		$result = $getter->retrieve();
-		return $result;
-	}
-
-	public function getGetter($conn)
-	{
-		$getter = new ConsignmentGetter($this, $conn);
-		return $getter;
-	}
-
-	public function getDeleter($conn) {
-		$deleter = new ConsignmentDeleter($conn);
-		return $deleter;
-	}
 
 }

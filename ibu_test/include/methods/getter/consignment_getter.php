@@ -25,20 +25,58 @@ class ConsignmentGetter extends Getter
 	{
 		return "consignments";
 	}
-	public function determineConsignmentNumber() {
-
-		$statement = "SELECT consignment_number FROM consignments ";
-		$consignment = $this->consignment;
-		$studentID = $consignment->getStudentID();
-
-		$where = "WHERE student_id = " . $studentID;
-
-		$statement .= $where . " ORDER BY consignment_number DESC LIMIT 1";
-
-		$stmt = $this->commitToDatabase($statement);
-        
+	
+	public function checkForPreExistingConsignment() 
+	{
+		$query = $this->constructConsignmentSearch();
+		
+		$stmt = $this->commitToDatabase($query);
 		$stmt->bind_result($consignment_number);
 
-		return $consignment_number;
+		if ($consignment_number) {
+			$this->consignment->setConsignmentNumber($consignment_number);
+		}
+		return ($consignment_number) ? true : false;
+	}
+	
+	private function constructConsignmentSearch()
+	{
+		if (date(M) == 1 || date(M == 12)) {
+			$query = $this->constructConsignmentSearchTermTwo();
+		} else {
+			$query = $this->constructConsignmentSearchTermOne();
+		}
+		return $query;
+	}
+	
+	private function constructConsignmentSearchTermOne()
+	{
+		$select = "SELECT consignment_number ";
+		$from = "FROM consignments ";
+		$where = "WHERE student_id = " . $this->consignment->getStudentID();
+		$upperDateLimit = " AND date >= '" . date(Y) . "-04-01'";
+		$lowerDateLimit = " AND date <= '" . date(Y) . "-09-31'";
+		
+		return $select . $from . $where . $upperDateLimit . $lowerDateLimit;
+	}
+	
+	private function constructConsignmentSearchTermTwo()
+	{
+		$select = "SELECT consignment_number";
+		$from = "FROM consignments";
+		$where = "WHERE student_id = " . $this->consignment->getStudentID();
+		$upperDateLimit = " AND date >= '" . date(Y) . "-12-01'";
+		$lowerDateLimit = " AND date <= '" . date(Y)++ . "-01-31'";
+		
+		return $select . $from . $where . $upperDateLimit . $lowerDateLimit;
+	}
+	
+	public function determineConsignmentNumber() 
+	{
+		if (!$this->consignment->getConsignmentNumber()) {
+			// using this method for this purpose is a bit sloppy,
+			// at the very least consider changing the name of the methods
+			$this->checkForPreExistingConsignment()
+		}
 	}
 }
