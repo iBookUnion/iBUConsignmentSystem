@@ -18,6 +18,4 @@ class DbUserResourceHandler implements DbHandler
         $result = $poster->insert();
         return $result;
     }
-
-    
 }

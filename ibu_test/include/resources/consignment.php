@@ -48,7 +48,4 @@ class Consignment {
 	        $consignmentItem->setConsignmentNumber($this->getConsignmentNumber());
 	    }
 	}
-
-
-
 }

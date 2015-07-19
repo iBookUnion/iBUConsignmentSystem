@@ -32,16 +32,22 @@ class ConsignmentGetter extends Getter
 		
 		$stmt = $this->commitToDatabase($query);
 		$stmt->bind_result($consignment_number);
-
+		
+		while($row = $stmt->fetch())
+		{
+			$consignment_number = $consignment_number; 
+		}
+		$stmt->close();
+			
 		if ($consignment_number) {
 			$this->consignment->setConsignmentNumber($consignment_number);
 		}
-		return ($consignment_number) ? true : false;
+		return (($consignment_number == 0) ? true : false);
 	}
 	
 	private function constructConsignmentSearch()
 	{
-		if (date(M) == 1 || date(M == 12)) {
+		if (date('M') == 1 || date('M') == 12) {
 			$query = $this->constructConsignmentSearchTermTwo();
 		} else {
 			$query = $this->constructConsignmentSearchTermOne();
@@ -54,8 +60,8 @@ class ConsignmentGetter extends Getter
 		$select = "SELECT consignment_number ";
 		$from = "FROM consignments ";
 		$where = "WHERE student_id = " . $this->consignment->getStudentID();
-		$upperDateLimit = " AND date >= '" . date(Y) . "-04-01'";
-		$lowerDateLimit = " AND date <= '" . date(Y) . "-09-31'";
+		$upperDateLimit = " AND date >= '" . date('Y') . "-04-01'";
+		$lowerDateLimit = " AND date <= '" . date('Y') . "-09-31'";
 		
 		return $select . $from . $where . $upperDateLimit . $lowerDateLimit;
 	}
@@ -65,8 +71,8 @@ class ConsignmentGetter extends Getter
 		$select = "SELECT consignment_number";
 		$from = "FROM consignments";
 		$where = "WHERE student_id = " . $this->consignment->getStudentID();
-		$upperDateLimit = " AND date >= '" . date(Y) . "-12-01'";
-		$lowerDateLimit = " AND date <= '" . date(Y)++ . "-01-31'";
+		$upperDateLimit = " AND date >= '" . date('Y') . "-12-01'";
+		$lowerDateLimit = " AND date <= '" . (date('Y') + 1) . "-01-31'";
 		
 		return $select . $from . $where . $upperDateLimit . $lowerDateLimit;
 	}
@@ -76,7 +82,7 @@ class ConsignmentGetter extends Getter
 		if (!$this->consignment->getConsignmentNumber()) {
 			// using this method for this purpose is a bit sloppy,
 			// at the very least consider changing the name of the methods
-			$this->checkForPreExistingConsignment()
+			$this->checkForPreExistingConsignment();
 		}
 	}
 }

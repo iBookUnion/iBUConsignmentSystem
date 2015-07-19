@@ -10,9 +10,3 @@ interface DbHandler {
      function postMethod($resource);
     
 }
-
-
-
-
-
-

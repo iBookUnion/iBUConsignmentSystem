@@ -52,6 +52,7 @@ class BookPoster extends Poster
 		//make string
 		$title = stringify($title);
 		$author = stringify($author);
+		$edition = stringify($edition);
 
 		$params = array();
 		$params[] = $isbn;

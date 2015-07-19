@@ -36,7 +36,7 @@ class ConsignedItemPoster extends Poster
 
 	protected function getColumns() 
 	{
-    	$columns = " (consignment_number, isbn, price, current_state) ";
+    	$columns = " (consigned_items, consignment_number, isbn, price, current_state) ";
     	return $columns;		
 	}
 

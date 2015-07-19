@@ -68,8 +68,6 @@ class UserResult extends Result
 		$response = array();
 		
         if ($this->statusCode  == 201) {
-        	echo "we made it into the correct spot";
-        	
             $response["error"] = false;
             $response["message"] = "You are successfully registered";
         } else if ($this->statusCode == 400) {

@@ -25,7 +25,8 @@ class ConsignedItemGetter extends Getter
 	protected function getKeyAsSentence() {
 	    $consigneditem = $this->consignedItem;
 		$consignmentNumber = $consigneditem->getConsignmentNumber();
-		$keyAsSentence = "consignment_number = " . $consignmentNumber;
+		$isbn = $consigneditem->getISBN();
+		$keyAsSentence = "consignment_number = " . $consignmentNumber . " AND isbn = " . $isbn;
 		return $keyAsSentence;  
 	}
 }

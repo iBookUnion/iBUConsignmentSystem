@@ -1,7 +1,7 @@
 <?php
 
 
-class DbConsignmentsResourceHandler extends DbHandler 
+class DbConsignmentsResourceHandler implements DbHandler 
 {
     protected $conn;
     protected $delegate;
@@ -24,7 +24,7 @@ class DbConsignmentsResourceHandler extends DbHandler
         $userPoster = $this->delegate->getUserPoster($user, $this->conn);
         $listOfResults[] = $userPoster->insert();
 
-        $consignmentPoster = $this->delegate->getConsignmentPoster($this->conn);
+        $consignmentPoster = $this->delegate->getConsignmentPoster($resource, $this->conn);
         $listOfResults[] = $consignmentPoster->insert(); 
        
         $this->assignConsignmentNumberFromDatabase($resource);
@@ -35,7 +35,7 @@ class DbConsignmentsResourceHandler extends DbHandler
         $listOfResults = array_merge($listOfResults, $this->usePosters($consignmentItemsPosters));
 
         // need to create the courses as well
-        $coursePosters = $this->delegate->getCoursePosters($consignmentItems, $this->conn);
+        $coursePosters = $this->delegate->getAllCoursePosters($consignmentItems, $this->conn);
         $listOfResults = array_merge($listOfResults, $this->usePosters($coursePosters));
 
         //$this->rollback($listOfResults);
@@ -45,7 +45,7 @@ class DbConsignmentsResourceHandler extends DbHandler
 
     private function assignConsignmentNumberFromDatabase($consignment)
     {   
-        $consignmentGetter = $this->delegate->getGetter($this->conn);
+        $consignmentGetter = $this->delegate->getConsignmentGetter($consignment, $this->conn);
         $consignmentNumber = $consignmentGetter->determineConsignmentNumber();
         $consignment->assignConsignmentNumberToConsignmentItems();
     }

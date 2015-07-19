@@ -51,7 +51,7 @@ class NullPoster extends Poster {
 		}
 		else if (is_a($this->resource, $consignedItem)) 
 		{
-			$result = new ConsignedItemResult($this);
+			$result = new ConsignmentResult($this);
 		}	
 		else if (is_a($this->resource, $course))
 		{

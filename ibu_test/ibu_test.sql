@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `books` (
   `isbn` int(13) NOT NULL,
   `title` varchar(35) NOT NULL,
   `author` varchar(35) NOT NULL,
-  `edition` int(2) NOT NULL,
+  `edition` varchar(25) NOT NULL,
   PRIMARY KEY (`isbn`)
 );
 
@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `consignments` (
 );
 
 CREATE TABLE IF NOT EXISTS `consigned_items` (
+  `consigned_items` int NOT NUll,
   `consignment_number` int NOT NULL,
   `isbn` int(13) NOT NULL,
   `price` decimal(6,0) NOT NULL,
