@@ -1,0 +1,25 @@
+{
+    "first_name": "Martin",
+    "last_name": "Carter",
+    "student_id": 10000002,
+    "email": "martin@test.fds",
+    "phone_number": 5551234567,
+    "faculty": "Commerce",
+    "books": [
+        {
+            "isbn": 100,
+            "title": "And Then There Was Everyone",
+            "author": "Augustus Christopher",
+            "edition": "2",
+            "courses": [
+                {
+                    "subject": "TEST",
+                    "course_number": 123
+                }
+            ],
+            "price": 51,
+            "consigned_item": 1,
+            "current_state": "available"
+        }
+    ]
+}
