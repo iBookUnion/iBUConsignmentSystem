@@ -1,0 +1,40 @@
+{
+    "first_name": "Bob",
+    "last_name": "Adams",
+    "student_id": 10000003,
+    "email": "bob@test.fds",
+    "phone_number": 5559999999,
+    "faculty": "Forestry",
+    "books": [
+        {
+            "isbn": 103,
+            "title": "Duplicate Book",
+            "author": "John Bob",
+            "edition": "1",
+            "courses": [
+                {
+                    "subject": "TEST",
+                    "course_number": 123
+                }
+            ],
+            "price": 10,
+            "consigned_item": 1,
+            "current_state": "available"
+        },
+        {
+            "isbn": 103,
+            "title": "Duplicate Book",
+            "author": "John Bob",
+            "edition": "1",
+            "courses": [
+                {
+                    "subject": "TEST",
+                    "course_number": 123
+                }
+            ],
+            "price": 10,
+            "consigned_item": 1,
+            "current_state": "available"
+        }
+    ]
+}

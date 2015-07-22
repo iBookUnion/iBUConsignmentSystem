@@ -1,0 +1,25 @@
+{
+    "first_name": "Martin",
+    "last_name": "Carter",
+    "student_id": 10000002,
+    "email": "martin@test.fds",
+    "phone_number": 5551234567,
+    "faculty": "Commerce",
+    "books": [
+        {
+            "isbn": 101,
+            "title": "Girl on the Shinkansen",
+            "author": "Polly Hawkins",
+            "edition": "Canadian Edition",
+            "courses": [
+                {
+                    "subject": "JAPN",
+                    "course_number": 100
+                }
+            ],
+            "price": 27,
+            "consigned_item": 1,
+            "current_state": "available"
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    "first_name": "Shirley",
+    "last_name": "Yip",
+    "student_id": 10000004,
+    "email": "shirley@test.fds",
+    "phone_number": 5552222222,
+    "faculty": "Science",
+    "books": [
+        {
+            "isbn": 105,
+            "title": "Claen Doe",
+            "author": "Bobby Martin",
+            "edition": "",
+            "courses": [
+                {
+                    "subject": "CPSC",
+                    "course_number": 100
+                }
+            ],
+            "price": 35,
+            "consigned_item": 1,
+            "current_state": "available"
+        }
+    ]
+}

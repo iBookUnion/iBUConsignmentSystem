@@ -1,0 +1,63 @@
+{
+    "first_name": "Alice",
+    "last_name": "Lee",
+    "student_id": 10000000,
+    "email": "fdsa@fdsa.fds",
+    "phone_number": 5559876541,
+    "faculty": "Arts",
+    "books": [
+        {
+            "isbn": 13,
+            "title": "Some book title",
+            "author": "Book Author et al.",
+            "edition": "1",
+            "courses": [
+                {
+                    "subject": "TEST",
+                    "course_number": 123
+                }
+            ],
+            "price": 23,
+            "consigned_item": 1,
+            "current_state": "available"
+        },
+        {
+            "isbn": 14,
+            "title": "Murder on the Orient Express",
+            "author": "Agatha Christe",
+            "edition": "Canadian Edition",
+            "courses": [
+                {
+                    "subject": "ASDF",
+                    "course_number": 123
+                },
+                {
+                    "subject": "TEST",
+                    "course_number": 312
+                }
+            ],
+            "price": 32,
+            "consigned_item": 2,
+            "current_state": "available"
+        },
+        {
+            "isbn": 15,
+            "title": "Resonate",
+            "author": "Nancy Durate",
+            "edition": "12th Edition",
+            "courses": [
+                {
+                    "subject": "LSAT",
+                    "course_number": 838
+                },
+                {
+                    "subject": "SSAT",
+                    "course_number": 888
+                }
+            ],
+            "price": 12,
+            "consigned_item": 2,
+            "current_state": "available"
+        }
+    ]
+}
