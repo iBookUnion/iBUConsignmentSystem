@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 );
  
 CREATE TABLE IF NOT EXISTS `books` (
-  `isbn` int(13) NOT NULL,
+  `isbn` bigint(13) NOT NULL,
   `title` varchar(35) NOT NULL,
   `author` varchar(35) NOT NULL,
   `edition` varchar(25) NOT NULL,

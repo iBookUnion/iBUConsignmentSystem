@@ -186,8 +186,8 @@ class Delegate
 
 		$results = $this->confirmConsignmentItemDoesNotExist($consignmentItem, $conn);
 		if ($results["bookResult"]) {
-			$posters[] = new ConsignedItemPoster($consignmentItem, $conn);
 			$posters[] = new BookPoster($consignmentItem->getBook(), $conn);
+			$posters[] = new ConsignedItemPoster($consignmentItem, $conn);
 		} else if ($results["consignedItemResult"]) {
 			$posters[] = new ConsignedItemPoster($consignmentItem, $conn);
 		} else {
