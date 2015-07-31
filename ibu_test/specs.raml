@@ -81,7 +81,7 @@ Schema:
 
 		date:
 			type: TIMESTAMP
-			required: true
+			required: false
 
 	COURSES:
 		isbn (KEY):
@@ -133,13 +133,7 @@ Resources:
 		patch:
 			description: use to update a user record 
 
-			/{student_id}
-
-			queryParameters:
-				first_name:
-				last_name:
-				email:
-				phone_number:			
+			/{student_id}		
 
 	/books:
 			restriction: all methods open only to administrators	
@@ -167,13 +161,18 @@ Resources:
 				edition:
 					type: string
 					required: false
-				course:
-					type: json:
-							{"courses":[{"subject": ..
-										 "classes": [{"course": ..,
-										 }]							
-							}]}
-
+				courses:
+					example: |
+						[
+			                {
+			                    "subject": "ASDF",
+			                    "course_number": 123
+			                },
+			                {
+			                    "subject": "TEST",
+			                    "course_number": 312
+			                }
+		            	]
 					required: false
 		patch:
 			description: updates a book record, expects record to exist, partial updates are accepted (ex. if title is not given it will remain as it was)
@@ -181,13 +180,13 @@ Resources:
 			title:
 			author:
 			edition:
-			course:
+			courses:
 
 		delete:
 			/{isbn}
 
 	/consignments
-		restriction: all methods only open to administrators
+		restriction: aside from the post method, all methods are restricted to administrators
 
 		get:
 			description: use to obtain list of consignments (join of users and consignments)
@@ -229,11 +228,9 @@ Resources:
 											"price": ...,
 											"consignment_item: ...,
 											"courses":[{"subject": ...,
-											"classes": [{"course": ...,
 																		}]
 								 }]
-
-				}]}
+				}
 
 		patch:
 			description: useful for changing the information for one consignment form

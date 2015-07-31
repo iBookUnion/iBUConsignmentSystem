@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var app = angular.module('consignmentApp', ['ui.bootstrap', 'ngRoute', 'ngResource']);
+  var app = angular.module('consignmentApp', ['ui.bootstrap', 'ngRoute', 'ngResource', 'directive.g+signin']);
 
   app.config(function ($routeProvider) {
     $routeProvider
