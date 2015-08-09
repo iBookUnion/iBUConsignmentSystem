@@ -2,11 +2,29 @@
 
     <div class="form-group">
         <label for="first_name">First Name</label>
+        <div class="error-container"
+            ng-show="contactForm.first_name.$touched || contactForm.$submitted">
+            <small class="error" ng-show="contactForm.first_name.$error.required">
+            First name is required.
+            </small>
+        </div>
+        <div class="check-container" ng-show="contactForm.first_name.$touched && contactForm.first_name.$valid">
+            <small class="checked">&#10003;</small>
+        </div>
         <input type="text" class="form-control" id="first_name" name="first_name" ng-model="consignment.fname" placeholder="Enter first name" required>
     </div>
 
     <div class="form-group">
         <label for="last_name">Last Name</label>
+        <div class="error-container"
+            ng-show="contactForm.last_name.$touched || contactForm.$submitted">
+            <small class="error" ng-show="contactForm.last_name.$error.required">
+            Last name is required.
+            </small>
+        </div>
+        <div class="check-container" ng-show="contactForm.last_name.$touched && contactForm.last_name.$valid">
+            <small class="checked">&#10003;</small>
+        </div>
         <input type="text" class="form-control" id="last_name" name="last_name" ng-model="consignment.lname" placeholder="Enter last name" required>
     </div>
 
@@ -19,9 +37,7 @@
             </small>
         </div>
         <div class="check-container" ng-show="contactForm.student_number.$touched && contactForm.student_number.$valid">
-            <small class="checked">
-                &#10003;
-            </small>
+            <small class="checked">&#10003;</small>
         </div>
         <input type="text" class="form-control" id="student_number" name="student_number" ng-model="consignment.sno"
                 ng-pattern="/\d{8}$/" placeholder="Enter student number" required>
@@ -37,9 +53,7 @@
             </small>
         </div>
         <div class="check-container" ng-show="contactForm.email.$touched && contactForm.email.$valid">
-            <small class="checked">
-                &#10003;
-            </small>
+            <small class="checked">&#10003;</small>
         </div>
         <input type="email" class="form-control" id="email" name="email" ng-model="consignment.email" placeholder="Enter email" required>
     </div>
@@ -53,9 +67,7 @@
             </small>
         </div>
 <!--         <div class="check-container" ng-show="contactForm.phone_number.$touched && contactForm.phone_number.$valid">
-            <small class="checked">
-                &#10003;
-            </small>
+            <small class="checked">&#10003;</small>
         </div> -->
         <!-- ^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$ -->
         <input type="text" class="form-control" id="phone_number" name="phone_number" ng-model="consignment.phno"
