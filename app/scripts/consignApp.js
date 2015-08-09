@@ -8,6 +8,10 @@
       .when('/', {
         templateUrl: 'views/consignmentForm.html'
       })
+      .when('/contract', {
+        templateUrl: 'views/contract.html',
+        controller: 'ContractCtrl'
+      })
       .when('/admin', {
         templateUrl: 'views/inventory.html',
         controller: 'InventoryCtrl'

@@ -149,6 +149,14 @@ input.ng-valid {
     padding-left: 5px; padding-right: 5px;
 }
 
+.contract-key {
+    font-weight: bold;
+}
+
+.contract-value {
+    float: right;
+}
+
 /*.book-entry {*/
 /*.make-row();*/
 /*display: table;*/
