@@ -1,0 +1,14 @@
+{
+  "global": {
+    "parseVersion": "1.5.0"
+  },
+  "applications": {
+    "Consignment System": {
+      "applicationId": "JSeVik2YOheBlxuKr037BjYvJsFhP7Q75MKmmKhi",
+      "masterKey": "9qeF82UUtlG9IX416SzxHtdHFXgv3R8MDmHE8MwM"
+    },
+    "_default": {
+      "link": "Consignment System"
+    }
+  }
+}
