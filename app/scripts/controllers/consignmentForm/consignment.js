@@ -12,10 +12,14 @@ angular.module('consignmentApp')
         ConsignmentService.submitForm();
       };
 
-      $scope.$on('$routeChangeSuccess', function() {
-        console.log('loaded!');
-        ConsignmentService.createNewForm();
-        console.log(ConsignmentService);
-        $scope.consignment = ConsignmentService;
-      });
+      $scope.submitForm = function () {
+        var form = angular.fromJson(angular.toJson($scope.consignment.form));
+        Parse.Cloud.run('postConsignment', form)
+          .then(function (result) {
+            console.log(result);
+          },
+          function (error) {
+            console.log(error);
+          });
+      };
     }]);
