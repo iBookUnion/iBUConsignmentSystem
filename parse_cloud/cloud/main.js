@@ -1,4 +1,6 @@
 var _ = require('underscore');
+require('cloud/consignmentItemBeforeSave.js');
+require('cloud/bookBeforeSave.js');
 
 Parse.Cloud.define("postConsignment", function (request, response) {
   createConsignorIfNotExists(request.params)
