@@ -3,13 +3,16 @@ require('cloud/consignmentItemBeforeSave.js');
 require('cloud/bookBeforeSave.js');
 
 Parse.Cloud.define("postConsignment", function (request, response) {
+  var consignment = {};
   createConsignorIfNotExists(request.params)
     .then(function (consignor) {
+      consignment.consignor = consignor;
       return createConsignmentItems(request.params, consignor);
     })
     .then(
-    function (result) {
-      response.success(result);
+    function (consignmentItems) {
+      consignment.consignmentItems = consignmentItems;
+      response.success(consignment);
     },
     function (error) {
       response.error(error);
