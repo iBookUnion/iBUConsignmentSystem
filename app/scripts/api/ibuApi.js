@@ -52,24 +52,21 @@ angular.module('consignmentApp')
   .service('ContractService', [function () {
     // dummy data to be overwritten upon $http.post success
     var contract = {
-      'first_name': 'Marley',
-      'last_name': 'Davis',
-      'student_id': 10000005,
+      'firstName': 'Marley',
+      'lastName': 'Davis',
+      'studentId': 10000005,
       'email': 'marley@test.fds',
-      'phone_number': 5553333333,
+      'phoneNumber': 5553333333,
       'faculty': 'Arts',
-      'books': [
+      'consignmentItems': [
         {
-          'isbn': 105,
-          'title': 'Clean Code',
-          'author': 'Bobby Martin',
-          'edition': '1st Edition',
-          'courses': [
-            {
-              'subject': 'CPSC',
-              'course_number': 100
-            }
-          ],
+          'items': [{
+            'isbn': 105,
+            'title': 'Clean Code',
+            'author': 'Bobby Martin',
+            'edition': '1st Edition',
+            'courses': 'CPSC 100'
+          }],
           'price': 35,
           'consigned_item': 1,
           'current_state': 'available'

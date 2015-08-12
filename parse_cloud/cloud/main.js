@@ -16,9 +16,7 @@ Parse.Cloud.define('postConsignment', function (request, response) {
       return createConsignmentItems(request.params, consignor);
     })
     .then(function () {
-      consignment.consignmentItems = _.map(arguments, function (consignmentItem) {
-        return consignmentItem.toJSON();
-      });
+      consignment.consignmentItems = arguments;
       response.success(consignment);
     },
     response.error);
@@ -52,11 +50,12 @@ function getConsignor(studentId) {
     .find();
 }
 
+// TODO: Support Packaged Books
 function createConsignmentItems(consignorInfo, consignor) {
   return Parse.Promise.when(_.map(consignorInfo.books, function (bookInfo) {
     return createBookIfNotExists(bookInfo)
       .then(function (book) {
-        return createConsignmentItem(bookInfo, consignor, book);
+        return createConsignmentItem(bookInfo, consignor, [book]);
       });
   }));
 }
@@ -86,14 +85,19 @@ function getBook(isbn) {
     .find();
 }
 
-// TODO: Support Packaged Books
-function createConsignmentItem(itemInfo, consignor, book) {
+function createConsignmentItem(itemInfo, consignor, books) {
   var newItem = new Parse.Object('ConsignmentItem');
   return newItem.save({
     consignor: consignor,
-    items: [book],
+    items: books,
     price: itemInfo.price,
     currentState: 'available'
+  }).then(function (consignmentItem) {
+    // Convert to JSON representation
+    consignmentItem = consignmentItem.toJSON();
+    var items = new Parse.Collection(books);
+    consignmentItem.items = items.toJSON();
+    return consignmentItem;
   });
 }
 
