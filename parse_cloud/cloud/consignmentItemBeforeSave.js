@@ -1,5 +1,5 @@
 'use strict';
-var _ = require('underscore');
+var _ = require('cloud/lib/underscore.js');
 
 var states = {
   'available': 1,

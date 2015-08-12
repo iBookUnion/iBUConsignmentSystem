@@ -1,22 +1,27 @@
-var _ = require('underscore');
+var _ = require('cloud/lib/underscore.js');
 require('cloud/consignmentItemBeforeSave.js');
 require('cloud/bookBeforeSave.js');
 
-Parse.Cloud.define("postConsignment", function (request, response) {
+Parse.Cloud.define('postConsignment', function (request, response) {
+  var errors = findConsignmentErrors(request.params);
+  if (errors.length) {
+    response.error(errors);
+  }
+
   var consignment = {};
+
   createConsignorIfNotExists(request.params)
     .then(function (consignor) {
-      consignment.consignor = consignor;
+      consignment = consignor.toJSON();
       return createConsignmentItems(request.params, consignor);
     })
-    .then(
-    function (consignmentItems) {
-      consignment.consignmentItems = consignmentItems;
+    .then(function () {
+      consignment.consignmentItems = _.map(arguments, function (consignmentItem) {
+        return consignmentItem.toJSON();
+      });
       response.success(consignment);
     },
-    function (error) {
-      response.error(error);
-    });
+    response.error);
 });
 
 function createConsignorIfNotExists(consignorInfo) {
@@ -39,6 +44,7 @@ function createConsignorIfNotExists(consignorInfo) {
     }
   );
 }
+
 function getConsignor(studentId) {
   var consignorQuery = new Parse.Query('Consignor');
   return consignorQuery
@@ -50,7 +56,7 @@ function createConsignmentItems(consignorInfo, consignor) {
   return Parse.Promise.when(_.map(consignorInfo.books, function (bookInfo) {
     return createBookIfNotExists(bookInfo)
       .then(function (book) {
-        return createConsignmentEntry(bookInfo, consignor, book);
+        return createConsignmentItem(bookInfo, consignor, book);
       });
   }));
 }
@@ -81,7 +87,7 @@ function getBook(isbn) {
 }
 
 // TODO: Support Packaged Books
-function createConsignmentEntry(itemInfo, consignor, book) {
+function createConsignmentItem(itemInfo, consignor, book) {
   var newItem = new Parse.Object('ConsignmentItem');
   return newItem.save({
     consignor: consignor,
@@ -89,4 +95,47 @@ function createConsignmentEntry(itemInfo, consignor, book) {
     price: itemInfo.price,
     currentState: 'available'
   });
+}
+
+// Validation
+var consignorKeys = [
+  'studentId',
+  'firstName',
+  'lastName',
+  'email',
+  'faculty'
+];
+
+var bookKeys = [
+  'isbn',
+  'title',
+  'author',
+  'edition',
+  'courses'
+];
+
+function findConsignmentErrors(consignment) {
+  var errors = [];
+
+  // Check for required consignor fields fields
+  var missingConsignorKeys = findMissingKeys(consignment, consignorKeys);
+  if (missingConsignorKeys.length) {
+    errors.push('Some consignor fields are missing: ' + missingConsignorKeys.join(', '));
+  }
+  if (!consignment.books.length) {
+    errors.push('There are no items in the consignment.');
+  } else {
+    var missingBookKeys = _.reduce(consignment.books, function (missingKeys, book) {
+      return _.union(missingKeys, findMissingKeys(book, bookKeys));
+    });
+    if (missingBookKeys.length) {
+      errors.push('Some books are missing these fields: ' + missingBookKeys.join(', '));
+    }
+  }
+  return errors;
+}
+
+function findMissingKeys(object, keys) {
+  object = _.pick(object, _.identity);  // remove falsy properties
+  return _.difference(keys, _.keys(object));
 }
