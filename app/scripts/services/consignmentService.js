@@ -1,14 +1,10 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('ConsignmentService', ['ConsignmentAPI', 'Consignors',
+  .factory('ConsignmentService', ['ConsignmentApi', 'Consignors',
     function (ConsignmentAPI, Consignors) {
       var self = this;
-      var defaultForm = {
-        books: []
-      };
-
-      self.form = angular.copy(defaultForm);
+      createNewForm();
 
       return {
         'form': self.form,
@@ -17,11 +13,14 @@ angular.module('consignmentApp')
         'retrieveExistingForm': retrieveExistingForm
       };
 
-      function submitForm() {
-        ConsignmentAPI.submitForm(self.form);
+      function submitForm(form) {
+        return ConsignmentAPI.submitForm(form);
       }
 
       function createNewForm() {
+        var defaultForm = {
+          books: []
+        };
         self.form = angular.copy(defaultForm);
         return self.form;
       }

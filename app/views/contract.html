@@ -2,59 +2,62 @@
 
     <div class="row">
         <div class="form-section instruction">
-            <h1>Thank you, {{contract.first_name}}!</h1>
-            <p class="lead">Your consignment number is {{contract.consignment_number}}.</p>
+            <h1>Thank you, {{contract.firstName}}!</h1>
         </div>
     </div>
 
-	<!-- CONTACT INFO -->
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="list-group">
-				<h3>Contact Information</h3>
-				<p>We'll be contacting you during the consignment session.</p>
-				<li class="list-group-item">
-					<span class="contract-key">Name</span>
-					<span class="contract-value">{{contract.first_name}} {{contract.last_name}}</span>
-				</li>
-				<li class="list-group-item">
-					<span class="contract-key">Student Number</span>
-					<span class="contract-value">{{contract.student_id}}</span>
-				</li>
-				<li class="list-group-item">
-					<span class="contract-key">Email</span>
-					<span class="contract-value">{{contract.email}}</span>
-				</li>
-				<li class="list-group-item">
-					<span class="contract-key">Phone Number</span>
-					<span class="contract-value">{{contract.phone_number}}</span>
-				</li>
-		    </div>
-	    </div>
-	</div>
+    <!-- CONTACT INFO -->
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="list-group">
+                <h3>Contact Information</h3>
+
+                <p>We'll be contacting you during the consignment session.</p>
+                <li class="list-group-item">
+                    <span class="contract-key">Name</span>
+                    <span class="contract-value">{{contract.firstName}} {{contract.lastName}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="contract-key">Student Number</span>
+                    <span class="contract-value">{{contract.studentId}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="contract-key">Email</span>
+                    <span class="contract-value">{{contract.email}}</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="contract-key">Phone Number</span>
+                    <span class="contract-value">{{contract.phoneNumber}}</span>
+                </li>
+            </div>
+        </div>
+    </div>
 
     <!-- CONSIGNMENT -->
     <div id="#consign" class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="list-group">
 
-            	<h3>Consignment</h3>
+                <h3>Consignment</h3>
+
                 <p>This is the list of books you've consigned with us.</p>
-		        <li class="list-group-item" ng-repeat="book in contract.books">
-		            <div class="row book-entry">
-		                <div class="col-xs-10 book-entry-main">
-		                    <h4 class="list-group-item-heading">{{book.title}}
-		                    <small>{{book.author}}</small></h4>
+                <!--TODO: Support Multi-entry Consignment Items-->
+                <li class="list-group-item" ng-repeat="entry in contract.consignmentItems">
+                    <div class="row book-entry">
+                        <div class="col-xs-10 book-entry-main">
+                            <h4 class="list-group-item-heading">{{entry.items[0].title}}
+                                <small>{{entry.items[0].author}}</small>
+                            </h4>
 
-		                    <p class="list-group-item-text">{{book.courses.join(", ") | uppercase}}</p>
-		                </div>
+                            <p class="list-group-item-text">{{entry.items[0].courses}}</p>
+                        </div>
 
-		                <div class="col-xs-1 book-entry-secondary">
-		                    <h3 style="margin: 0">${{book.price}}</h3>
-		                </div>
-		            </div>
-		        </li>
-		    </div>
+                        <div class="col-xs-1 book-entry-secondary">
+                            <h3 style="margin: 0">${{entry.price}}</h3>
+                        </div>
+                    </div>
+                </li>
+            </div>
         </div>
     </div>
 
@@ -62,7 +65,7 @@
     <div class="row">
         <div class="form-section instruction">
             <p class="lead">Pick-up Period: January 9th, 2015 (10am-5pm) SUB 213.</p>
-        	<a href="http://ibookunionubc.com/" class="btn btn-info" role="button">Return to Main Site</a>
+            <a href="http://ibookunionubc.com/" class="btn btn-info" role="button">Return to Main Site</a>
         </div>
     </div>
 

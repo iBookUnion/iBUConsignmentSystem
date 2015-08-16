@@ -3,6 +3,7 @@
 angular.module('consignmentApp')
   .factory('Inventory', ['$resource', 'API_URI',
     function ($resource, API_URI) {
+<<<<<<< HEAD
       
     return {
       getList: getList
@@ -39,6 +40,31 @@ angular.module('consignmentApp')
               // failed to get back the book
         });
     }
+=======
+
+      var Inventory = $resource(API_URI.inventory);
+      return {
+        getList: getList
+      };
+
+      function getList(params) {
+        return Inventory.get(params).$promise
+          .then(function (response) {
+            return response.inventory;
+          });
+      }
+    }])
+  .factory('Books', ['$resource', 'API_URI', function ($resource, API_URI) {
+    return $resource(API_URI.books, {isbn: '@isbn'},
+      {
+        get: {
+          method: 'GET',
+          transformResponse: function (response, headers) {
+            return convertToCamelCase(JSON.parse(response).books[0]);
+          }
+        }
+      });
+>>>>>>> 30226a110977fb4d619d42ef81e4f4098efdac25
   }])
   .factory('Consignors', ['$http', 'API_URI', function ($http, API_URI) {
     return {
@@ -65,42 +91,40 @@ angular.module('consignmentApp')
   .service('ContractService', [function () {
     // dummy data to be overwritten upon $http.post success
     var contract = {
-     "first_name": "Marley",
-     "last_name": "Davis",
-     "student_id": 10000005,
-     "email": "marley@test.fds",
-     "phone_number": 5553333333,
-     "faculty": "Arts",
-     "books": [
-         {
-             "isbn": 105,
-             "title": "Clean Code",
-             "author": "Bobby Martin",
-             "edition": "1st Edition",
-             "courses": [
-                 {
-                     "subject": "CPSC",
-                     "course_number": 100
-                 }
-             ],
-             "price": 35,
-             "consigned_item": 1,
-             "current_state": "available"
-         }
-     ]
+      'firstName': 'Marley',
+      'lastName': 'Davis',
+      'studentId': 10000005,
+      'email': 'marley@test.fds',
+      'phoneNumber': 5553333333,
+      'faculty': 'Arts',
+      'consignmentItems': [
+        {
+          'items': [{
+            'isbn': 105,
+            'title': 'Clean Code',
+            'author': 'Bobby Martin',
+            'edition': '1st Edition',
+            'courses': 'CPSC 100'
+          }],
+          'price': 35,
+          'consigned_item': 1,
+          'current_state': 'available'
+        }
+      ]
     };
 
     return {
-      'getContract' : getContract,
-      'setContract' : setContract
+      'getContract': getContract,
+      'setContract': setContract
     };
 
     function getContract() {
-     return contract;
-    };
+      return contract;
+    }
 
     function setContract(resp) {
       contract = resp;
+<<<<<<< HEAD
     };
   }])
   .service('ConsignmentAPI', ['$http', '$location', 'API_URI', 'ContractService', 
@@ -152,23 +176,10 @@ angular.module('consignmentApp')
           return response.data.consignments;
         })
         .then(convertToCamelCase);
+=======
+>>>>>>> 30226a110977fb4d619d42ef81e4f4098efdac25
     }
-
-      function submitForm(consignment) {
-        console.log(consignment);
-        return $http.post(API_URI.consignment, consignment).
-        then(function(response) {
-          // set contract to be accessible through ContractService
-          ContractService.setContract(response);
-          $location.path('/contract');
-        }, function(response) {
-          // if form submission fails, then...(TODO)
-          $location.path('/contract');
-        });
-      }
-
-    }]);
-
+  }]);
 function convertToCamelCase(object) {
   if (_.isArray(object)) {
     return _.map(object, convertObjectToCamelCase);
