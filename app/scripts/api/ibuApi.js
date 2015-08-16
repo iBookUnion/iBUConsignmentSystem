@@ -3,29 +3,42 @@
 angular.module('consignmentApp')
   .factory('Inventory', ['$resource', 'API_URI',
     function ($resource, API_URI) {
-
-    var Inventory = $resource(API_URI.inventory);
+      
     return {
       getList: getList
     };
 
     function getList(params) {
-      return Inventory.get(params).$promise
-        .then(function (response) {
-          return response.inventory;
-        });
+      var book = Parse.Object.extend("Book");
+      var query = new Parse.Query(book);
+      query.greaterThanOrEqualTo("copiesAvailable", 1);
+      return query.find().then(
+        function(books) {
+          console.log(books);
+          return _.map(books, function(book) {
+            return book.toJSON();
+          })
+      })
     }
   }])
-  .factory('Books', ['$resource', 'API_URI', function ($resource, API_URI) {
-    return $resource(API_URI.books, {isbn: '@isbn'},
-      {
-        get: {
-          method: 'GET',
-          transformResponse: function (response, headers) {
-            return convertToCamelCase(JSON.parse(response).books[0]);
-          }
-        }
-      });
+  .factory('Books', ['$resource',  function ($resource) {
+    
+    return{
+      getFromParse: getFromParse
+    };
+    
+    function getFromParse(isbn) {
+        var Book = Parse.Object.extend("Book");
+        var query = new Parse.Query(Book);
+        query.equalTo("isbn", isbn);
+        return query.first().then(
+          function (book) {
+            console.log(book.toJSON());
+            return book.toJSON();
+          }, function(error) {
+              // failed to get back the book
+        });
+    }
   }])
   .factory('Consignors', ['$http', 'API_URI', function ($http, API_URI) {
     return {
@@ -99,13 +112,38 @@ angular.module('consignmentApp')
       };
 
     function searchConsignments(params) {
-      return $http.get(API_URI.consignment,
-        {params: params})
-        .then(function (response) {
-          return response.data.consignments;
-        })
-        .then(convertToCamelCase);
+      var book = Parse.Object.extend("Book");
+      var queryBook = new Parse.Query(book);
+      queryBook.equalTo("isbn", params); 
+      
+      var getBook = function () {
+        return queryBook.find().then(
+          function (book) {
+            return book;
+      });
+      }
+      
+      return getBook().then(
+          function (book) {
+            var consignments = Parse.Object.extend("ConsignmentItem");
+            var pointers = _.map(items, function(objectId) {
+              var pointer = new Parse.Object("Book");
+              pointer.objectId = item_id;
+              return pointer;
+            })
+            var queryConsignments = new Parse.Query(consignments);
+            queryConsignments.containedIn("items", pointers);
+            
+            queryConsignments.find().then(
+              function (consignments) {
+                  console.log(consignments);
+                  return _.map(consignments, function(consignment) {
+                      return consignment.toJSON();
+                  });
+              }); 
+      });
     }
+
 
     function getConsignments(consignmentId) {
       var consignmentParam = consignmentId ? '/' + consignmentId : '';
