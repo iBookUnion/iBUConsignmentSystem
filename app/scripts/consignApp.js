@@ -24,13 +24,22 @@
         templateUrl: 'views/consignorInfo.html',
         controller: 'ConsignorInfoCtrl'
       })
-      .when('/admin/login', {
+      .when('/login', {
         templateUrl: 'views/admin/login.html',
         controller: 'AdminLoginCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
+  });
+
+  app.run(function ($rootScope, $location) {
+    $rootScope.$on("$routeChangeStart", function () {
+      var onAdminPage = $location.url().match(/^\/admin/);
+      if (onAdminPage && !Parse.User.current()) {
+        $location.path("/login");
+      }
+    });
   });
 
   app.directive('contactForm', function () {
