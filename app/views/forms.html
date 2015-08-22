@@ -10,7 +10,7 @@
         <div class="col-sm-6">
             <div ng-if="isbn">
                 <h3 class="text-center">
-                    {{book.title}}
+                    {{book.result.title}}
                 </h3>
 
                 <div class="row">
@@ -64,14 +64,14 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
-                    <td>Consignment #</td>
+                    <td>Consignor</td>
                     <td>Price</td>
                     <td>Status</td>
                     </thead>
                     <tbody>
                     <tr ng-repeat="consignment in consignments | filter:{currentState : stateFilter}"
                         ng-click="viewConsignment(consignment);">
-                        <td>{{consignment.consignmentNumber}}</td>
+                        <td>{{consignment.consignor.studentId}}</td>
                         <td>{{consignment.price}}</td>
                         <td>{{consignment.currentState}}</td>
                     </tr>
