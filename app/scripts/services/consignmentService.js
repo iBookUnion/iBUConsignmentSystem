@@ -51,11 +51,19 @@ angular.module('consignmentApp')
 
         return Consignors.getConsignors(consignmentId)
           .then(function (consignor) {
-            // TODO: Get Consignment Object Instead When The API is Working
-            self.form = angular.copy(consignor);
+            self.form = angular.copy(consignor.attributes);
+            return Consignors.getBooks(consignmentId);
+          }).then(function(consignedBooks) {
+            var booksList = [];
+            
+            for (var i = 0; i < consignedBooks.length; i++) {
+              var book = consignedBooks[i].items.attributes;
+              book.price = consignedBooks[i].price;
+              book.current_state = consignedBooks[i].currentState;
 
-            // TODO: Get real books associated with the consignment
-            self.form.books = mockBooks;
+              booksList.push(book);
+            };
+            self.form.books = booksList;
             return self;
           });
       }
