@@ -27,25 +27,6 @@ angular.module('consignmentApp')
         }
       });
   }])
-  .factory('Consignors', ['$http', 'API_URI', function ($http, API_URI) {
-    return {
-      getConsignors: getConsignors
-    };
-
-    function getConsignors(studentId) {
-      var consignorId = studentId ? '/' + studentId : '';
-      return $http.get(API_URI.consignors + consignorId)
-        .then(function (response) {
-          return response.data.users;
-        })
-        .then(convertToCamelCase)
-        .then(function (users) {
-          // get the first element of the array if studentId is specified, should update REST API
-          var isArray = _.isArray(users);
-          return studentId && isArray ? users[0] : users;
-        });
-    }
-  }])
   .factory('Consignor', ['$resource', 'API_URI', function ($resource, API_URI) {
     return $resource(API_URI.consignor);
   }])
