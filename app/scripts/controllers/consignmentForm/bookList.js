@@ -70,6 +70,10 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
       $scope.consignForm.$setPristine();
     };
 
+    $scope.addItem = function () {
+      //TODO: add new accordion group
+    };
+
     function makeAlert(msg) {
       $scope.alertMessage = msg;
     }

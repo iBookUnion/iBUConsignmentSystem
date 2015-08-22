@@ -131,6 +131,12 @@ input.ng-valid {
     }
 }
 
+/*Book Modal*/
+.modal-header > * {
+    display: inline-block;
+    padding-right: 0.3em;
+}
+
 /*Book List*/
 
 .book-entry {
