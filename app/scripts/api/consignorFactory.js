@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('Consignors', ['API_URI', function (API_URI) {
+  .factory('Consignors', ['API_URI', function () {
 	return {
 		'getConsignors': getConsignors,
 		'getBooks': getBooks

@@ -2,8 +2,6 @@ var _ = require('cloud/lib/underscore.js');
 
 Parse.Cloud.define('postConsignment', function (request, response) {
 
-  Parse.Cloud.useMasterKey();
-
   var errors = findConsignmentErrors(request.params);
   if (errors.length) {
     response.error(errors);
@@ -36,7 +34,7 @@ function createConsignorIfNotExists(consignorInfo) {
           email: consignorInfo.email,
           phoneNumber: consignorInfo.phoneNumber,
           faculty: consignorInfo.faculty
-        });
+        }, {useMasterKey: true});
       } else {
         return consignor[0];
       }
@@ -48,7 +46,7 @@ function getConsignor(studentId) {
   var consignorQuery = new Parse.Query('Consignor');
   return consignorQuery
     .equalTo('studentId', studentId)
-    .find();
+    .find({useMasterKey: true});
 }
 
 // TODO: Support Packaged Books
@@ -72,7 +70,7 @@ function createBookIfNotExists(book) {
           author: book.author,
           edition: book.edition,
           courses: book.courses.join(',')
-        });
+        }, {useMasterKey: true});
       } else {
         return result[0];
       }
@@ -83,7 +81,7 @@ function getBook(isbn) {
   var bookQuery = new Parse.Query('Book');
   return bookQuery
     .equalTo('isbn', isbn.toString())
-    .find();
+    .find({useMasterKey: true});
 }
 
 function createConsignmentItem(itemInfo, consignor, books) {
@@ -93,13 +91,14 @@ function createConsignmentItem(itemInfo, consignor, books) {
     items: books,
     price: itemInfo.price,
     currentState: 'available'
-  }).then(function (consignmentItem) {
-    // Convert to JSON representation
-    consignmentItem = consignmentItem.toJSON();
-    var items = new Parse.Collection(books);
-    consignmentItem.items = items.toJSON();
-    return consignmentItem;
-  });
+  }, {useMasterKey: true})
+    .then(function (consignmentItem) {
+      // Convert to JSON representation
+      consignmentItem = consignmentItem.toJSON();
+      var items = new Parse.Collection(books);
+      consignmentItem.items = items.toJSON();
+      return consignmentItem;
+    });
 }
 
 // Validation
