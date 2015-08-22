@@ -95,12 +95,12 @@ describe('Controller: BookFormModalCtrl opened with no existing book', function 
 
     var BookFormModalCtrl,
         scope, mockBookCartService, mockModalInstance, existingBook;
-
+//ll; always beforeEach before unit tests
     beforeEach(inject(function ($rootScope, $controller) {
         // Initialize the controller and a mock scope
         scope = $rootScope.$new();
         mockBookCartService = jasmine.createSpyObj('BookCartService', ['addItem']);
-        mockModalInstance = jasmine.createSpyObj('modalInstance', ['close', 'dismiss']);
+        mockModalInstance = jasmine.createSpyObj('modalInstance', ['close', 'dismiss']); //ll;use $inject if you want to put real thing, and dependecy injection for real modals etc.
         existingBook = {courses: []};
 
         BookFormModalCtrl = $controller('BookFormModalCtrl', {
@@ -111,7 +111,7 @@ describe('Controller: BookFormModalCtrl opened with no existing book', function 
         });
         scope.consignForm = jasmine.createSpyObj('consignForm', ['$setPristine']);
     }));
-
+//ll; these are actual tests 
     it('has an empty book object at the beginning', function () {
         expect(scope.consignedBook).toEqual(anEmptyBook);
     });

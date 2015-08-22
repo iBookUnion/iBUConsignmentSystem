@@ -13,20 +13,20 @@ angular.module('consignmentApp')
 
       if ($routeParams.isbn) {
         $scope.isbn = $routeParams.isbn;
-        $scope.book = Books.get({isbn: $scope.isbn},
+        Books.getFromParse($routeParams.isbn).then(
           function (book) {
-            console.log(book);
+            $scope.book = book;
           });
       }
 
       ConsignmentAPI.searchConsignments({isbn: $routeParams.isbn})
         .then(function (consignments) {
-          $scope.consignments = consignments;
+          $scope.consignments = consignments; 
         });
 
       $scope.viewConsignment = function (consignment) {
         $location.url($location.path);  // Clear query parameters
-        $location.path('/admin/consignorInfo/' + consignment.studentId);
+        $location.path('/admin/consignorInfo/' + consignment.consignor.studentId);
       };
 
       $scope.states = OPTIONS.bookStates;

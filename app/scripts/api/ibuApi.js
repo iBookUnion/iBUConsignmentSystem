@@ -8,47 +8,37 @@ angular.module('consignmentApp')
       return {
         getList: getList
       };
-
-      function getList(params) {
-        return Inventory.get(params).$promise
-          .then(function (response) {
-            return response.inventory;
-          });
-      }
-    }])
-  .factory('Books', ['$resource', 'API_URI', function ($resource, API_URI) {
-    return $resource(API_URI.books, {isbn: '@isbn'},
-      {
-        get: {
-          method: 'GET',
-          transformResponse: function (response, headers) {
-            return convertToCamelCase(JSON.parse(response).books[0]);
-          }
-        }
-      });
-  }])
-  .factory('Consignors', ['$http', 'API_URI', function ($http, API_URI) {
-    return {
-      getConsignors: getConsignors
-    };
-
-    function getConsignors(studentId) {
-      var consignorId = studentId ? '/' + studentId : '';
-      return $http.get(API_URI.consignors + consignorId)
-        .then(function (response) {
-          return response.data.users;
-        })
-        .then(convertToCamelCase)
-        .then(function (users) {
-          // get the first element of the array if studentId is specified, should update REST API
-          var isArray = _.isArray(users);
-          return studentId && isArray ? users[0] : users;
-        });
+      
+    function getList(params) {
+      var book = Parse.Object.extend("Book");
+      var query = new Parse.Query(book);
+      query.greaterThanOrEqualTo("copiesAvailable", 1);
+      return query.find().then(
+        function(books) {
+          console.log(books);
+          return _.map(books, function(book) {
+            return book.toJSON();
+          })
+      })
     }
   }])
-  .factory('Consignor', ['$resource', 'API_URI', function ($resource, API_URI) {
-    return $resource(API_URI.consignor);
-  }])
+  
+  .factory('Books', ['$resource',  function ($resource) {
+    
+    return{
+      getFromParse: getFromParse
+    };
+    
+    function getFromParse(isbn) {
+        var query = new Parse.Query("Book");
+        query.equalTo("isbn", isbn);
+        return query.first().then(
+          function (book) {
+            return book.toJSON();
+          });
+    }
+}])
+
   .service('ContractService', [function () {
     // dummy data to be overwritten upon $http.post success
     var contract = {
@@ -86,7 +76,69 @@ angular.module('consignmentApp')
     function setContract(resp) {
       contract = resp;
     }
-  }]);
+  }])
+  .service('ConsignmentAPI', ['$http', '$location', 'API_URI', 'ContractService', 
+    function ($http, $location, API_URI, ContractService) {
+      return {
+      'submitForm': submitForm,
+      'searchConsignments': searchConsignments,
+      'getConsignments': getConsignments
+      };
+      
+      function submitForm(consignment) {
+        console.log(consignment);
+        return $http.post(API_URI.consignment, consignment).
+        then(function(response) {
+          // set contract to be accessible through ContractService
+          ContractService.setContract(response);
+          $location.path('/contract');
+        }, function(response) {
+          // if form submission fails, then...(TODO)
+          $location.path('/contract');
+        });
+      }
+
+
+  function searchConsignments(params) {
+    	var consignments = new Parse.Query("ConsignmentItem");
+    	consignments.include("consignor");
+    	if (params && params.isbn) {
+    		bookForConsignmentQuery(params.isbn).then(
+    		  function (book) {
+    		    consignments.containedIn("items", book);
+    		  })
+    	}
+    	return consignments.find().then(
+    		function (consignments) {
+    			return _.map(consignments, function(consignment) {
+    				var consignor = consignment.attributes.consignor.toJSON();
+    				var consignmentAsJSON = consignment.toJSON();
+    				consignmentAsJSON.consignor = consignor;
+    					return consignmentAsJSON;
+    			})
+    		})
+    }
+    
+    function bookForConsignmentQuery(isbn) {
+    	var book = new Parse.Query("Book");
+    	book.equalTo("isbn", isbn);
+    	return book.find().then(
+    		function (bookReturned) {
+    			return bookReturned;
+    	})
+    }
+    
+    function getConsignments(consignmentId) {
+      var consignmentParam = consignmentId ? '/' + consignmentId : '';
+      return $http.get(API_URI.consignment + consignmentParam)
+        .then(function (response) {
+          return response.data.consignments;
+        })
+        .then(convertToCamelCase);
+    }
+}]);
+  
+
 function convertToCamelCase(object) {
   if (_.isArray(object)) {
     return _.map(object, convertObjectToCamelCase);
