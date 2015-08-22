@@ -2,13 +2,15 @@
 
 var app = angular.module('consignmentApp');
 
-app.controller('BookFormCtrl', ['$scope', '$modal', '$log',
-  function ($scope, $modal, $log) {
+app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
+  function ($scope, $modal, $log, OPTIONS) {
     $scope.removeBook = function (book) {
       _.remove($scope.consignment.form.books, function (e) {
         return e === book;
       });
     };
+
+    $scope.states = OPTIONS.bookStates;
 
     $scope.openBookModal = function (book) {
       $scope.modalInstance = $modal.open({

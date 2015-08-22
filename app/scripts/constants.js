@@ -14,10 +14,10 @@ angular.module('consignmentApp')
   })())
   .constant('OPTIONS', (function () {
     var bookStateMapping = {
-      'available': 'Available',
-      'sold': 'Sold',
-      'unavailable': 'Not in Store',
-      'complete': 'Consignment Complete'
+      'available': 'available',
+      'sold': 'sold',
+      'unavailable': 'not in store',
+      'complete': 'complete'
     };
     return {
       'bookState': bookStateMapping,

@@ -10,16 +10,13 @@ var states = {
 
 Parse.Cloud.beforeSave('ConsignmentItem', function (request, response) {
   if (!states.hasOwnProperty(request.object.get('currentState'))) {
-    response.error('Invalid status value: ' + request.object.get('currentState'));
+    response.error('Invalid current state value: ' + request.object.get('currentState'));
+    return;
   }
 
   updateBookQuantities(request.object)
-    .then(function () {
-      response.success();
-    },
-    function (error) {
-      response.error(error);
-    });
+    .then(response.success)
+    .fail(response.error);
 });
 
 function updateBookQuantities(consignItem) {
@@ -34,12 +31,13 @@ function updateBookQuantities(consignItem) {
 }
 
 function incrementBookCopies(books, increment) {
+  Parse.Cloud.useMasterKey();
   return Parse.Promise.when(_.map(books, function (book) {
     return book.fetch()
       .then(function (result) {
         var copies = result.get('copiesAvailable') + increment;
         result.set('copiesAvailable', copies);
-        return book.save();
+        return book.save(null, {useMasterKey: true});
       });
   }));
 }
