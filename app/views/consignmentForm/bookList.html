@@ -1,36 +1,42 @@
 <div class="form-section" ng-controller="BookFormCtrl">
-    <p class="text-center text-info" ng-show="consignment.form.books.length == 0">You currently have no items added to the consignment
+    <p class="text-center text-info" ng-show="!consignment.form.consignments.length">You currently have no items added
+        to the consignment
         form.</p>
 
     <div class="list-group">
-        <a class="list-group-item" ng-repeat="book in consignment.form.books" ng-click="openBookModal(book)">
-            <div class="row book-entry">
-                <div class="col-xs-8 book-entry-main">
-                    <h4 class="list-group-item-heading">{{book.title}}
-                        <small>{{book.author}}</small>
-                    </h4>
+        <div ng-repeat="consignment in consignment.form.consignments">
+            <a class="list-group-item"
+               ng-repeat="book in consignment.items"
+               ng-click="openBookModal(book)">
+                <div class="row book-entry">
+                    <div class="col-xs-8 book-entry-main">
+                        <h4 class="list-group-item-heading">{{book.title}}
+                            <small>{{book.author}}</small>
+                        </h4>
 
-                    <p class="list-group-item-text">{{book.courses.join(", ") | uppercase}}</p>
-                </div>
-                <div class="col-xs-2 book-entry-secondary">
-                    <select ng-if="isAdmin"
-                            ng-model="book.current_state"
-                            ng-click="$event.stopPropagation()"
-                            ng-options="state for state in states">
-                    </select>
-                </div>
-                <div class="col-xs-1 book-entry-secondary">
-                    <h3 style="margin: 0">${{book.price}}</h3>
-                </div>
+                        <p class="list-group-item-text">{{book.courses.join(", ") | uppercase}}</p>
+                    </div>
+                    <div class="col-xs-2 book-entry-secondary">
+                        <select ng-if="isAdmin"
+                                ng-model="book.currentState"
+                                ng-click="$event.stopPropagation()"
+                                ng-options="state for state in states">
+                        </select>
+                    </div>
+                    <div class="col-xs-1 book-entry-secondary">
+                        <h3 style="margin: 0">${{consignment.price}}</h3>
+                    </div>
 
-                <div class="col-xs-1 book-entry-secondary">
+                    <div class="col-xs-1 book-entry-secondary">
                     <span class="badge remove-button"
                           ng-click="$event.stopPropagation(); removeBook(book)">
                         <span class="glyphicon glyphicon-remove white"></span>
                     </span>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
+
     </div>
 
     <button id="add_button" name="add_button" class="btn btn-primary btn-success pull-right" ng-click="openBookModal()">
