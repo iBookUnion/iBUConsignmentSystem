@@ -51,9 +51,9 @@
     </div>
 
     <!-- SUBMIT -->
-    <div class="row">
+    <div class="row" ng-init="flag=false">
         <div class="col-md-4 col-md-offset-6">
-            <div class="btn btn-block btn-primary" ng-click="submitForm(consignment.form)">Submit Form</div>
+            <div class="btn btn-block btn-primary" ng-click="submitForm(consignment.form)" ng-disabled="flag">Submit Form</div>
         </div>
     </div>
 
