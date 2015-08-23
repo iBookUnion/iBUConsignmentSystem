@@ -15,7 +15,9 @@ Parse.Cloud.beforeSave('ConsignmentItem', function (request, response) {
   }
 
   updateBookQuantities(request.object)
-    .then(response.success)
+    .then(function () {
+      response.success();
+    })
     .fail(response.error);
 });
 
@@ -32,11 +34,13 @@ function updateBookQuantities(consignItem) {
 
 function incrementBookCopies(books, increment) {
   Parse.Cloud.useMasterKey();
-  return Parse.Promise.when(_.map(books, function (book) {
-    return book.fetch()
-      .then(function (result) {
-        var copies = result.get('copiesAvailable') + increment;
-        result.set('copiesAvailable', copies);
+  return Parse.Promise.when(_.map(books, function (bookData) {
+    // bookData may be instance of Parse.Object or just a plain object
+    var bookQuery = new Parse.Query('Book').get(bookData.objectId || bookData.id);
+    return bookQuery
+      .then(function (book) {
+        var copies = book.get('copiesAvailable') + increment;
+        book.set('copiesAvailable', copies);
         return book.save(null, {useMasterKey: true});
       });
   }));
