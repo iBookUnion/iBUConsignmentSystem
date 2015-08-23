@@ -22,22 +22,6 @@ angular.module('consignmentApp')
       })
     }
   }])
-  
-  .factory('Books', ['$resource',  function ($resource) {
-    
-    return{
-      getFromParse: getFromParse
-    };
-    
-    function getFromParse(isbn) {
-        var query = new Parse.Query("Book");
-        query.equalTo("isbn", isbn);
-        return query.first().then(
-          function (book) {
-            return book.toJSON();
-          });
-    }
-}])
 
   .service('ContractService', [function () {
     // dummy data to be overwritten upon $http.post success
