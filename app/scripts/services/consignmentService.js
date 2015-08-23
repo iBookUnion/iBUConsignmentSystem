@@ -25,44 +25,23 @@ angular.module('consignmentApp')
         return self.form;
       }
 
-      function retrieveExistingForm(consignmentId) {
-        var mockBooks =
-          [
-            {
-              'isbn': 1234567890321,
-              'title': 'crisis on infinite earths',
-              'author': 'wolfman',
-              'edition': 0,
-              'subject': 'TEST',
-              'course_number': 100,
-              'price': 20
-            },
-            {
-              'isbn': 1987654321321,
-              'title': 'long halloween',
-              'author': 'loeb',
-              'edition': 1,
-              'subject': 'TEST',
-              'course_number': 101,
-              'price': 21
-            }
-          ];
-
-        return Consignors.getConsignors(consignmentId)
+      function retrieveExistingForm(studentId) {
+        return Consignors.getConsignors(studentId)
           .then(function (consignor) {
-            self.form = angular.copy(consignor.attributes);
-            return Consignors.getBooks(consignmentId);
+            self.form = angular.copy(consignor);
+            return Consignors.getConsignmentItems(studentId);
           }).then(function(consignedBooks) {
-            var booksList = [];
-            
-            for (var i = 0; i < consignedBooks.length; i++) {
-              var book = consignedBooks[i].items.attributes;
-              book.price = consignedBooks[i].price;
-              book.current_state = consignedBooks[i].currentState;
-
-              booksList.push(book);
-            };
-            self.form.books = booksList;
+            //var booksList = [];
+            //
+            //for (var i = 0; i < consignedBooks.length; i++) {
+            //  // TODO: Add support for bundled consignment items
+            //  var book = consignedBooks[i].items[0];
+            //  book.price = consignedBooks[i].price;
+            //  book.currentState = consignedBooks[i].currentState;
+            //
+            //  booksList.push(book);
+            //}
+            self.form.consignments = consignedBooks;
             return self;
           });
       }

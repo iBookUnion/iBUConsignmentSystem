@@ -27,6 +27,7 @@ angular.module('consignmentApp')
 
       function submitForm(form) {
         form = angular.fromJson(angular.toJson(form)); // Strips Angular $ properties
+        console.log(form);
         return Parse.Cloud.run('postConsignment', form);
       }
     }]);

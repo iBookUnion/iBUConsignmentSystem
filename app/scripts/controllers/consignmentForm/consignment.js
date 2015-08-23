@@ -13,7 +13,6 @@ angular.module('consignmentApp')
           .then(function (response) {
             console.log(response);
             // set contract to be accessible through ContractService
-            console.log(response);
             ContractService.setContract(response);
             $location.path('/contract');
           },
