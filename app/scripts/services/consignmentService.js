@@ -19,7 +19,7 @@ angular.module('consignmentApp')
 
       function createNewForm() {
         var defaultForm = {
-          books: []
+          consignments: []
         };
         self.form = angular.copy(defaultForm);
         return self.form;

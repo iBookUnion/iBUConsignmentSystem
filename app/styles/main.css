@@ -134,7 +134,10 @@ input.ng-valid {
 /*Book Modal*/
 .modal-header > * {
     display: inline-block;
-    padding-right: 0.3em;
+}
+
+#bundle-button {
+    margin-top: -0.5em;
 }
 
 /*Book List*/
