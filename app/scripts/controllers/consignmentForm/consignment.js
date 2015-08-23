@@ -24,7 +24,10 @@ angular.module('consignmentApp')
       };
 
       $scope.$on('$routeChangeSuccess', function () {
-        ConsignmentService.createNewForm();
-        $scope.consignment = ConsignmentService;
+        //ConsignmentService.createNewForm();
+        ConsignmentService.retrieveExistingForm('12345678')
+          .then(function (form) {
+            $scope.consignment = form;
+          });
       });
     }]);

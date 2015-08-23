@@ -47,7 +47,7 @@ angular.module('consignmentApp')
       function calculateConsignorPayout(books) {
         var totalPayout = 0;
         _.forEach(books, function (book) {
-          if (book.current_state === OPTIONS.bookState.sold) {
+          if (book.currentState === OPTIONS.bookState.sold) {
             totalPayout += book.price;
           }
         });

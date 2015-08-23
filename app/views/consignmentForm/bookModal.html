@@ -59,7 +59,7 @@
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
                             <input type="number" min="1" class="form-control input-medium" id="price" name="price"
-                                   ng-model="consignedBook.price" placeholder="Enter Price" required>
+                                   ng-model="consignmentItem.price" placeholder="Enter Price" required>
                             <span class="input-group-addon">.00</span>
                         </div>
                         <div class="error-container"
@@ -137,7 +137,7 @@
                     </small>
                 </div>
                 <input type="text" class="form-control input-medium" id="course" name="course"
-                       ng-model="consignedBook.courses[0]" ng-pattern="/^\w{4}\s?\d{3}$/"
+                       ng-model="consignedBook.courses" ng-pattern="/^\w{4}\s?\d{3}$/"
                        placeholder="Enter Course Number" required>
             </div>
 

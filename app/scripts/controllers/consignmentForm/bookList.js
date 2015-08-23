@@ -4,21 +4,19 @@ var app = angular.module('consignmentApp');
 
 app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
   function ($scope, $modal, $log, OPTIONS) {
-    $scope.removeBook = function (book) {
-      _.remove($scope.consignment.form.books, function (e) {
-        return e === book;
-      });
+    $scope.removeConsignmentItem = function (consignmentItem) {
+      _.remove($scope.consignment.form.consignments, _.matches(consignmentItem));
     };
 
     $scope.states = OPTIONS.bookStates;
 
-    $scope.openBookModal = function (book) {
+    $scope.openBookModal = function (consignmentItem) {
       $scope.modalInstance = $modal.open({
         templateUrl: 'views/consignmentForm/bookModal.html',
         controller: 'BookFormModalCtrl',
         resolve: {
-          existingBook: function () {
-            return book;
+          consignmentItem: function () {
+            return consignmentItem;
           }
         }
       });
@@ -31,20 +29,24 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingBook', 'ConsignmentService', 'Books',
-  function ($scope, $log, $modalInstance, existingBook, ConsignmentService, Books) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'consignmentItem', 'ConsignmentService', 'Books',
+  function ($scope, $log, $modalInstance, consignmentItem, ConsignmentService, Books) {
 
-    //TODO: Either complete or remove support multiple courses.
-    // Need to instantiate empty array for courses on init.
-    var anEmptyBook = {
-      courses: []
+    var newConsignmentItem = {
+      items: []
     };
+
+    var previousConsignmentItem = consignmentItem;
 
     $scope.alertMessage = '';
 
-    $scope.existingBook = existingBook;
+    $scope.consignmentItem = consignmentItem || newConsignmentItem;
 
-    $scope.consignedBook = existingBook || angular.copy(anEmptyBook);
+    if (!consignmentItem.items.length) {
+      consignmentItem.items.push({});
+    }
+
+    $scope.consignedBook = consignmentItem.items[0];
 
     $scope.findBookMetadata = function (isbn) {
       Books.get({isbn: isbn}, function (book) {
@@ -53,9 +55,9 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
     };
 
     $scope.submitForm = function () {
-      $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses[0]);
-      if (!existingBook) {
-        ConsignmentService.form.books.push($scope.consignedBook);
+      $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses);
+      if (!previousConsignmentItem) {
+        ConsignmentService.form.items.push($scope.consignmentItem);
         makeAlert('Added ' + $scope.consignedBook.title + ' into your book list.');
       } else {
         makeAlert('Saved changes.');
@@ -68,7 +70,8 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
     };
 
     $scope.resetForm = function () {
-      $scope.consignedBook = angular.copy(anEmptyBook);
+      consignmentItem.items[0] = {};
+      $scope.consignedBook = consignmentItem.items[0];
       $scope.consignForm.$setPristine();
     };
 

@@ -4,17 +4,18 @@
         form.</p>
 
     <div class="list-group">
-        <div ng-repeat="consignment in consignment.form.consignments">
+        <div ng-repeat="consignment in consignment.form.consignments"
+                ng-init="consignmentNo = $index">
             <a class="list-group-item"
                ng-repeat="book in consignment.items"
-               ng-click="openBookModal(book)">
+               ng-click="openBookModal(consignment)">
                 <div class="row book-entry">
                     <div class="col-xs-8 book-entry-main">
-                        <h4 class="list-group-item-heading">{{book.title}}
+                        <h4 class="list-group-item-heading">{{consignmentNo}}: {{book.title}}
                             <small>{{book.author}}</small>
                         </h4>
 
-                        <p class="list-group-item-text">{{book.courses.join(", ") | uppercase}}</p>
+                        <p class="list-group-item-text">{{book.courses | uppercase}}</p>
                     </div>
                     <div class="col-xs-2 book-entry-secondary">
                         <select ng-if="isAdmin"
@@ -29,7 +30,7 @@
 
                     <div class="col-xs-1 book-entry-secondary">
                     <span class="badge remove-button"
-                          ng-click="$event.stopPropagation(); removeBook(book)">
+                          ng-click="$event.stopPropagation(); removeConsignmentItem(consignment)">
                         <span class="glyphicon glyphicon-remove white"></span>
                     </span>
                     </div>
