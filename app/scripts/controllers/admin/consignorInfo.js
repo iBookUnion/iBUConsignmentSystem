@@ -27,8 +27,14 @@ angular.module('consignmentApp')
         $scope.section = section;
       };
 
+      /**
+       * This updates consignor and consignment items data. Book data are not updated.
+       * All books referenced by consignment items are expected to have a Parse objectId
+       * and have been already created on Parse.
+       * @returns {Parse.Promise}
+       */
       $scope.saveConsignor = function () {
-        return Parse.Promise.when(saveConsignor($scope.consignment.form),
+        return Parse.Promise.when(saveContactInfo($scope.consignment.form),
           saveConsignmentItems($scope.consignment.form.consignments))
           .then(function (callback) {
             console.log(callback);
@@ -53,13 +59,12 @@ angular.module('consignmentApp')
         return totalPayout;
       }
 
-      function saveConsignor(consignor) {
+      function saveContactInfo(consignor) {
         var consignorObject = new Parse.Object('Consignor');
         var consignorInfo = _.omit(consignor, 'consignments');
         return consignorObject
           .save(sanitizeForParse(consignorInfo))
           .fail(function (error) {
-            console.log(error);
             return Parse.Promise.error(error);
           });
       }
@@ -68,16 +73,26 @@ angular.module('consignmentApp')
         return Parse.Promise.when(_.map(consignmentItems, saveConsignmentItem));
 
         function saveConsignmentItem(consignmentItem) {
-          console.log(consignmentItem);
+          var serializedConsignmentItem = serializeConsignmentItem(consignmentItem);
+          console.log(serializedConsignmentItem);
           var consignmentItemObject = new Parse.Object('ConsignmentItem');
           return consignmentItemObject
-            .save(sanitizeForParse(consignmentItem))
+            .save(serializedConsignmentItem)
             .fail(function (error) {
-              console.log(error);
               return Parse.Promise.error(error);
-            })
-            ;
+            });
         }
+      }
+
+      function serializeConsignmentItem(consignmentItem) {
+        var items = consignmentItem.items;
+        var consignmentItemCopy = angular.copy(consignmentItem);
+        consignmentItemCopy.items = _.map(items, function (item) {
+          var bookPointer = Parse.Object.extend('Book').createWithoutData(item.objectId || item.id);
+          return bookPointer;
+        });
+        console.log(consignmentItemCopy);
+        return consignmentItemCopy;
       }
 
       // TODO: Make Utility Function out of this
