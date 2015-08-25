@@ -18,10 +18,10 @@ angular.module('consignmentApp')
       }
 
       function createNewForm() {
-        //var defaultForm = {
-        //  items: []
-        //};
-        var defaultForm = getTestData();
+        var defaultForm = {
+          consignments: []
+        };
+        //var defaultForm = getTestData();
         self.form = angular.copy(defaultForm);
         return self;
       }
