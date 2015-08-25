@@ -3,7 +3,8 @@ var _ = require('cloud/lib/underscore.js');
 Parse.Cloud.define('postConsignment', function (request, response) {
 
   var errors = findConsignmentErrors(request.params);
-  if (errors.length) {
+
+  if (errors == []) {
     response.error(errors);
   }
 
@@ -51,11 +52,18 @@ function getConsignor(studentId) {
 
 // TODO: Support Packaged Books
 function createConsignmentItems(consignorInfo, consignor) {
-  return Parse.Promise.when(_.map(consignorInfo.books, function (bookInfo) {
-    return createBookIfNotExists(bookInfo)
-      .then(function (book) {
-        return createConsignmentItem(bookInfo, consignor, [book]);
+  return Parse.Promise.when(_.map(consignorInfo.consignments, function (consignmentItem) {
+    return createBooksIfNotExists(consignmentItem)
+      .then(function () {
+      var books = _.toArray(arguments);
+        return createConsignmentItem(consignmentItem, consignor, books);
       });
+  }));
+}
+
+function createBooksIfNotExists(consignmentItem) {
+  return Parse.Promise.when(_.map(consignmentItem.items, function (book) {
+    return createBookIfNotExists(book);
   }));
 }
 
@@ -69,7 +77,7 @@ function createBookIfNotExists(book) {
           title: book.title,
           author: book.author,
           edition: book.edition,
-          courses: book.courses.join(',')
+          courses: book.courses
         }, {useMasterKey: true});
       } else {
         return result[0];
@@ -126,16 +134,18 @@ function findConsignmentErrors(consignment) {
   if (missingConsignorKeys.length) {
     errors.push('Some consignor fields are missing: ' + missingConsignorKeys.join(', '));
   }
-  if (!consignment.books.length) {
+  if (!consignment.consignments.length) {
     errors.push('There are no items in the consignment.');
   } else {
-    var missingBookKeys = _.reduce(consignment.books, function (missingKeys, book) {
+    var books = _.flatten( _.pluck(consignment.consignments, 'items'));
+    var missingBookKeys = _.reduce(books, function (missingKeys, book) {
       return _.union(missingKeys, findMissingKeys(book, bookKeys));
     });
     if (missingBookKeys.length) {
       errors.push('Some books are missing these fields: ' + missingBookKeys.join(', '));
     }
   }
+
   return errors;
 }
 
