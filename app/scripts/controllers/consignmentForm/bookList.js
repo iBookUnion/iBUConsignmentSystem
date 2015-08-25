@@ -15,7 +15,7 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
         templateUrl: 'views/consignmentForm/bookModal.html',
         controller: 'BookFormModalCtrl',
         resolve: {
-          consignmentItem: function () {
+          existingConsignmentItem: function () {
             return consignmentItem;
           }
         }
@@ -29,24 +29,14 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'consignmentItem', 'ConsignmentService', 'Books',
-  function ($scope, $log, $modalInstance, consignmentItem, ConsignmentService, Books) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingConsignmentItem', 'ConsignmentService', 'Books',
+  function ($scope, $log, $modalInstance, existingConsignmentItem, ConsignmentService, Books) {
 
-    var newConsignmentItem = {
-      items: []
-    };
-
-    var previousConsignmentItem = consignmentItem;
+    var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
+    $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
+    bindNewOrExistingBook();
 
     $scope.alertMessage = '';
-
-    $scope.consignmentItem = consignmentItem || newConsignmentItem;
-
-    if (!consignmentItem.items.length) {
-      consignmentItem.items.push({});
-    }
-
-    $scope.consignedBook = consignmentItem.items[0];
 
     $scope.findBookMetadata = function (isbn) {
       Books.get({isbn: isbn}, function (book) {
@@ -56,10 +46,11 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'consig
 
     $scope.submitForm = function () {
       $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses);
-      if (!previousConsignmentItem) {
-        ConsignmentService.form.items.push($scope.consignmentItem);
+      if (!existingConsignmentItem) {
+        ConsignmentService.form.consignments.push(angular.copy(openedConsignmentItem));
         makeAlert('Added ' + $scope.consignedBook.title + ' into your book list.');
       } else {
+        _.merge(existingConsignmentItem, openedConsignmentItem);
         makeAlert('Saved changes.');
       }
       this.resetForm();
@@ -70,12 +61,25 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'consig
     };
 
     $scope.resetForm = function () {
-      consignmentItem.items[0] = {};
-      $scope.consignedBook = consignmentItem.items[0];
+      openedConsignmentItem.items[0] = {};
+      $scope.consignedBook = openedConsignmentItem.items[0];
       $scope.consignForm.$setPristine();
     };
 
     function makeAlert(msg) {
       $scope.alertMessage = msg;
+    }
+
+    function createNewConsignmentItem () {
+      return {
+        items: []
+      };
+    }
+
+    function bindNewOrExistingBook() {
+      if (!openedConsignmentItem.items.length) {
+        openedConsignmentItem.items.push({});
+      }
+      $scope.consignedBook = openedConsignmentItem.items[0];
     }
   }]);
