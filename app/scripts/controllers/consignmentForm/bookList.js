@@ -5,10 +5,11 @@ var app = angular.module('consignmentApp');
 app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
   function ($scope, $modal, $log, OPTIONS) {
     $scope.removeConsignmentItem = function (consignmentItem) {
-      _.remove($scope.consignment.form.consignments, _.matches(consignmentItem));
+      _.remove($scope.consignmentForm.consignments, _.matches(consignmentItem));
     };
 
     $scope.states = OPTIONS.bookStates;
+    $scope.isAdmin = Parse.User.current();
 
     $scope.openBookModal = function (consignmentItem) {
       $scope.modalInstance = $modal.open({
@@ -17,6 +18,10 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
         resolve: {
           existingConsignmentItem: function () {
             return consignmentItem;
+          },
+          consignmentForm: function () {
+            console.log($scope.consignmentForm);
+            return $scope.consignmentForm;
           }
         }
       });
@@ -29,8 +34,8 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingConsignmentItem', 'ConsignmentService', 'Books',
-  function ($scope, $log, $modalInstance, existingConsignmentItem, ConsignmentService, Books) {
+app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingConsignmentItem', 'consignmentForm', 'Books',
+  function ($scope, $log, $modalInstance, existingConsignmentItem, consignmentForm, Books) {
 
     var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
     $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
@@ -46,8 +51,7 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
 
     $scope.submitForm = function () {
       $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses);
-      if (!existingConsignmentItem) {
-        ConsignmentService.form.consignments.push(angular.copy(openedConsignmentItem));
+      if (!existingConsignmentItem) {        consignmentForm.consignments.push(angular.copy(openedConsignmentItem));
         makeAlert('Added ' + $scope.consignedBook.title + ' into your book list.');
       } else {
         _.merge(existingConsignmentItem, openedConsignmentItem);

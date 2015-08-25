@@ -1,10 +1,10 @@
 <div class="form-section" ng-controller="BookFormCtrl">
-    <p class="text-center text-info" ng-show="!consignment.form.consignments.length">You currently have no items added
+    <p class="text-center text-info" ng-show="!consignmentForm.consignments.length">You currently have no items added
         to the consignment
         form.</p>
 
     <div class="list-group">
-        <div ng-repeat="consignment in consignment.form.consignments"
+        <div ng-repeat="consignment in consignmentForm.consignments"
                 ng-init="consignmentNo = $index">
             <a class="list-group-item"
                ng-repeat="book in consignment.items"
@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-xs-2 book-entry-secondary">
                         <select ng-if="isAdmin"
-                                ng-model="book.currentState"
+                                ng-model="consignment.currentState"
                                 ng-click="$event.stopPropagation()"
                                 ng-options="state for state in states">
                         </select>

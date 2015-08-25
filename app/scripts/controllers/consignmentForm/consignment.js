@@ -3,8 +3,9 @@
 angular.module('consignmentApp')
   .controller('ConsignmentCtrl', ['$scope', '$location', 'ConsignmentService', 'ContractService', 'OPTIONS',
     function ($scope, $location, ConsignmentService, ContractService, OPTIONS) {
+      var consignment = ConsignmentService.createNewForm();
 
-      $scope.consignment = ConsignmentService;
+      $scope.consignment = consignment;
       $scope.faculties = OPTIONS.faculties;
 
       $scope.submitForm = function (form) {
@@ -25,9 +26,4 @@ angular.module('consignmentApp')
             $location.path('/contract');
           });
       };
-
-      $scope.$on('$routeChangeSuccess', function () {
-        ConsignmentService.createNewForm();
-        $scope.consignment = ConsignmentService;
-      });
     }]);
