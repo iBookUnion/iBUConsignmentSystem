@@ -61,10 +61,21 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
     };
 
     $scope.resetForm = function () {
+      openedConsignmentItem = createNewConsignmentItem();
       openedConsignmentItem.items[0] = {};
+      $scope.consignmentItem = openedConsignmentItem;
       $scope.consignedBook = openedConsignmentItem.items[0];
       $scope.consignForm.$setPristine();
+      $scope.consignForm.$setUntouched();
     };
+
+    $scope.addItem = function () {
+      $scope.consignmentItem.items.push({});
+    };
+
+    $scope.removeItem = function(i) {
+      $scope.consignmentItem.items.splice(i,1);
+    }
 
     function makeAlert(msg) {
       $scope.alertMessage = msg;
