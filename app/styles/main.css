@@ -141,6 +141,14 @@ input.ng-valid {
     padding-right: 0.3em;
 }
 
+#modal-accordion > * {
+    margin: 0 -1em;
+}
+
+.panel-collapse > .panel-body > div {
+    margin: 0;
+}
+
 /*Book List*/
 
 .book-entry {

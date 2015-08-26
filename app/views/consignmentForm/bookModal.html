@@ -12,8 +12,14 @@
         <form role="form" class="form-horizontal book-form" name="consignForm"
               ng-submit="consignForm.$valid && submitForm()" novalidate>
 
-            <accordion close-others="oneAtATime">
-                <accordion-group heading="{{item.title || 'Book'}}" ng-repeat="item in items" ng-form="itemForm" is-open="true">
+            <accordion id="modal-accordion" close-others="false">
+                <accordion-group heading="{{item.title || 'Book'}}" ng-repeat="item in consignmentItem.items" ng-form="itemForm" is-open="true">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span class="pull-right glyphicon" ng-class="{'glyphicon-remove': consignmentItem.items.length > 1}" ng-click="removeItem($index)" tooltip="Warning: Will remove this item from the bundle."  tooltip-trigger="mouseenter" tooltip-placement="left"></span>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
