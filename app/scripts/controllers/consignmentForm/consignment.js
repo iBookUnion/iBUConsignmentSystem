@@ -23,14 +23,11 @@ angular.module('consignmentApp')
             // if form submission fails, then...(TODO)
             console.log(error);
             $location.path('/contract');
-          })
+          });
       };
 
       $scope.$on('$routeChangeSuccess', function () {
-        //ConsignmentService.createNewForm();
-        ConsignmentService.retrieveExistingForm('12345678')
-          .then(function (form) {
-            $scope.consignment = form;
-          });
+        ConsignmentService.createNewForm();
+        $scope.consignment = ConsignmentService;
       });
     }]);
