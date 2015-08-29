@@ -26,10 +26,4 @@ angular.module('consignmentApp')
               $location.path('/contract');
             });
       }};
-
-      $scope.$on('$routeChangeSuccess', function () {
-        ConsignmentService.createNewForm();
-        $scope.consignment = ConsignmentService;
-      });
-
     }]);
