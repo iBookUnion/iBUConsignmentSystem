@@ -2,8 +2,8 @@
     <div class="page-header">
         <div>
             <h1>
-                {{consignment.form.firstName}} {{consignment.form.lastName}}
-                <small>#{{consignment.form.consignmentNumber}}</small>
+                {{consignment.firstName}} {{consignment.lastName}}
+                <small>#{{consignment.studentId}}</small>
             </h1>
 
         </div>
@@ -14,7 +14,10 @@
             <contact-form></contact-form>
         </tab>
         <tab heading="Consignment">
-            <book-list></book-list>
+            <book-list
+                    consignment-form="consignment"
+                    is-new-consignment="false">
+            </book-list>
         </tab>
     </tabset>
 

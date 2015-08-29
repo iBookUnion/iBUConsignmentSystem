@@ -22,6 +22,8 @@ angular.module('consignmentApp')
     return {
       'bookState': bookStateMapping,
       'bookStates': _.values(bookStateMapping),
-      'faculties': ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics']
+      'faculties': ['Arts', 'Commerce', 'Music', 'Science', 'Applied Science', 'Forestry', 'Dentistry', 'Human Kinetics',
+                    'Creative and Critical Studies', 'Land and Food Systems', 'Law', 'Pharmaceutical Sciences', 'Medicine',
+                     'Management', 'School of Social Work and Family Studies']
     };
   }()));

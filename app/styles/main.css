@@ -104,6 +104,11 @@ input.ng-valid {
     border: 1px solid green;
 }
 
+#phoneNumber.ng-pristine {
+    border: 1px solid #CCCCCC ;
+}
+
+
 .checked {
     color: green;
 }
@@ -199,3 +204,10 @@ input.ng-valid {
 /*display: table-cell;*/
 /*vertical-align: middle;*/
 /*}*/
+
+/* Agreement Form */
+
+#agreementMsg {
+    color: red;
+    text-align: center;
+}
