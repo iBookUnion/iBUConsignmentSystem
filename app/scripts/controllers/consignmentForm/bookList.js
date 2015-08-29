@@ -51,17 +51,18 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
 
     $scope.submitForm = function () {
       $log.info('Consigning book ' + $scope.consignedBook.isbn + ' for course ' + $scope.consignedBook.courses);
-      if (!existingConsignmentItem) {        consignmentForm.consignments.push(angular.copy(openedConsignmentItem));
-        var bundledItems = angular.copy(openedConsignmentItem);
-        for (var i = 0; i < bundledItems.items.length; i++) {
-          bundledItems.items[i].courses = bundledItems.courses;
-        };
-        var formattedConsignment = {'items': bundledItems.items, 'price': bundledItems.price};
-
+      
+      var bundledItems = angular.copy(openedConsignmentItem);
+      for (var i = 0; i < bundledItems.items.length; i++) {
+        bundledItems.items[i].courses = bundledItems.courses;
+      };
+      var formattedConsignment = {'items': bundledItems.items, 'price': bundledItems.price};
+      
+      if (!existingConsignmentItem) {
         ConsignmentService.form.consignments.push(formattedConsignment);
         makeAlert('Added ' + $scope.consignedBook.title + ' into your book list.');
       } else {
-        _.merge(existingConsignmentItem, openedConsignmentItem);
+        _.merge(existingConsignmentItem, formattedConsignment);
         makeAlert('Saved changes.');
       }
       this.resetForm();
