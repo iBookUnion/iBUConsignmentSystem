@@ -54,7 +54,8 @@
         templateUrl: 'views/consignmentForm/bookList.html',
         scope: {
           'consignmentForm': '=',
-          'isNewConsignment': '='
+          'isNewConsignment': '=',
+          'saveBookOnSubmit': '='
         }
       };
     })

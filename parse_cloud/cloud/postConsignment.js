@@ -50,7 +50,6 @@ function getConsignor(studentId) {
     .find({useMasterKey: true});
 }
 
-// TODO: Support Packaged Books
 function createConsignmentItems(consignorInfo, consignor) {
   return Parse.Promise.when(_.map(consignorInfo.consignments, function (consignmentItem) {
     return createBooksIfNotExists(consignmentItem)

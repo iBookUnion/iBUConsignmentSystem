@@ -8,12 +8,12 @@
  * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
-  .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'ConsignmentApi', 'Books', 'OPTIONS',
-    function ($scope, $routeParams, $location, ConsignmentApi, Books, OPTIONS) {
+  .controller('FormsCtrl', ['$scope', '$routeParams', '$location', 'ConsignmentApi', 'Book', 'OPTIONS',
+    function ($scope, $routeParams, $location, ConsignmentApi, Book, OPTIONS) {
 
       if ($routeParams.isbn) {
         $scope.isbn = $routeParams.isbn;
-        Books.getFromParse($routeParams.isbn).then(
+        Book.get($routeParams.isbn).then(
           function (book) {
             $scope.book = book;
           });

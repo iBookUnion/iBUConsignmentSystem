@@ -22,7 +22,8 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
           consignmentForm: function () {
             console.log($scope.consignmentForm);
             return $scope.consignmentForm;
-          }
+          },
+          saveBookOnSubmit: $scope.saveBookOnSubmit
         }
       });
 
@@ -34,8 +35,10 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
     };
   }]);
 
-app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingConsignmentItem', 'consignmentForm', 'Books',
-  function ($scope, $log, $modalInstance, existingConsignmentItem, consignmentForm, Books) {
+app.controller('BookFormModalCtrl', ['$scope', '$modalInstance',
+  'existingConsignmentItem', 'consignmentForm', 'saveBookOnSubmit', 'Book',
+  function ($scope, $modalInstance,
+            existingConsignmentItem, consignmentForm, saveBookOnSubmit, Book) {
 
     var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
     $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
@@ -44,7 +47,7 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
     $scope.alertMessage = '';
 
     $scope.findBookMetadata = function (isbn) {
-      Books.get({isbn: isbn}, function (book) {
+      Book.get({isbn: isbn}, function (book) {
         $scope.consignedBook = book;
       });
     };
@@ -80,12 +83,12 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
     };
 
     $scope.addItem = function () {
-      $scope.consignmentItem.items.push({});
+      $scope.consignmentItem.items.push(new Book());
     };
 
     $scope.removeItem = function(i) {
       $scope.consignmentItem.items.splice(i,1);
-    }
+    };
 
     function makeAlert(msg) {
       $scope.alertMessage = msg;
@@ -99,7 +102,7 @@ app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existi
 
     function bindNewOrExistingBook() {
       if (!openedConsignmentItem.items.length) {
-        openedConsignmentItem.items.push({});
+        openedConsignmentItem.items.push(new Book());
       }
       $scope.consignedBook = openedConsignmentItem.items[0];
     }

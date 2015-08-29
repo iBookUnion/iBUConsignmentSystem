@@ -1,6 +1,6 @@
 angular.module('consignmentApp')
-  .service('ConsignmentApi', ['Books',
-    function (Books) {
+  .service('ConsignmentApi', ['Book',
+    function (Book) {
       return {
         'submitForm': submitForm,
         'searchConsignments': searchConsignments,
@@ -19,7 +19,7 @@ angular.module('consignmentApp')
 
         var filterQuery = Parse.Promise.as(consignmentQuery);
         if (params && params.isbn) {
-          filterQuery = Books.getParseObject(params.isbn)
+          filterQuery = Book.get(params.isbn)
             .then(function (book) {
               return consignmentQuery.containedIn('items', [book]);
             });

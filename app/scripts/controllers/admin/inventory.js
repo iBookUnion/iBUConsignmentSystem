@@ -8,8 +8,8 @@
  * Controller of the consignmentApp
  */
 angular.module('consignmentApp')
-  .controller('InventoryCtrl', ['$scope', '$location', 'Inventory',
-    function ($scope, $location, Inventory) {
+  .controller('InventoryCtrl', ['$scope', '$location', 'Book',
+    function ($scope, $location, Book) {
 
     $scope.viewAvailableBookCopies = function () {
       $location.search('isbn', this.book.isbn)
@@ -17,7 +17,7 @@ angular.module('consignmentApp')
     };
 
     $scope.searchBooks = function (params) {
-      Inventory.getList(params)
+      Book.searchInventory(params)
         .then(function (inventory) {
           $scope.books = inventory;
         });
