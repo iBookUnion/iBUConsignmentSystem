@@ -7,15 +7,16 @@
         <div ng-repeat="consignment in consignmentForm.consignments"
                 ng-init="consignmentNo = $index">
             <a class="list-group-item"
-               ng-repeat="book in consignment.items"
                ng-click="openBookModal(consignment)">
                 <div class="row book-entry">
                     <div class="col-xs-8 book-entry-main">
-                        <h4 class="list-group-item-heading">{{consignmentNo}}: {{book.title}}
+                        <h4 class="list-group-item-heading"
+                            ng-repeat="book in consignment.items">
+                            {{book.title}}
                             <small>{{book.author}}</small>
                         </h4>
 
-                        <p class="list-group-item-text">{{book.courses | uppercase}}</p>
+                        <p class="list-group-item-text">{{consignment.items[consignmentNo].courses | uppercase}}</p>
                     </div>
                     <div class="col-xs-2 book-entry-secondary">
                         <select ng-if="isAdmin"
