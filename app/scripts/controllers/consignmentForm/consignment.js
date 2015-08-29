@@ -3,9 +3,7 @@
 angular.module('consignmentApp')
   .controller('ConsignmentCtrl', ['$scope', '$location', 'ConsignmentService', 'ContractService', 'OPTIONS',
     function ($scope, $location, ConsignmentService, ContractService, OPTIONS) {
-      var consignment = ConsignmentService.createNewForm();
-
-      $scope.consignment = consignment;
+      $scope.consignment = ConsignmentService.createNewForm();
       $scope.faculties = OPTIONS.faculties;
 
       $scope.submitForm = function (form) {

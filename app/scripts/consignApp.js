@@ -53,7 +53,8 @@
         restrict: 'E',
         templateUrl: 'views/consignmentForm/bookList.html',
         scope: {
-          'consignmentForm': '='
+          'consignmentForm': '=',
+          'isNewConsignment': '='
         }
       };
     })
