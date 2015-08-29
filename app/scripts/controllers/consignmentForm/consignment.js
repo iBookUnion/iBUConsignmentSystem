@@ -25,5 +25,7 @@ angular.module('consignmentApp')
               console.log(error);
               $location.path('/contract');
             });
+      } else {
+        $scope.Msg = "You cannot submit the form until you accept the terms of the agreement.";
       }};
     }]);
