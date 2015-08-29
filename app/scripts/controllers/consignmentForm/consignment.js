@@ -7,8 +7,7 @@ angular.module('consignmentApp')
       $scope.faculties = OPTIONS.faculties;
 
       $scope.submitForm = function (form) {
-        console.log($scope.agreement);
-        if ($scope.agreement) { 
+        if (isCompleteConsignment(form)) { 
           $scope.flag = true;
           console.log(form);
           ConsignmentService.submitForm(form)
@@ -25,5 +24,12 @@ angular.module('consignmentApp')
               console.log(error);
               $location.path('/contract');
             });
+      } else {
+        $scope.Msg = "You cannot submit the form until you accept the terms of the agreement.";
       }};
+      
+      function isCompleteConsignment(form) {
+        return $scope.contactForm.$valid && $scope.agreement && form.consignments.length;
+      }
+      
     }]);
