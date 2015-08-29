@@ -7,21 +7,29 @@ angular.module('consignmentApp')
       $scope.faculties = OPTIONS.faculties;
 
       $scope.submitForm = function (form) {
-        $scope.flag = true;
-        console.log(form);
-        ConsignmentService.submitForm(form)
-          .then(function (response) {
-            $scope.flag = false;
-            console.log(response);
-            // set contract to be accessible through ContractService
-            ContractService.setContract(response);
-            $location.path('/contract');
-          },
-          function (error) {
-            $scope.flag = false;
-            // if form submission fails, then...(TODO)
-            console.log(error);
-            $location.path('/contract');
-          });
-      };
+        console.log($scope.agreement);
+        if ($scope.agreement) { 
+          $scope.flag = true;
+          console.log(form);
+          ConsignmentService.submitForm(form)
+            .then(function (response) {
+              $scope.flag = false;
+              console.log(response);
+              // set contract to be accessible through ContractService
+              ContractService.setContract(response);
+              $location.path('/contract');
+            },
+            function (error) {
+              $scope.flag = false;
+              // if form submission fails, then...(TODO)
+              console.log(error);
+              $location.path('/contract');
+            });
+      }};
+
+      $scope.$on('$routeChangeSuccess', function () {
+        ConsignmentService.createNewForm();
+        $scope.consignment = ConsignmentService;
+      });
+
     }]);
