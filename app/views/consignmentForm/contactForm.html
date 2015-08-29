@@ -11,7 +11,7 @@
         <div class="check-container" ng-show="contactForm.first_name.$touched && contactForm.first_name.$valid">
             <small class="checked">&#10003;</small>
         </div>
-        <input type="text" class="form-control" id="first_name" name="firstName" ng-model="consignment.form.firstName" placeholder="Enter first name" required>
+        <input type="text" class="form-control" id="first_name" name="firstName" ng-model="consignment.firstName" placeholder="Enter first name" required>
     </div>
 
     <div class="form-group">
@@ -25,7 +25,7 @@
         <div class="check-container" ng-show="contactForm.last_name.$touched && contactForm.last_name.$valid">
             <small class="checked">&#10003;</small>
         </div>
-        <input type="text" class="form-control" id="last_name" name="lastName" ng-model="consignment.form.lastName" placeholder="Enter last name" required>
+        <input type="text" class="form-control" id="last_name" name="lastName" ng-model="consignment.lastName" placeholder="Enter last name" required>
     </div>
 
     <div class="form-group">
@@ -39,7 +39,7 @@
         <div class="check-container" ng-show="contactForm.student_number.$touched && contactForm.student_number.$valid">
             <small class="checked">&#10003;</small>
         </div>
-        <input type="text" class="form-control" id="studentId" name="student_number" ng-model="consignment.form.studentId"
+        <input type="text" class="form-control" id="studentId" name="student_number" ng-model="consignment.studentId"
                 ng-pattern="/\d{8}$/" placeholder="Enter student number" required>
 
     </div>
@@ -55,7 +55,7 @@
         <div class="check-container" ng-show="contactForm.email.$touched && contactForm.email.$valid">
             <small class="checked">&#10003;</small>
         </div>
-        <input type="email" class="form-control" id="email" name="email" ng-model="consignment.form.email" placeholder="Enter email" required>
+        <input type="email" class="form-control" id="email" name="email" ng-model="consignment.email" placeholder="Enter email" required>
     </div>
 
     <div class="form-group">
@@ -64,16 +64,15 @@
             ng-show="contactForm.phone_number.$touched && contactForm.phone_number.$invalid">
              <small class="error" ng-show="contactForm.phone_number.$error.pattern" class="err">Please enter a valid phone number.</small>
         </div>
-        <input type="text" class="form-control" id="phoneNumber" name="phone_number" ng-model="consignment.form.phoneNumber"
-               ng-minlength="0" ng-pattern="/(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})/" placeholder="Enter phone number" required>
+        <input type="text" class="form-control" id="phoneNumber" name="phone_number" ng-model="consignment.phoneNumber"
+               ng-pattern="/(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})/" placeholder="Enter phone number">
     </div>
     
 
     <div class="form-group">
         <label for="faculty">Faculty</label>
-        <select id="faculty" ng-model="consignment.form.faculty" name="faculty" class="form-control"
+        <select id="faculty" ng-model="consignment.faculty" name="faculty" class="form-control"
                 ng-options="faculty for faculty in faculties">
         </select>
     </div>
-
 </form>

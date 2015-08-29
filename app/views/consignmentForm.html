@@ -30,7 +30,10 @@
             </div>
 
             <div class="col-md-8">
-                <book-list class=""></book-list>
+                <book-list
+                        consignment-form="consignment"
+                        is-new-consignment="true">
+                </book-list>
             </div>
     </div>
 
@@ -53,7 +56,7 @@
     <!-- SUBMIT -->
     <div class="row" ng-init="flag=false">
         <div class="col-md-4 col-md-offset-6">
-            <div class="btn btn-block btn-primary" ng-click="submitForm(consignment.form)" ng-disabled="flag">Submit Form</div>
+            <div class="btn btn-block btn-primary" ng-click="submitForm(consignment)" ng-disabled="flag">Submit Form</div>
         </div>
     </div>
 

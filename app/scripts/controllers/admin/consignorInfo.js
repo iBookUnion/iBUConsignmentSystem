@@ -19,7 +19,6 @@ angular.module('consignmentApp')
           $scope.consignment = consignment;
         });
 
-      $scope.isAdmin = Parse.User.current();
       $scope.section = 'contact';
       $scope.states = OPTIONS.bookStates;
       $scope.faculties = OPTIONS.faculties;
@@ -30,7 +29,7 @@ angular.module('consignmentApp')
       };
 
       $scope.saveConsignor = function () {
-        return ConsignmentApi.updateConsignment($scope.consignment.form)
+        return ConsignmentApi.updateConsignment($scope.consignment)
           .then(function (callback) {
             console.log(callback);
           })
@@ -39,7 +38,9 @@ angular.module('consignmentApp')
           });
       };
 
-      $scope.$watch('consignment.form.books',
+      $scope.$watch('isAdmin');
+
+      $scope.$watch('consignment.consignments',
         function (newValue) {
           $scope.consignorPayout = calculateConsignorPayout(newValue);
         }, true);

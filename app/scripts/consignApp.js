@@ -51,7 +51,11 @@
     .directive('bookList', function () {
       return {
         restrict: 'E',
-        templateUrl: 'views/consignmentForm/bookList.html'
+        templateUrl: 'views/consignmentForm/bookList.html',
+        scope: {
+          'consignmentForm': '=',
+          'isNewConsignment': '='
+        }
       };
     })
     .directive('agreement', function () {

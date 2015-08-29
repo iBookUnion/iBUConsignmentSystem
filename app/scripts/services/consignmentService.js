@@ -3,11 +3,7 @@
 angular.module('consignmentApp')
   .factory('ConsignmentService', ['ConsignmentApi', 'Consignors',
     function (ConsignmentAPI, Consignors) {
-      var self = this;
-      createNewForm();
-
       return {
-        'form': self.form,
         'createNewForm': createNewForm,
         'submitForm': submitForm,
         'retrieveExistingForm': retrieveExistingForm
@@ -18,7 +14,7 @@ angular.module('consignmentApp')
       }
 
       function createNewForm() {
-        var defaultForm = {
+        return {
           consignments: []
         };
        var defaultForm = getTestData();
@@ -27,23 +23,15 @@ angular.module('consignmentApp')
       }
 
       function retrieveExistingForm(studentId) {
+        var form;
         return Consignors.getConsignors(studentId)
           .then(function (consignor) {
-            self.form = angular.copy(consignor);
+            form = angular.copy(consignor);
             return Consignors.getConsignmentItems(studentId);
-          }).then(function (consignedBooks) {
-            //var booksList = [];
-            //
-            //for (var i = 0; i < consignedBooks.length; i++) {
-            //  // TODO: Add support for bundled consignment items
-            //  var book = consignedBooks[i].items[0];
-            //  book.price = consignedBooks[i].price;
-            //  book.currentState = consignedBooks[i].currentState;
-            //
-            //  booksList.push(book);
-            //}
-            self.form.consignments = consignedBooks;
-            return self;
+          })
+          .then(function (consignedBooks) {
+            form.consignments = consignedBooks;
+            return form;
           });
       }
 
