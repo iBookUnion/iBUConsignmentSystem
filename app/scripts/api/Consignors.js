@@ -49,9 +49,8 @@ angular.module('consignmentApp')
 
     // Converts a Parse.Object Consignment Item into a JSON Object
     function consignmentItemToJSON(consignmentItem) {
-      var itemsJSON = _.map(consignmentItem.attributes.items, _.method('toJSON'));
       var consignmentItemJSON = consignmentItem.toJSON();
-      consignmentItemJSON.items = itemsJSON;
+      consignmentItemJSON.items = consignmentItem.attributes.items;
       return consignmentItemJSON;
     }
   }]);

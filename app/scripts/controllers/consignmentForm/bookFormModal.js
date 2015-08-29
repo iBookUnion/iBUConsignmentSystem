@@ -2,9 +2,9 @@
 
 angular.module('consignmentApp')
   .controller('BookFormModalCtrl', ['$scope', '$modalInstance',
-    'existingConsignmentItem', 'consignmentForm', 'saveBookOnSubmit', 'Book',
+    'existingConsignmentItem', 'consignmentForm', 'Book', 'OPTIONS',
     function ($scope, $modalInstance,
-              existingConsignmentItem, consignmentForm, saveBookOnSubmit, Book) {
+              existingConsignmentItem, consignmentForm, Book, OPTIONS) {
 
       var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
       $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
@@ -12,18 +12,23 @@ angular.module('consignmentApp')
 
       $scope.alertMessage = '';
 
-      $scope.findBookMetadata = function (isbn) {
-        Book.get({isbn: isbn}, function (book) {
-          $scope.consignedBook = book;
-        });
+      $scope.getBookDataIfExists = function(itemForm, book) {
+        console.log(itemForm.isbn);
+        var validIsbn = itemForm.isbn.$touched && itemForm.isbn.$valid;
+        if (validIsbn) {
+          // TODO: Add loading indicator
+          return book.fetchByIsbn(itemForm.isbn.$viewValue);
+        }
       };
 
       $scope.submitForm = function () {
         var bundledItems = angular.copy(openedConsignmentItem);
-        for (var i = 0; i < bundledItems.items.length; i++) {
-          bundledItems.items[i].courses = bundledItems.courses;
-        }
+        _.forEach(bundledItems.items, function (book) {
+          console.log(book);
+          book.courses = bundledItems.courses;
+        });
         var formattedConsignment = {'items': bundledItems.items, 'price': bundledItems.price};
+        formattedConsignment.status = formattedConsignment.status || OPTIONS.bookState.available;
 
         if (!existingConsignmentItem) {
           consignmentForm.consignments.push(formattedConsignment);

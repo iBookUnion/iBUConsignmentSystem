@@ -23,7 +23,9 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
             console.log($scope.consignmentForm);
             return $scope.consignmentForm;
           },
-          saveBookOnSubmit: $scope.saveBookOnSubmit
+          consignor: function () {
+            return $scope.consignor;
+          }
         }
       });
 

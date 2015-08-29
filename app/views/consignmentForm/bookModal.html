@@ -32,7 +32,8 @@
 
                                 <input type="text" class="form-control input-medium" ng-maxlength=13 ng-minlength=13 id="isbn"
                                        name="isbn" ng-pattern="/^[0-9]{13}$/"
-                                       ng-model="item.isbn" placeholder="Enter 13-digit ISBN" required>
+                                       ng-model="item.isbn" placeholder="Enter 13-digit ISBN"
+                                       ng-blur="getBookDataIfExists(itemForm, item)" required>
                                 <div class="error-container"
                                      ng-show="itemForm.isbn.$touched || consignForm.$submitted">
                                     <small class="error" ng-show="itemForm.isbn.$error.required">

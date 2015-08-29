@@ -55,7 +55,7 @@
         scope: {
           'consignmentForm': '=',
           'isNewConsignment': '=',
-          'saveBookOnSubmit': '='
+          'consignor': '='
         }
       };
     })

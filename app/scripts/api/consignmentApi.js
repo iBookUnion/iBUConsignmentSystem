@@ -54,24 +54,29 @@ angular.module('consignmentApp')
         return Parse.Promise.when(_.map(consignmentItems, saveConsignmentItem));
 
         function saveConsignmentItem(consignmentItem) {
-          var serializedConsignmentItem = serializeConsignmentItem(consignmentItem);
-          console.log(serializedConsignmentItem);
-          var consignmentItemObject = new Parse.Object('ConsignmentItem');
-          return consignmentItemObject
-            .save(serializedConsignmentItem)
-            .fail(function (error) {
-              return Parse.Promise.error(error);
+          saveConsignmentBooks(consignmentItem)
+            .then(function () {
+              return _.toArray(arguments);
+            })
+            .then(function (items) {
+              var serializedConsignmentItem = _.cloneDeep(consignmentItem);
+              serializedConsignmentItem.items = items;
+              var consignmentItemObject = new Parse.Object('ConsignmentItem');
+              return consignmentItemObject
+                .save(serializedConsignmentItem)
+                .fail(function (error) {
+                  return Parse.Promise.error(error);
+                });
             });
         }
       }
 
-      function serializeConsignmentItem(consignmentItem) {
+      function saveConsignmentBooks(consignmentItem) {
         var items = consignmentItem.items;
-        var consignmentItemCopy = angular.copy(consignmentItem);
-        consignmentItemCopy.items = _.map(items, function (item) {
-          return Parse.Object.extend('Book').createWithoutData(item.objectId || item.id);
+        var bookPromises = _.map(items, function (item) {
+          return item.save();
         });
-        return consignmentItemCopy;
+        return Parse.Promise.when(bookPromises);
       }
 
       function sanitizeForParse(json) {
