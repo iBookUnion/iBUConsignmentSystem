@@ -131,6 +131,24 @@ input.ng-valid {
     }
 }
 
+/*Book Modal*/
+.modal-header > * {
+    display: inline-block;
+}
+
+#bundle-button {
+    margin-top: -0.5em;
+    padding-right: 0.3em;
+}
+
+#modal-accordion > * {
+    margin: 0 -1em;
+}
+
+.panel-collapse > .panel-body > div {
+    margin: 0;
+}
+
 /*Book List*/
 
 .book-entry {

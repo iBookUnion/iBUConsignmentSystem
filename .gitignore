@@ -59,7 +59,7 @@ bower_components
 ### grunt ###
 # Grunt usually compiles files inside this directory
 dist/
-
+Gruntfile.js
 # Grunt usually preprocesses files such as coffeescript, compass... inside the .tmp directory
 .tmp/
 
