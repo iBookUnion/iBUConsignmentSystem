@@ -45,8 +45,9 @@
                 <li class="list-group-item" ng-repeat="entry in contract.consignmentItems">
                     <div class="row book-entry">
                         <div class="col-xs-10 book-entry-main">
-                            <h4 class="list-group-item-heading">{{entry.items[0].title}}
-                                <small>{{entry.items[0].author}}</small>
+                            <h4 class="list-group-item-heading" ng-repeat="book in entry.items">
+                                {{book.title}}
+                                <small>{{book.author}}</small>
                             </h4>
 
                             <p class="list-group-item-text">{{entry.items[0].courses}}</p>
