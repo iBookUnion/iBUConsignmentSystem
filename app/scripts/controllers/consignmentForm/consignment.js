@@ -7,6 +7,7 @@ angular.module('consignmentApp')
       $scope.faculties = OPTIONS.faculties;
 
       $scope.submitForm = function (form) {
+        console.log($scope.contactForm.$dirty);
         if (isCompleteConsignment(form)) { 
           $scope.flag = true;
           console.log(form);
@@ -30,6 +31,19 @@ angular.module('consignmentApp')
       
       function isCompleteConsignment(form) {
         return $scope.contactForm.$valid && $scope.agreement && form.consignments.length;
+      }
+      
+      window.onbeforeunload = function (event) {
+        if ($scope.contactForm.$dirty || $scope.consignment.consignments.length) {
+          var message = 'Sure you want to leave?';
+          if (typeof event == 'undefined') {
+            event = window.event;
+          }
+          if (event) {
+            event.returnValue = message;
+          }
+          return message;
+        }
       }
       
     }]);
