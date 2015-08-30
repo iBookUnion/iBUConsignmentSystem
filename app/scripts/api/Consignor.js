@@ -1,28 +1,24 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('Consignors', ['API_URI', function () {
-    return {
-      'getConsignors': getConsignors,
-      'getConsignmentItems': getConsignmentItems
-    };
+  .factory('Consignor', ['ParseObject', 'Book', function (ParseObject, Book) {
 
-    function getConsignors(studentId) {
-      var Consignor = Parse.Object.extend('Consignor');
-      var query = new Parse.Query(Consignor);
+    var CONSIGNOR_KEYS = ['studentId', 'lastName', 'firstName', 'email', 'phoneNumber', 'faculty'];
 
-      if (studentId){
+    var Consignor = ParseObject.extend('Consignor', CONSIGNOR_KEYS, {
+      // Instance Methods
+    }, {
+      // Class Methods
+      get : get,
+      getConsignmentItems : getConsignmentItems
+    });
+
+    function get(studentId) {
+      var query = new Parse.Query('Consignor');
+      if (studentId) {
         query.equalTo('studentId', studentId);
       }
-
-      return query.first()
-        .then(function (consignor) {
-          return consignor.toJSON();
-        })
-        .fail(function (error) {
-          // there was some error retreiving consignor.
-          console.log('Consignors.getConsignors: ' + error);
-        });
+      return studentId ? query.first() : query.find();
     }
 
     function getConsignmentItems(studentId) {
@@ -53,4 +49,7 @@ angular.module('consignmentApp')
       consignmentItemJSON.items = consignmentItem.attributes.items;
       return consignmentItemJSON;
     }
+
+    return Consignor;
+
   }]);

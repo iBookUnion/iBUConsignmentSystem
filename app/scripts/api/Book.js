@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('Book', [function () {
+  .factory('Book', ['ParseObject', function (ParseObject) {
 
     var BOOK_KEYS = ['isbn', 'title', 'author', 'edition', 'courses', 'copiesAvailable'];
 
-    var Book = Parse.Object.extend('Book', {
+    var Book = ParseObject.extend('Book', BOOK_KEYS, {
       // Instance Methods
-      initialize: function(attrs, options) {
+      initialize: function (attrs, options) {
         var self = this;
         this.fetchByIsbn = function (isbn) {
           isbn = isbn || self.isbn;
@@ -49,15 +49,6 @@ angular.module('consignmentApp')
       query.greaterThanOrEqualTo('copiesAvailable', 1);
       return query.find();
     }
-
-    _.forEach(BOOK_KEYS, function (keyName) {
-      Book.prototype.__defineGetter__(keyName, function () {
-        return this.get(keyName);
-      });
-      Book.prototype.__defineSetter__(keyName, function (aValue) {
-        return this.set(keyName, aValue);
-      });
-    });
 
     return Book;
 

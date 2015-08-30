@@ -2,9 +2,9 @@
 
 angular.module('consignmentApp')
   .controller('BookFormModalCtrl', ['$scope', '$modalInstance',
-    'existingConsignmentItem', 'consignmentForm', 'Book', 'OPTIONS',
+    'existingConsignmentItem', 'consignmentForm', 'consignor', 'Book', 'OPTIONS',
     function ($scope, $modalInstance,
-              existingConsignmentItem, consignmentForm, Book, OPTIONS) {
+              existingConsignmentItem, consignmentForm, consignor, Book, OPTIONS) {
 
       var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
       if (existingConsignmentItem) {
@@ -16,8 +16,7 @@ angular.module('consignmentApp')
 
       $scope.alertMessage = '';
 
-      $scope.getBookDataIfExists = function(itemForm, book) {
-        console.log(itemForm.isbn);
+      $scope.getBookDataIfExists = function (itemForm, book) {
         var validIsbn = itemForm.isbn.$touched && itemForm.isbn.$valid;
         if (validIsbn) {
           // TODO: Add loading indicator
@@ -28,11 +27,16 @@ angular.module('consignmentApp')
       $scope.submitForm = function () {
         var bundledItems = angular.copy(openedConsignmentItem);
         _.forEach(bundledItems.items, function (book) {
-          console.log(book);
           book.courses = bundledItems.courses;
         });
-        var formattedConsignment = {'items': bundledItems.items, 'price': bundledItems.price};
-        formattedConsignment.status = formattedConsignment.status || OPTIONS.bookState.available;
+
+        var formattedConsignment = {
+          'items': bundledItems.items,
+          'price': bundledItems.price,
+          'currentState': bundledItems.currentState || OPTIONS.bookState.available,
+          'consignor': consignor
+        };
+        console.log(formattedConsignment);
 
         if (!existingConsignmentItem) {
           consignmentForm.consignments.push(formattedConsignment);

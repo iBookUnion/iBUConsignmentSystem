@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('ConsignmentService', ['ConsignmentApi', 'Consignors',
-    function (ConsignmentAPI, Consignors) {
+  .factory('ConsignmentService', ['ConsignmentApi', 'Consignor',
+    function (ConsignmentAPI, Consignor) {
       return {
         'createNewForm': createNewForm,
         'submitForm': submitForm,
@@ -21,10 +21,10 @@ angular.module('consignmentApp')
 
       function retrieveExistingForm(studentId) {
         var form;
-        return Consignors.getConsignors(studentId)
+        return Consignor.get(studentId)
           .then(function (consignor) {
             form = angular.copy(consignor);
-            return Consignors.getConsignmentItems(studentId);
+            return Consignor.getConsignmentItems(studentId);
           })
           .then(function (consignedBooks) {
             form.consignments = consignedBooks;
