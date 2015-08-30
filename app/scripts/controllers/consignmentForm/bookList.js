@@ -37,7 +37,12 @@ app.controller('BookFormCtrl', ['$scope', '$modal', '$log', 'OPTIONS',
 app.controller('BookFormModalCtrl', ['$scope', '$log', '$modalInstance', 'existingConsignmentItem', 'consignmentForm', 'Books',
   function ($scope, $log, $modalInstance, existingConsignmentItem, consignmentForm, Books) {
 
-    var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
+    if (existingConsignmentItem) {
+      var openedConsignmentItem = angular.copy(existingConsignmentItem);
+      openedConsignmentItem.courses = openedConsignmentItem.items[0].courses;
+    } else {
+      var openedConsignmentItem = createNewConsignmentItem();
+    }
     $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
     bindNewOrExistingBook();
 
