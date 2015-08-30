@@ -7,6 +7,10 @@ angular.module('consignmentApp')
               existingConsignmentItem, consignmentForm, Book, OPTIONS) {
 
       var openedConsignmentItem = angular.copy(existingConsignmentItem) || createNewConsignmentItem();
+      if (existingConsignmentItem) {
+        openedConsignmentItem.courses = openedConsignmentItem.items[0].courses;
+      }
+
       $scope.consignmentItem = openedConsignmentItem; // bind the consignment item to scope
       bindNewOrExistingBook();
 
