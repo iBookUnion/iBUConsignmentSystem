@@ -48,6 +48,25 @@ angular.module('consignmentApp')
           'price': 35,
           'consigned_item': 1,
           'current_state': 'available'
+        },
+        {
+          'items': [{
+            'isbn': 1051041031021,
+            'title': 'Faust I',
+            'author': 'Goethe',
+            'edition': '1st Edition',
+            'courses': 'GERM 100'
+          },
+          {
+            'isbn': 1051041031022,
+            'title': 'Faust II',
+            'author': 'Goethe',
+            'edition': '1st Edition',
+            'courses': 'GERM 100'
+          }],
+          'price': 20,
+          'consigned_item': 1,
+          'current_state': 'available'
         }
       ]
     };
