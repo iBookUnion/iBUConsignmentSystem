@@ -1,32 +1,6 @@
 'use strict';
 
 angular.module('consignmentApp')
-  .factory('Inventory', ['$resource', 'API_URI',
-    function ($resource, API_URI) {
-
-      var Inventory = $resource(API_URI.inventory);
-      return {
-        getList: getList
-      };
-      
-    function getList(params) {
-      var book = Parse.Object.extend("Book");
-      var query = new Parse.Query(book);
-      if (params) {
-        if (params.title) query.contains("title", params.title);
-        if (params.subject) query.contains('courses', params.subject.toUpperCase());
-      }
-      query.greaterThanOrEqualTo("copiesAvailable", 1);
-      return query.find().then(
-        function(books) {
-          console.log(books);
-          return _.map(books, function(book) {
-            return book.toJSON();
-          })
-      })
-    }
-  }])
-  
   .service('ContractService', [function () {
     // dummy data to be overwritten upon $http.post success
     var contract = {

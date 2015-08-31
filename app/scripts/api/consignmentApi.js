@@ -1,6 +1,6 @@
 angular.module('consignmentApp')
-  .service('ConsignmentApi', ['Books',
-    function (Books) {
+  .service('ConsignmentApi', ['Book',
+    function (Book) {
       return {
         'submitForm': submitForm,
         'searchConsignments': searchConsignments,
@@ -19,7 +19,7 @@ angular.module('consignmentApp')
 
         var filterQuery = Parse.Promise.as(consignmentQuery);
         if (params && params.isbn) {
-          filterQuery = Books.getParseObject(params.isbn)
+          filterQuery = Book.get(params.isbn)
             .then(function (book) {
               return consignmentQuery.containedIn('items', [book]);
             });
@@ -36,46 +36,60 @@ angular.module('consignmentApp')
        * @returns {Parse.Promise}
        */
       function updateConsignment(consignmentForm) {
-        return Parse.Promise.when(saveContactInfo(consignmentForm),
-          saveConsignmentItems(consignmentForm.consignments));
+        var savedConsignment;
+        return saveContactInfo(consignmentForm)
+          .then(function (consignor) {
+            savedConsignment = consignor;
+            return saveConsignmentItems(consignmentForm.consignments);
+          })
+          .then(function (consignmentItems) {
+            savedConsignment.consignments = consignmentItems;
+            return savedConsignment;
+          });
       }
 
       function saveContactInfo(consignor) {
-        var consignorObject = new Parse.Object('Consignor');
         var consignorInfo = _.omit(consignor, 'consignments');
-        return consignorObject
-          .save(sanitizeForParse(consignorInfo))
-          .fail(function (error) {
-            return Parse.Promise.error(error);
-          });
+        return consignorInfo.save();
       }
 
       function saveConsignmentItems(consignmentItems) {
         return Parse.Promise.when(_.map(consignmentItems, saveConsignmentItem));
 
         function saveConsignmentItem(consignmentItem) {
-          var serializedConsignmentItem = serializeConsignmentItem(consignmentItem);
-          console.log(serializedConsignmentItem);
-          var consignmentItemObject = new Parse.Object('ConsignmentItem');
-          return consignmentItemObject
-            .save(serializedConsignmentItem)
-            .fail(function (error) {
-              return Parse.Promise.error(error);
+          saveConsignmentBooks(consignmentItem)
+            .then(function (bookPointers) {
+              var consignmentItemObject = new Parse.Object('ConsignmentItem');
+              consignmentItemObject.set('items', bookPointers);
+              consignmentItemObject.set('consignor', consignmentItem.consignor);
+              consignmentItemObject.set('price', consignmentItem.price);
+              consignmentItemObject.set('currentState', consignmentItem.currentState);
+              consignmentItemObject.set('objectId', consignmentItem.objectId);
+              return consignmentItemObject
+                .save()
+                .fail(function (error) {
+                  console.log(error);
+                  return Parse.Promise.error(error);
+                });
             });
         }
       }
 
-      function serializeConsignmentItem(consignmentItem) {
+      function saveConsignmentBooks(consignmentItem) {
         var items = consignmentItem.items;
-        var consignmentItemCopy = angular.copy(consignmentItem);
-        consignmentItemCopy.items = _.map(items, function (item) {
-          return Parse.Object.extend('Book').createWithoutData(item.objectId || item.id);
-        });
-        return consignmentItemCopy;
-      }
-
-      function sanitizeForParse(json) {
-        return angular.fromJson(angular.toJson(json));
+        var bookPromises = _.map(items, _.method('save'));
+        return Parse.Promise.when(bookPromises)
+          .then(function () {
+            return _.toArray(arguments);
+          })
+          .then(function (books) {
+            return _.map(books, function (book) {
+              return Book.createWithoutData(book.id);
+            });
+          })
+          .fail(function () {
+            return _.toArray(arguments);
+          });
       }
 
       function consignmentsToJSON(consignments) {

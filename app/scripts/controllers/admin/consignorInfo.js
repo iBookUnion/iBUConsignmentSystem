@@ -10,11 +10,16 @@
 
 angular.module('consignmentApp')
   .controller('ConsignorInfoCtrl', ['$scope', '$routeParams',
-    'Consignors', 'ConsignmentApi', 'ConsignmentService', 'OPTIONS',
+    'ConsignmentApi', 'Consignor', 'ConsignmentService', 'OPTIONS',
     function ($scope, $routeParams,
-              Consignors, ConsignmentApi, ConsignmentService, OPTIONS) {
+              ConsignmentApi, Consignor, ConsignmentService, OPTIONS) {
 
-      ConsignmentService.retrieveExistingForm($routeParams.consignorId)
+      Consignor.get($routeParams.consignorId)
+        .then(function (consignor) {
+          $scope.consignor = consignor;
+          return $routeParams.consignorId;
+        })
+        .then(ConsignmentService.retrieveExistingForm)
         .then(function (consignment) {
           $scope.consignment = consignment;
         });
@@ -29,6 +34,7 @@ angular.module('consignmentApp')
       };
 
       $scope.saveConsignor = function () {
+        // TODO: Add Loading Animation
         return ConsignmentApi.updateConsignment($scope.consignment)
           .then(function (callback) {
             console.log(callback);
