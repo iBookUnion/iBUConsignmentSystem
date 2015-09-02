@@ -2,8 +2,12 @@
 
 Parse.Cloud.beforeSave('Book', function(request, response) {
   Parse.Cloud.useMasterKey();
-  if (!request.object.get('copiesAvailable')) {
-    request.object.set('copiesAvailable', 0);
+  var book = request.object;
+  if (!book.get('copiesAvailable')) {
+    book.set('copiesAvailable', 0);
+  }
+  if (book.get('courses')) {
+    book.set('courses', book.get('courses').toUpperCase());
   }
   response.success();
 });

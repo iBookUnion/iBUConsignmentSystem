@@ -25,7 +25,7 @@
                     <span class="contract-key">Email</span>
                     <span class="contract-value">{{contract.email}}</span>
                 </li>
-                <li class="list-group-item">
+                <li class="list-group-item" ng-if="contract.phoneNumber">
                     <span class="contract-key">Phone Number</span>
                     <span class="contract-value">{{contract.phoneNumber}}</span>
                 </li>
@@ -66,6 +66,7 @@
     <div class="row">
         <div class="form-section instruction">
             <p class="lead">Pick-up Period: January 9th, 2015 (10am-5pm) SUB 213.</p>
+            <p>Print or save this page for your records.</p>
             <a href="http://ibookunionubc.com/" class="btn btn-info" role="button">Return to Main Site</a>
         </div>
     </div>

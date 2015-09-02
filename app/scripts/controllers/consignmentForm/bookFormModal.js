@@ -17,7 +17,7 @@ angular.module('consignmentApp')
       $scope.alertMessage = '';
 
       $scope.getBookDataIfExists = function (itemForm, book) {
-        var validIsbn = itemForm.isbn.$touched && itemForm.isbn.$valid;
+        var validIsbn = itemForm.isbn.$valid;
         if (validIsbn) {
           // TODO: Add loading indicator
           return book.fetchByIsbn(itemForm.isbn.$viewValue);

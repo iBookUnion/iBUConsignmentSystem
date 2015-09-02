@@ -42,7 +42,15 @@
             </tr>
         </table>
     </div>
-
+    <div class="page-header text-center" ng-if="isLoading">
+        <h1>Loading...</h1>
+    </div>
+    <div class="page-header text-center" ng-if="!books.length && !isLoading">
+        <h1>No Books Found</h1>
+    </div>
+    <div class="page-header text-center" ng-if="errorMessage">
+        <h1>{{errorMessage}}</h1>
+    </div>
     <!-- /.row -->
 
 </div>

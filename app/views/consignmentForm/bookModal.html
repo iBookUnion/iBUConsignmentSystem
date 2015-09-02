@@ -136,7 +136,7 @@
                             </small>
                         </div>
                         <input type="text" class="form-control input-medium" id="course" name="course"
-                               ng-model="consignmentItem.courses" ng-pattern="/^\w{4}\s?\d{3}$/"
+                               ng-model="consignmentItem.courses" ng-pattern="/^(\w{4}\s?\d{3})(,\s*\w{4}\s?\d{3})*$/"
                                placeholder="Enter Course Number" required>
 
                         <div class="error-container"

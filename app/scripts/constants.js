@@ -26,6 +26,6 @@ angular.module('consignmentApp')
         'Forestry', 'Dentistry', 'Human Kinetics',
         'Creative and Critical Studies', 'Land and Food Systems', 'Law',
         'Pharmaceutical Sciences', 'Medicine',
-        'Management', 'School of Social Work and Family Studies']
+        'Management', 'School of Social Work and Family Studies', 'Other']
     };
   }()));
