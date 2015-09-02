@@ -9,5 +9,8 @@ Parse.Cloud.beforeSave('Book', function(request, response) {
   if (book.get('courses')) {
     book.set('courses', book.get('courses').toUpperCase());
   }
+  if (book.get('title')) {
+    book.set('canonicalTitle', book.get('title').toUpperCase());
+  }
   response.success();
 });

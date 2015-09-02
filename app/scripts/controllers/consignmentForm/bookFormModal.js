@@ -22,7 +22,9 @@ angular.module('consignmentApp')
           // TODO: Add loading indicator
           return Book.get(itemForm.isbn.$viewValue)
             .then(function (book) {
-              consignmentItem[index] = book;
+              if (book) {
+                consignmentItem[index] = book;
+              }
             });
         }
       };

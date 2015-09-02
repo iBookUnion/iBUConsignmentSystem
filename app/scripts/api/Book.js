@@ -24,8 +24,11 @@ angular.module('consignmentApp')
     function searchInventory(params) {
       var query = new Parse.Query('Book');
       if (params) {
+        if (params.isbn) {
+          query.equalTo('isbn', params.isbn);
+        }
         if (params.title) {
-          query.contains('title', params.title);
+          query.contains('canonicalTitle', params.title.toUpperCase());
         }
         if (params.subject) {
           query.contains('courses', params.subject.toUpperCase());
