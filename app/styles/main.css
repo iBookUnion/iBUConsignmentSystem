@@ -93,6 +93,10 @@ input.ng-valid {
     margin: 0;
 }
 
+#button-save {
+    margin-left: 0.5em;
+}
+
 /*Book List*/
 
 .book-entry {
