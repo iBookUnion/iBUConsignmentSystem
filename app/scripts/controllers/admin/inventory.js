@@ -10,6 +10,8 @@
 angular.module('consignmentApp')
   .controller('InventoryCtrl', ['$scope', '$location', 'Book',
     function ($scope, $location, Book) {
+      
+      $scope.isGuest = !Parse.User.current();
 
       $scope.viewAvailableBookCopies = function () {
         $location.search('isbn', this.book.isbn)

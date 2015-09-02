@@ -34,7 +34,8 @@
             <td>Copies Available</td>
             </thead>
             <tbody>
-            <tr ng-repeat="book in books track by $index" ng-click="viewAvailableBookCopies()">
+            <tr ng-repeat="book in books track by $index" ng-click="isGuest || viewAvailableBookCopies()"
+                ng-disabled="isGuest">
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
                 <td>{{book.edition}}</td>

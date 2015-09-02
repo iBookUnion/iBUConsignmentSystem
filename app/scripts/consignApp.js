@@ -16,6 +16,10 @@
         templateUrl: 'views/inventory.html',
         controller: 'InventoryCtrl'
       })
+      .when('/inventory', {
+        templateUrl: 'views/inventory.html',
+        controller: 'InventoryCtrl'
+      })
       .when('/admin/forms', {
         templateUrl: 'views/forms.html',
         controller: 'FormsCtrl'
