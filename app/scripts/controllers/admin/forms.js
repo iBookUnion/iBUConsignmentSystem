@@ -16,8 +16,7 @@ angular.module('consignmentApp')
         Book.get($routeParams.isbn).then(
           function (book) {
             if (!book) {
-              console.log("this is not a real book.")
-              window.location.replace('https://ibu-alt-rcacho.c9.io/#/admin/');
+              window.location.replace('https://ibu-alt-rcacho.c9.io/#/admin/404');
             } else {
               $scope.book = book;
             }
