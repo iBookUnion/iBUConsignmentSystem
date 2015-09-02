@@ -136,7 +136,7 @@
                             </small>
                         </div>
                         <input type="text" class="form-control input-medium" id="course" name="course"
-                               ng-model="consignmentItem.courses" ng-pattern="/^(\w{4}\s?\d{3})(,\s*\w{4}\s?\d{3})*$/"
+                               ng-model="consignmentItem.courses" ng-pattern="/^([a-zA-Z]{4}\s?\d{3})(,\s*[a-zA-Z]{4}\s?\d{3})*$/"
                                placeholder="Enter Course Number" required>
 
                         <div class="error-container"
@@ -161,7 +161,7 @@
                         <div class="input-group">
                             <span class="input-group-addon">$</span>
                             <input type="number" min="1" class="form-control input-medium" id="price" name="price"
-                                   ng-model="consignmentItem.price" placeholder="Enter Price" required>
+                                   ng-model="consignmentItem.price" placeholder="Enter Price" ng-pattern="/^[0-9]+$/" required>
                             <span class="input-group-addon">.00</span>
                         </div>
                         <div class="error-container"
@@ -170,8 +170,8 @@
                                 Book price is required.
                             </small>
                             <small class="error"
-                                   ng-show="consignForm.price.$error.number || consignForm.price.$badInput">
-                                Please input a valid price.
+                                   ng-show="consignForm.price.$error.number || consignForm.price.$error.pattern || consignForm.price.$badInput">
+                                The price must be a whole number.
                             </small>
                         </div>
                     </div>
