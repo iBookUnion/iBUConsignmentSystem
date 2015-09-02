@@ -152,7 +152,7 @@ describe('Controller: BookFormModalCtrl opened with an existing book', function 
     beforeEach(module('consignmentApp'));
 
     var BookFormModalCtrl,
-        scope, mockBookCartService, mockModalInstance, existingBook;
+        scope, mockBookCartService, mockModalInstance;
 
     var testBook = {
         isbn: 1234567890123,

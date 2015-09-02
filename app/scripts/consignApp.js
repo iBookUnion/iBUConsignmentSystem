@@ -34,10 +34,10 @@
   });
 
   app.run(function ($rootScope, $location) {
-    $rootScope.$on("$routeChangeStart", function () {
+    $rootScope.$on('$routeChangeStart', function () {
       var onAdminPage = $location.url().match(/^\/admin/);
       if (onAdminPage && !Parse.User.current()) {
-        $location.path("/login");
+        $location.path('/login');
       }
     });
   });
@@ -55,7 +55,8 @@
         scope: {
           'consignmentForm': '=',
           'isNewConsignment': '=',
-          'consignor': '='
+          'consignor': '=',
+          'showConsignmentStates': '='
         }
       };
     })

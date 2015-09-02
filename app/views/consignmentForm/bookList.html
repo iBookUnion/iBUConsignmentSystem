@@ -19,7 +19,7 @@
                         <p class="list-group-item-text">{{consignment.items[consignmentNo].courses | uppercase}}</p>
                     </div>
                     <div class="col-xs-2 book-entry-secondary">
-                        <select ng-if="isAdmin"
+                        <select ng-if="isAdmin && showConsignmentStates"
                                 ng-model="consignment.currentState"
                                 ng-click="$event.stopPropagation()"
                                 ng-options="state for state in states">

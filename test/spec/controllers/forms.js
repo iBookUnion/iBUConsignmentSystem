@@ -12,26 +12,6 @@ describe('Controller: FormCtrl', function () {
     // Set up the mock http service responses
     httpBackend = $httpBackend;
 
-    var mockUserResponse = {
-      'error': false,
-      'users': [
-        {
-          'student_id': 0,
-          'first_name': 'richard',
-          'last_name': 'grayson',
-          'email': 'gray@mail.com',
-          'phone_number': 2147483647
-        },
-        {
-          'student_id': 1,
-          'first_name': 'Clark',
-          'last_name': 'Kent',
-          'email': 'kent@mail.com',
-          'phone_number': 1234541234
-        }
-      ]
-    };
-
     var mockConsignorsResponse = {
       'error': false,
       'consignments': [
