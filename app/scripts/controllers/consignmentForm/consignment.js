@@ -25,12 +25,21 @@ angular.module('consignmentApp')
               console.log(error);
               $location.path('/contract');
             });
-      } else {
-        $scope.Msg = "You cannot submit the form until you accept the terms of the agreement.";
       }};
       
       function isCompleteConsignment(form) {
-        return $scope.contactForm.$valid && $scope.agreement && form.consignments.length;
+        if (!$scope.contactForm.$valid) {
+          $scope.Msg = "Please Fill Out The Contact Form.";
+          return false;
+        } else if (!form.consignments.length) {
+          $scope.Msg = "The Consignment Form Must Contain At Least One Book."
+          return false;
+        } else if (!$scope.agreement) {
+        $scope.Msg = "You cannot submit the form until you accept the terms of the agreement.";
+        return false;
+        } else {
+          return true;
+        }
       }
       
       window.onbeforeunload = function (event) {
