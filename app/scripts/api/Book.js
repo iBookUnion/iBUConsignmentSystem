@@ -7,21 +7,6 @@ angular.module('consignmentApp')
 
     var Book = ParseObject.extend('Book', BOOK_KEYS, {
       // Instance Methods
-      initialize: function (attrs, options) {
-        var self = this;
-        this.fetchByIsbn = function (isbn) {
-          isbn = isbn || self.isbn;
-          return Book.get(isbn)
-            .then(function (book) {
-              console.log(self);
-              if (book) {
-                _.merge(self, book);
-              }
-              return this;
-            });
-        };
-      }
-
     }, {
       // Class Methods
       get: get,

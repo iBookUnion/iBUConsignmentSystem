@@ -16,11 +16,14 @@ angular.module('consignmentApp')
 
       $scope.alertMessage = '';
 
-      $scope.getBookDataIfExists = function (itemForm, book) {
+      $scope.getBookDataIfExists = function (itemForm, consignmentItem, index) {
         var validIsbn = itemForm.isbn.$valid;
         if (validIsbn) {
           // TODO: Add loading indicator
-          return book.fetchByIsbn(itemForm.isbn.$viewValue);
+          return Book.get(itemForm.isbn.$viewValue)
+            .then(function (book) {
+              consignmentItem[index] = book;
+            });
         }
       };
 
@@ -56,7 +59,6 @@ angular.module('consignmentApp')
         openedConsignmentItem = createNewConsignmentItem();
         openedConsignmentItem.items[0] = {};
         $scope.consignmentItem = openedConsignmentItem;
-        $scope.consignedBook = openedConsignmentItem.items[0];
         $scope.consignForm.$setPristine();
         $scope.consignForm.$setUntouched();
       };
@@ -83,6 +85,5 @@ angular.module('consignmentApp')
         if (!openedConsignmentItem.items.length) {
           openedConsignmentItem.items.push(new Book());
         }
-        $scope.consignedBook = openedConsignmentItem.items[0];
       }
     }]);
