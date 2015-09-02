@@ -10,18 +10,18 @@
 
 angular.module('consignmentApp')
   .controller('ConsignorInfoCtrl', ['$scope', '$routeParams',
-    'ConsignmentApi', 'Consignor', 'ConsignmentService', 'OPTIONS',
+    'ConsignmentApi', 'Consignor', 'ConsignmentService', 'OPTIONS', '$location',
     function ($scope, $routeParams,
-              ConsignmentApi, Consignor, ConsignmentService, OPTIONS) {
+              ConsignmentApi, Consignor, ConsignmentService, OPTIONS, $location) {
 
       Consignor.get($routeParams.consignorId)
         .then(function (consignor) {
           if (!consignor) {
-            window.location.replace('https://ibu-alt-rcacho.c9.io/#/admin/404');
-          }
-          $scope.consignor = consignor;
-          return $routeParams.consignorId;
-        })
+            $location.url('/admin/404');
+          } else {
+            $scope.consignor = consignor;
+            return $routeParams.consignorId;
+        }})
         .then(ConsignmentService.retrieveExistingForm)
         .then(function (consignment) {
           $scope.consignment = consignment;
