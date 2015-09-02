@@ -7,21 +7,6 @@ angular.module('consignmentApp')
 
     var Book = ParseObject.extend('Book', BOOK_KEYS, {
       // Instance Methods
-      initialize: function (attrs, options) {
-        var self = this;
-        this.fetchByIsbn = function (isbn) {
-          isbn = isbn || self.isbn;
-          return Book.get(isbn)
-            .then(function (book) {
-              console.log(self);
-              if (book) {
-                _.merge(self, book);
-              }
-              return this;
-            });
-        };
-      }
-
     }, {
       // Class Methods
       get: get,
@@ -39,8 +24,11 @@ angular.module('consignmentApp')
     function searchInventory(params) {
       var query = new Parse.Query('Book');
       if (params) {
+        if (params.isbn) {
+          query.equalTo('isbn', params.isbn);
+        }
         if (params.title) {
-          query.contains('title', params.title);
+          query.contains('canonicalTitle', params.title.toUpperCase());
         }
         if (params.subject) {
           query.contains('courses', params.subject.toUpperCase());

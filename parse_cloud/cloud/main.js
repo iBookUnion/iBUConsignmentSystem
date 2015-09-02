@@ -25,3 +25,18 @@ require('cloud/postConsignment.js');
 //  }
 //
 //});
+
+Parse.Cloud.job('migrateBookData', function (request, status) {
+  Parse.Cloud.useMasterKey();
+  var query = new Parse.Query('Book');
+  query.each(function (book) {
+    // trigger bookBeforeSave
+    return book.save();
+  })
+    .then(function () {
+      status.success('Migration Complete');
+    }, function (error) {
+      status.error(error.message);
+    });
+});
+
