@@ -32,67 +32,6 @@ form.book-form {
     color: #5cb85c;
 }
 
-/* --- Navbar Style --- */
-.navbar-default {
-    background-color: #6aa63b;
-    border-color: #598b31;
-}
-
-.navbar-default .navbar-brand {
-    color: #b2d39d;
-}
-
-.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
-    color: #ffffff;
-}
-
-.navbar-default .navbar-text {
-    color: #b2d39d;
-}
-
-.navbar-default .navbar-nav > li > a {
-    color: #b2d39d;
-}
-
-.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
-    color: #ffffff;
-}
-
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-    color: #ffffff;
-    background-color: #598b31;
-}
-
-.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-    color: #ffffff;
-    background-color: #598b31;
-}
-
-.navbar-default .navbar-toggle {
-    border-color: #598b31;
-}
-
-.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-    background-color: #598b31;
-}
-
-.navbar-default .navbar-toggle .icon-bar {
-    background-color: #b2d39d;
-}
-
-.navbar-default .navbar-collapse,
-.navbar-default .navbar-form {
-    border-color: #b2d39d;
-}
-
-.navbar-default .navbar-link {
-    color: #b2d39d;
-}
-
-.navbar-default .navbar-link:hover {
-    color: #ffffff;
-}
-
 .error {
     color: red;
 }
@@ -210,4 +149,65 @@ input.ng-valid {
 #agreementMsg {
     color: red;
     text-align: center;
+}
+
+/* --- Navbar Style --- */
+.navbar-default {
+    background-color: #6aa63b;
+    border-color: #598b31;
+}
+
+.navbar-default .navbar-brand {
+    color: #b2d39d;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {
+    color: #ffffff;
+}
+
+.navbar-default .navbar-text {
+    color: #b2d39d;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: #b2d39d;
+}
+
+.navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
+    color: #ffffff;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: #ffffff;
+    background-color: #598b31;
+}
+
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    color: #ffffff;
+    background-color: #598b31;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: #598b31;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+    background-color: #598b31;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #b2d39d;
+}
+
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+    border-color: #b2d39d;
+}
+
+.navbar-default .navbar-link {
+    color: #b2d39d;
+}
+
+.navbar-default .navbar-link:hover {
+    color: #ffffff;
 }
