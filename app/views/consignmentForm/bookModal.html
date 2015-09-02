@@ -41,7 +41,7 @@
                                        id="isbn"
                                        name="isbn" ng-pattern="/^[0-9]{13}$/"
                                        ng-model="item.isbn" placeholder="Enter 13-digit ISBN"
-                                       ng-change="getBookDataIfExists(itemForm, consignmentItem.items, $index)" required>
+                                       ng-change="findBookInfo(itemForm, consignmentItem.items, $index)" required>
 
                                 <div class="error-container"
                                      ng-show="itemForm.isbn.$touched || consignForm.$submitted">
