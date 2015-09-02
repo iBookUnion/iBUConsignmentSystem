@@ -4,7 +4,7 @@ Parse.Cloud.define('postConsignment', function (request, response) {
 
   var errors = findConsignmentErrors(request.params);
 
-  if (errors == []) {
+  if (errors === []) {
     response.error(errors);
   }
 
@@ -69,7 +69,7 @@ function createBooksIfNotExists(consignmentItem) {
 function createBookIfNotExists(book) {
   return getBook(book.isbn)
     .then(function (result) {
-      if (!result.length) {
+      if (!result) {
         var newBook = new Parse.Object('Book');
         return newBook.save({
           isbn: book.isbn.toString(),
@@ -79,7 +79,10 @@ function createBookIfNotExists(book) {
           courses: book.courses
         }, {useMasterKey: true});
       } else {
-        return result[0];
+        var originalBook = result;
+        // Only allow courses to be updated for existing books
+        originalBook.set('courses', book.courses);
+        return originalBook;
       }
     });
 }
@@ -88,7 +91,7 @@ function getBook(isbn) {
   var bookQuery = new Parse.Query('Book');
   return bookQuery
     .equalTo('isbn', isbn.toString())
-    .find({useMasterKey: true});
+    .first({useMasterKey: true});
 }
 
 function createConsignmentItem(itemInfo, consignor, books) {
