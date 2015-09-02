@@ -16,6 +16,9 @@ angular.module('consignmentApp')
 
       Consignor.get($routeParams.consignorId)
         .then(function (consignor) {
+          if (!consignor) {
+            window.location.replace('https://ibu-alt-rcacho.c9.io/#/admin/404');
+          }
           $scope.consignor = consignor;
           return $routeParams.consignorId;
         })

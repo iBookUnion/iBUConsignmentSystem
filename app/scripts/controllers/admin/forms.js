@@ -15,7 +15,11 @@ angular.module('consignmentApp')
         $scope.isbn = $routeParams.isbn;
         Book.get($routeParams.isbn).then(
           function (book) {
-            $scope.book = book;
+            if (!book) {
+              window.location.replace('https://ibu-alt-rcacho.c9.io/#/admin/404');
+            } else {
+              $scope.book = book;
+            }
           });
       }
 

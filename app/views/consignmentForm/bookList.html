@@ -16,7 +16,7 @@
                             <small>{{book.author}}</small>
                         </h4>
 
-                        <p class="list-group-item-text">{{consignment.items[consignmentNo].courses | uppercase}}</p>
+                        <p class="list-group-item-text">{{consignment.items[0].courses | uppercase}}</p>
                     </div>
                     <div class="col-xs-2 book-entry-secondary">
                         <select ng-if="isAdmin && showConsignmentStates"

@@ -28,6 +28,9 @@
         templateUrl: 'views/admin/login.html',
         controller: 'AdminLoginCtrl'
       })
+      .when('/admin/404', {
+        templateUrl: 'views/404Page.html',
+      })
       .otherwise({
         redirectTo: '/'
       });
