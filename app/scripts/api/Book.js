@@ -37,7 +37,6 @@ angular.module('consignmentApp')
       query.greaterThanOrEqualTo('copiesAvailable', 1);
       return query.find();
     }
-
     return Book;
 
   }]);

@@ -41,7 +41,7 @@
                                        id="isbn"
                                        name="isbn" ng-pattern="/^[0-9]{13}$/"
                                        ng-model="item.isbn" placeholder="Enter 13-digit ISBN"
-                                       ng-blur="getBookDataIfExists(itemForm, consignmentItem.items, $index)" required>
+                                       ng-change="getBookDataIfExists(itemForm, consignmentItem.items, $index)" required>
 
                                 <div class="error-container"
                                      ng-show="itemForm.isbn.$touched || consignForm.$submitted">
@@ -68,16 +68,16 @@
                                         &#10003;
                                     </small>
                                 </div>
-                                <input type="text" class="form-control input-medium" id="edition" name="edition"
-                                       ng-model="item.edition" ng-pattern=""
-                                       placeholder="Enter Edition" required>
-
                                 <div class="error-container"
                                      ng-show="itemForm.edition.$touched || consignForm.$submitted">
                                     <small class="error" ng-show="itemForm.edition.$invalid">
                                         Please enter the edition details.
                                     </small>
                                 </div>
+                                <input type="text" class="form-control input-medium" id="edition" name="edition"
+                                       ng-model="item.edition"
+                                       ng-disabled="!newBook[$index]"
+                                       placeholder="Enter Edition" required>
                             </div>
                         </div>
                     </div>
@@ -96,7 +96,9 @@
                                 </small>
                             </div>
                             <input type="text" class="form-control input-medium" id="title" name="title"
-                                   ng-model="item.title" placeholder="Enter Book Title" required>
+                                   ng-model="item.title"
+                                   ng-disabled="!newBook[$index]"
+                                   placeholder="Enter Book Title" required>
                         </div>
                     </div>
 
@@ -114,7 +116,10 @@
                                 </small>
                             </div>
                             <input type="text" class="form-control input-medium" id="author" name="author"
-                                   ng-model="item.author" ng-pattern="/[a-zA-Z]+/" placeholder="Enter Book Author"
+                                   ng-model="item.author"
+                                   ng-pattern="/[a-zA-Z]+/"
+                                   ng-disabled="!newBook[$index]"
+                                   placeholder="Enter Book Author"
                                    required>
                         </div>
                     </div>
@@ -179,18 +184,14 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" class="btn btn-primary pull-right" value="Add"/>
-                <button type="button" class="btn btn-danger pull-right" ng-click="cancel()">Done</button>
+                <input type="submit" class="btn btn-primary pull-right" value="Save"/>
+                <button type="button" class="btn btn-danger pull-right" ng-click="cancel()">Cancel</button>
             </div>
             <hr>
             <div class="alert alert-warning" id="form-contains-errors"
                  ng-show="consignForm.$submitted && consignForm.$invalid">
                 Some require fields are missing/incorrect.
             </div>
-            <!--will add buttons here later<div class="modal-footer">
-              <button class="btn btn-danger" ng-click="cancel()">Done</button>
-              <button class="btn btn-success" ng-click="ok()">OK</button>
-            </div>-->
         </form>
     </div>
 </div>
