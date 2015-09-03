@@ -33,7 +33,7 @@
         controller: 'AdminLoginCtrl'
       })
       .when('/admin/404', {
-        templateUrl: 'views/404Page.html',
+        templateUrl: 'views/404Page.html'
       })
       .otherwise({
         redirectTo: '/'
