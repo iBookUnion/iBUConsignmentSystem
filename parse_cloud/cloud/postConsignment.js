@@ -84,6 +84,8 @@ function createBookIfNotExists(book) {
         originalBook.set('courses', book.courses);
         return originalBook;
       }
+    }, function(error){
+      console.log("ERROR IN createBookIfNotExists: " + error);
     });
 }
 

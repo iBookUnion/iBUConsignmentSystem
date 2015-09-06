@@ -16,14 +16,23 @@ Parse.Cloud.beforeSave('Book', function (request, response) {
   if (book.get('courses')) {
     promise = promise
       .then(function () {
-        return new Parse.Query('Book').get(book.id);
-      })
-      .then(function (originalBook) {
-        var originalCourses = originalBook.get('courses').match(/[A-Z]{4}\s*\d{3}/g);
-        var newCourses = cleanCourseList(book.get('courses')).match(/[A-Z]{4}\d{3}/g);
-        var courses = _.union(originalCourses, newCourses).join(',');
-        book.set('courses', courses);
-        return book;
+        var bookQuery = new Parse.Query('Book');
+        bookQuery.get(book.id, {
+          success: function(originalBook) {
+            var originalCourses = originalBook.get('courses').match(/[A-Z]{4}\s*\d{3}/g);
+            var newCourses = cleanCourseList(book.get('courses')).match(/[A-Z]{4}\d{3}/g);
+            var courses = _.union(originalCourses, newCourses).join(',');
+            book.set('courses', courses);
+            return book;
+          },
+
+          error: function(object, error) {
+            console.log('Cannot find originalBook: ' + error);
+            var courses = cleanCourseList(book.get('courses')).match(/[A-Z]{4}\d{3}/g);
+            book.set('courses', courses);
+            return book;
+          }
+        })
       });
   }
 
