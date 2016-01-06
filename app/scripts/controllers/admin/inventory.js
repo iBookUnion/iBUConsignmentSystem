@@ -18,6 +18,20 @@ angular.module('consignmentApp')
           .path('admin/forms');
       };
 
+      $scope.viewConsignor = function (uniqueId) {
+        if (uniqueId){
+          console.log(uniqueId);
+          var reversedHex = reverseHexId(uniqueId);
+          $location.url($location.path);
+          $location.path('/admin/consignorInfo/' + reversedHex);
+        }
+      };
+
+      function reverseHexId(id) {
+        var id = String(id);
+        return parseInt(id, 16);          
+      };
+
       $scope.searchBooks = function (params) {
         $scope.books = [];
         $scope.isLoading = true;
@@ -32,6 +46,7 @@ angular.module('consignmentApp')
             $scope.isLoading = false;
           });
       };
+        
 
       $scope.searchBooks();
     }]);

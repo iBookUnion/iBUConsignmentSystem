@@ -26,11 +26,17 @@ angular.module('consignmentApp')
       ConsignmentApi.searchConsignments({isbn: $routeParams.isbn})
         .then(function (consignments) {
           $scope.consignments = consignments; 
-        });
+      });
 
       $scope.viewConsignment = function (consignment) {
         $location.url($location.path);  // Clear query parameters
         $location.path('/admin/consignorInfo/' + consignment.consignor.studentId);
+      };
+
+      $scope.hexId = function (studentId) {
+        var studentIdNum = Number(studentId);
+        var hexString = studentIdNum.toString(16);
+        return hexString;
       };
 
       $scope.states = OPTIONS.bookStates;

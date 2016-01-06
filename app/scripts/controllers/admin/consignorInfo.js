@@ -32,6 +32,7 @@ angular.module('consignmentApp')
       $scope.faculties = OPTIONS.faculties;
       $scope.consignorPayout = 0;
 
+
       $scope.selectSection = function (section) {
         $scope.section = section;
       };

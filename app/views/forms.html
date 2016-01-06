@@ -64,6 +64,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-hover">
                     <thead>
+                    <td>Id</td>
                     <td>Consignor</td>
                     <td>Price</td>
                     <td>Status</td>
@@ -71,6 +72,7 @@
                     <tbody>
                     <tr ng-repeat="consignment in consignments | filter:{currentState : stateFilter}"
                         ng-click="viewConsignment(consignment);">
+                        <td>{{hexId(consignment.consignor.studentId)}}</td>
                         <td>{{consignment.consignor.studentId}}</td>
                         <td>{{consignment.price}}</td>
                         <td>{{consignment.currentState}}</td>
